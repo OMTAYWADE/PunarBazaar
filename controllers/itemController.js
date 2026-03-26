@@ -5,12 +5,13 @@ const User = require('../models/User.js');
 exports.getAllItems = async (req, res) => {
     let items;
     if (req.session.userId) {
-        const user = User.findById(req.session.userId);
+        const user = await User.findById(req.session.userId);
 
         const sameCollege = await Item.find().populate("user").sort({ createdAt: -1 });
 
         const filteredSame = sameCollege.filter(item =>
             item.user?.college === user.college
+            
         );
 
         const others = sameCollege.filter(item =>
@@ -23,10 +24,6 @@ exports.getAllItems = async (req, res) => {
         { featuredUntill: { $lt: new Date() } },
         { isFeatured: false }
     );
-
-    if ((item.type === "note" || item.type === "book") && item.user.college !== currentUser.college) {
-        return res.send("Only Same college stuents can access this");
-    }
 
     items = await Item.find().populate("user").sort({ isFeatured: -1, createdAt: -1 });
     res.render('home', { items });
@@ -75,7 +72,7 @@ exports.deleteItems = async (req, res) => {
 exports.searchItems = async (req, res) => {
     const q = req.query.q;
 
-    const items = await find({
+    const items = await Item.find({
         name: { $regex: q, $options: "i" }
     }).populate("user")
 
@@ -84,6 +81,7 @@ exports.searchItems = async (req, res) => {
 
 exports.getItemDetails = async(req, res) => {
     const item = await Item.findById(req.params.id).populate("user");
+    const user = await Item.findById(req.session.userId);
 
     const recommended = await Item.find({
         category: item.category,
@@ -98,8 +96,14 @@ exports.getItemDetails = async(req, res) => {
     });
 
     // notes for same college for free and paid for others
-    const isSameCollege = currentUser?.college === item.user?.college;
+    const isSameCollege = user?.college === item.user?.college;
     let isUnlocked = false
+    
+    //for different college restriction
+    if ((item.type === "note" || item.type === "book") && item.user.college !== currentUser.college) {
+        return res.send("Only Same college stuents can access this");
+    }
+
 
     if (item.type === "note") {
         if (isSameCollege) {
@@ -115,7 +119,7 @@ exports.getItemDetails = async(req, res) => {
         }
     }
 
-    res.render("details", { item, recommended , isUnlocked: !!unlock});
+    res.render("details", { item, recommended , isUnlocked, razorpayKey: process.env.RAZORPAY_KEY});
 };
 
 exports.getByCategory = async (req, res) => {
@@ -130,7 +134,7 @@ exports.addToWishList = async (req, res) => {
 
     // avoid duplicate
     if (!user.wishList.includes(req.params.id)) {
-        user.wishList.includes(req.params.id);
+        user.wishList.push(req.params.id);
         await user.save();
     }
 
@@ -157,14 +161,15 @@ exports.featureItem = async (req, res) => {
 
     await Item.findByIdAndUpdate(req.params.id, {
         isFeatured: true,
-        featuredUntill: expiry,
+        featuredUntil: expiry,
     });
 
     res.redirect("/");
 }   
 // create razor pay order
-const Razorpay = require('razorpay');
+const razorpay = require('../utils/razorpay.js');
 exports.createOrder = async (req, res) => {
+    const item = Item.findById(req.params.itemId);
     const options = {
         amount: 500, // 5 rupess(in paise)
         currency: "INR",
@@ -179,7 +184,7 @@ exports.createOrder = async (req, res) => {
         }
     }
 
-    const order = await Razorpay.order.create(options);
+    const order = await razorpay.orders.create(options);
 
     res.json(order);
 }
@@ -192,7 +197,7 @@ exports.verifyPayment = async (req, res) => {
     const { razorpay_order_id, razorpay_payment_id, ItemId, razorpay_signature } = req.body;
     const body = razorpay_order_id + '|' + razorpay_payment_id;
 
-    const expectedSignature = crypto.createHmac("vaisat", process.env.RAZORPAY_SECRET)
+    const expectedSignature = crypto.createHmac("sha256", process.env.RAZORPAY_SECRET)
         .update(body.toString())
         .digest("hex")
     
@@ -200,7 +205,7 @@ exports.verifyPayment = async (req, res) => {
             
         await Unlock.create({
             user: req.session.userId,
-            item: ItemId,
+            item: itemId,
             paymentId: razorpay_payment_id,
             status: "paid",
         });

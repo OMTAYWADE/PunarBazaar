@@ -16,11 +16,12 @@ exports.signUp = async (req, res) => {
     const { name, password, email, contact } = req.body;
     const hashed = await bcrypt.hash(password, 10);
 
-    await User.create({
+    const newUser = await User.create({
         name,
         password: hashed,
         email, contact
     });
+    res.session.userId = newUser._id
     res.redirect('/profile');
 };
 
@@ -29,16 +30,17 @@ exports.login = async (req, res) => {
     let user = await User.findOne({ email });
     if (!user) return res.send("User Not Found");
 
-    const isMatch = bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.send("Wrong Password");
     req.session.userId = user._id;
-    res.redirect('/add');
+    res.redirect('/');
 };
 
 exports.logout = async (req, res) => {
-    req.session.destroy();
-    res.redirect('/');
-}
+    req.session.destroy(() => {
+        res.redirect('/');
+    });
+};
 
 exports.profilePage = async(req, res) => {
     const user = await User.findById(req.session.userId);
@@ -46,11 +48,6 @@ exports.profilePage = async(req, res) => {
 } 
 
 exports.profile = async (req, res) => {
-    const { phone, college, branch, division, year } = req.body;
-
-    await User.findByIdAndUpdate(req.session.userId, {
-        phone, college, branch, division, year
-    });
     let updateData = { phone, college, branch, division, year };
 
     if (req.file) {
@@ -58,5 +55,5 @@ exports.profile = async (req, res) => {
         updateData.verificationStatus = "pending";
     }
     await User.findByIdAndUpdate(req.session.userId, updateData);
-    res.redirect('/login');
+    res.redirect('/profile');
 };

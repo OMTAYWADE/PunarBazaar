@@ -2,10 +2,12 @@ const mongoose = require('mongoose')
 
 const itemSchema = new mongoose.Schema({
     name: String,
-    price: String,
+    price: {
+        type: Number,
+        required: true
+    },
     desc: String,
     image: String,
-    category: String,
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
@@ -16,17 +18,12 @@ const itemSchema = new mongoose.Schema({
         default: "Other",
     },
     
-    wishList: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Item"
-    }],
-
-    ifFeatured: {
+    isFeatured: {
         type: Boolean,
         default: false,
     },
     
-    featuredUntill: {
+    featuredUntil: {
         type: Date,
         default: null
     },

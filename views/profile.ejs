@@ -5,73 +5,111 @@
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
-<body class="bg-zinc-100">
+<body class="bg-black text-white min-h-screen flex items-center justify-center">
 
-<div class="max-w-2xl mx-auto mt-10 bg-white p-6 rounded shadow">
+<!-- ⚡ LOADER -->
+<div id="loader" class="fixed inset-0 bg-black flex items-center justify-center z-50 hidden">
+    <p class="text-yellow-400 text-xl animate-pulse">⚡ Saving Power...</p>
+</div>
 
-    <% if(!user.phone || !user.college || !user.branch || !user.year){ %>
-    <p class="text-red-500 mb-3">
-        ⚠ Complete your profile to start selling items
+<!-- 🌟 PROFILE CARD -->
+<div class="max-w-xl w-full bg-zinc-900 p-6 rounded-2xl shadow-2xl relative overflow-hidden">
+
+    <!-- Glow Effect -->
+    <div class="absolute inset-0 bg-blue-500 opacity-10 blur-3xl"></div>
+
+    <!-- Header -->
+    <h1 class="text-2xl font-bold mb-2 text-center">
+        ⚡ My Power Profile
+    </h1>
+
+    <p class="text-center text-gray-400 text-sm mb-4">
+        Build trust. Increase your power level 🚀
     </p>
-<% } %>
-    <h1 class="text-xl font-bold mb-4">My Profile</h1>
 
-    <!-- USER BASIC INFO -->
-    <div class="mb-4">
+    <!-- Goku Journey -->
+    <div class="flex justify-center gap-4 text-lg mb-4">
+        <span class="text-yellow-400 animate-pulse">👶</span>
+        <span class="text-orange-400 animate-pulse">🧑</span>
+        <span class="text-blue-400 animate-pulse">⚡</span>
+    </div>
+
+    <!-- ⚠ WARNING -->
+    <% if(!user.phone || !user.college || !user.branch || !user.year){ %>
+        <p class="text-red-400 text-center mb-4">
+            ⚠ Complete your profile to start selling items
+        </p>
+    <% } %>
+
+    <!-- USER INFO -->
+    <div class="bg-zinc-800 p-4 rounded mb-4">
         <p><strong>Name:</strong> <%= user.name %></p>
         <p><strong>Email:</strong> <%= user.email %></p>
     </div>
 
     <!-- VERIFICATION STATUS -->
-    <div class="mb-4">
+    <div class="text-center mb-4">
+
         <% if(user.verificationStatus === "verified"){ %>
-            <p class="text-green-600">🎓 Verified Student</p>
+            <p class="text-green-400 font-semibold">🎓 Verified Student</p>
         <% } else if(user.verificationStatus === "pending"){ %>
-            <p class="text-yellow-500">Verification Pending</p>
+            <p class="text-yellow-400">⏳ Verification Pending</p>
         <% } else { %>
-            <p class="text-red-500">Not Verified</p>
+            <p class="text-red-400">❌ Not Verified</p>
         <% } %>
+
     </div>
 
-    <!-- PROFILE FORM -->
-    <form action="/profile" method="POST" enctype="multipart/form-data">
+    <!-- FORM -->
+    <form action="/profile" method="POST" enctype="multipart/form-data" id="profileForm">
 
         <input name="phone" value="<%= user.phone || '' %>" 
-        placeholder="Phone Number"
-        class="w-full p-2 mb-2 border">
+        placeholder="📱 Phone Number"
+        class="w-full p-2 mb-2 rounded text-black">
 
         <input name="college" value="<%= user.college || '' %>" 
-        placeholder="College Name"
-        class="w-full p-2 mb-2 border">
+        placeholder="🏫 College Name"
+        class="w-full p-2 mb-2 rounded text-black">
 
         <input name="branch" value="<%= user.branch || '' %>" 
-        placeholder="Branch"
-        class="w-full p-2 mb-2 border">
+        placeholder="📚 Branch"
+        class="w-full p-2 mb-2 rounded text-black">
 
         <input name="year" value="<%= user.year || '' %>" 
-        placeholder="Year"
-        class="w-full p-2 mb-2 border">
+        placeholder="🎓 Year"
+        class="w-full p-2 mb-2 rounded text-black">
 
         <input name="division" value="<%= user.division || '' %>" 
-        placeholder="Division"
-        class="w-full p-2 mb-2 border">
+        placeholder="🏷 Division"
+        class="w-full p-2 mb-3 rounded text-black">
 
-        <!-- Upload College ID -->
-        <label class="block mb-1">Upload College ID</label>
+        <!-- Upload -->
+        <label class="block mb-1 text-sm">Upload College ID</label>
         <input type="file" name="collegeIdImage" class="mb-3">
 
-        <!-- Show uploaded ID -->
+        <!-- Preview -->
         <% if(user.collegeIdImage){ %>
-            <img src="<%= user.collegeIdImage %>" class="h-32 mb-3">
+            <img src="<%= user.collegeIdImage %>" class="h-32 mb-3 rounded border">
         <% } %>
 
-        <button class="bg-blue-500 text-white p-2 w-full rounded">
-            Save Profile
+        <!-- Submit -->
+        <button class="bg-blue-500 hover:bg-blue-600 w-full p-2 rounded font-semibold transition">
+            Save Profile 🚀
         </button>
 
     </form>
 
 </div>
+
+<!-- ⚡ SCRIPT -->
+<script>
+const form = document.getElementById("profileForm");
+const loader = document.getElementById("loader");
+
+form.addEventListener("submit", () => {
+    loader.classList.remove("hidden");
+});
+</script>
 
 </body>
 </html>

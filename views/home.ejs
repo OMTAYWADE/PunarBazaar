@@ -7,6 +7,38 @@
 </head>
 
 <body class="bg-zinc-100">
+    <div class="bg-black text-white py-10 text-center relative overflow-hidden">
+
+    <h1 class="text-3xl font-bold mb-2">
+        ⚡ PunarBazaar
+    </h1>
+
+    <p class="text-gray-400 mb-6">
+        From student hustle → to powerful marketplace 🚀
+    </p>
+
+    <!-- Goku Journey -->
+    <div class="flex justify-center items-center gap-8 text-xl">
+
+        <div class="text-yellow-400 animate-pulse">
+            👶 Goku
+        </div>
+
+        <div class="w-16 h-1 bg-yellow-400"></div>
+
+        <div class="text-orange-400 animate-pulse">
+            🧑 Goku
+        </div>
+
+        <div class="w-16 h-1 bg-blue-400"></div>
+
+        <div class="text-blue-400 animate-pulse text-2xl">
+            ⚡ Super Saiyan
+        </div>
+
+    </div>
+
+</div>
 
     <!-- 🔵 NAVBAR -->
     <div class="bg-blue-600 p-4 flex items-center justify-between">
@@ -61,8 +93,12 @@
 
             <% items.forEach(item=> { %>
 
-                <div class="bg-white p-3 rounded shadow hover:shadow-lg transition">
-                    <<% if(item.isFeatured && item.featuredUntil){ %>
+                <div class="bg-white p-3 rounded-xl shadow 
+hover:shadow-2xl hover:scale-105 
+transition-all duration-300 
+border border-transparent hover:border-yellow-400">
+<div class="absolute inset-0 bg-yellow-300 opacity-0 hover:opacity-10 transition"></div>
+                    <% if(item.isFeatured && item.featuredUntil){ %>
     <p class="text-xs text-yellow-600">
         Featured till: <%= item.featuredUntil.toDateString() %>
     </p>
@@ -121,9 +157,9 @@ class="text-pink-500 text-sm">
 <% } %>
 
 <% if(item.isFeatured){ %>
-    <p class="text-yellow-500 text-xs font-bold">
-        ⭐ Featured
-    </p>
+<span class="absolute top-2 right-2 bg-yellow-400 text-black text-xs px-2 py-1 rounded-full">
+    ⚡ Power Item
+</span>
 <% } %>
 
 
@@ -147,6 +183,32 @@ class="text-pink-500 text-sm">
                 <% }) %>
 
         </div>
+        <div id="pageLoader" class="fixed inset-0 bg-black flex items-center justify-center z-50">
+
+    <div class="text-white text-center">
+        <div class="text-4xl animate-pulse text-yellow-400">
+            ⚡ Charging Energy...
+        </div>
+    </div>
+
+</div>
+
+<script>
+window.onload = () => {
+    document.getElementById("pageLoader").style.display = "none";
+};
+
+const cards = document.querySelectorAll('.card');
+
+window.addEventListener('scroll', () => {
+    cards.forEach(card => {
+        const rect = card.getBoundingClientRect();
+        if (rect.top < window.innerHeight) {
+            card.classList.add('opacity-100', 'translate-y-0');
+        }
+    });
+});
+</script>
 
 </body>
 

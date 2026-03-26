@@ -7,11 +7,12 @@ const upload = require('../utils/upload');
 
 //middleware
 const { isLoggedIn } = require('../middleware/authMiddleware');
-const {isProfileComplete } = require('../middleware/profileComplete');
+const { isProfileComplete } = require('../middleware/profileComplete');
+const { checkPendingPayment } = require('../middleware/paymentPending');
 
 router.get('/', itemControllers.getAllItems);
-router.get('/addItems',isLoggedIn,isProfileComplete, itemControllers.addItemPage);
-router.post('/addItems',isLoggedIn, isProfileComplete, upload.single('image'), itemControllers.createItem);
+router.get('/addItems',isLoggedIn,isProfileComplete, checkPendingPayment, itemControllers.addItemPage);
+router.post('/addItems',isLoggedIn, isProfileComplete,checkPendingPayment, upload.single('image'), itemControllers.createItem);
 router.get('/delete/:id',isLoggedIn, itemControllers.deleteItems);
 router.get('/search', itemControllers.searchItems);
 router.get('/item/:id', itemControllers.getItemDetails);

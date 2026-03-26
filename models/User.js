@@ -28,6 +28,15 @@ const userSchema = new mongoose.Schema({
         enum: ["pending", "verified", "rejected"],
         default: "pending",
     },
+        wishList: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Item"
+    }],
+    pendingPayment:{
+        type: Number,
+        default: 0
+        }
+
 
 }, { timestamps: true });
 

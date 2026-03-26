@@ -1,21 +1,67 @@
-<form action="/profile" method="POST">
-
-<input name="phone" placeholder="Phone Number" class="w-full p-2 mb-2">
-
-<input name="college" placeholder="College Name" class="w-full p-2 mb-2">
-
-<input name="branch" placeholder="Branch (IT, CS, etc)" class="w-full p-2 mb-2">
-
-<input name="year" placeholder="Year (FY, SY, TY)" class="w-full p-2 mb-2">
-
-<input name="division" placeholder="Division" class="w-full p-2 mb-2">
-
-<button class="bg-blue-500 text-white p-2 w-full">
-Save Profile
-</button>
-
-</form>
-
-<p class="text-xs text-gray-600">
-    <%= item.user?.college %> • <%= item.user?.branch %>
-</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <form action="/profile" method="POST" enctype="multipart/form-data" id="profileForm"
+    class="bg-zinc-900 p-5 rounded-xl shadow-lg text-white relative overflow-hidden">
+    
+        <!-- Glow -->
+        <div class="absolute inset-0 bg-blue-500 opacity-10 blur-2xl"></div>
+    
+        <h2 class="text-lg font-semibold mb-3 text-center">
+            ⚡ Complete Your Profile
+        </h2>
+    
+        <!-- PHONE -->
+        <input name="phone" placeholder="📱 Phone Number"
+        class="w-full p-2 mb-2 rounded text-black outline-none">
+    
+        <!-- COLLEGE -->
+        <input name="college" placeholder="🏫 College Name"
+        class="w-full p-2 mb-2 rounded text-black outline-none">
+    
+        <!-- BRANCH -->
+        <input name="branch" placeholder="📚 Branch (IT, CS, etc)"
+        class="w-full p-2 mb-2 rounded text-black outline-none">
+    
+        <!-- YEAR -->
+        <select name="year" class="w-full p-2 mb-2 rounded text-black">
+            <option value="">🎓 Select Year</option>
+            <option value="FY">FY</option>
+            <option value="SY">SY</option>
+            <option value="TY">TY</option>
+        </select>
+    
+        <!-- DIVISION -->
+        <input name="division" placeholder="🏷 Division"
+        class="w-full p-2 mb-3 rounded text-black outline-none">
+    
+        <!-- COLLEGE ID -->
+        <label class="text-sm mb-1 block">Upload College ID</label>
+        <input type="file" name="collegeIdImage" class="mb-3">
+    
+        <!-- SUBMIT -->
+        <button class="bg-blue-500 hover:bg-blue-600 text-white p-2 w-full rounded font-semibold transition">
+            Save Profile 🚀
+        </button>
+    
+    </form>
+    <div id="loader" class="fixed inset-0 bg-black flex items-center justify-center z-50 hidden">
+        <p class="text-yellow-400 text-xl animate-pulse">⚡ Powering Up...</p>
+    </div>
+    
+    <script>
+    const form = document.getElementById("profileForm");
+    const loader = document.getElementById("loader");
+    
+    form.addEventListener("submit", () => {
+        loader.classList.remove("hidden");
+    });
+    </script>
+</body>
+</html>
