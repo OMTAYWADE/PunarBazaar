@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Item Details</title>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="bg-zinc-100">
+
+<div class="max-w-4xl mx-auto mt-10 bg-white p-6 rounded shadow">
+    <button id="unlockBtn" class="bg-blue-500 text-white p-2 rounded">
+Unlock Contact (₹5)
+</button>
+
+
+    <!-- Image -->
+    <div class="h-60 mb-4">
+        <% if(item.image){ %>
+            <img src="<%= item.image %>" class="w-full h-full object-cover rounded">
+        <% } %>
+    </div>
+
+    <!-- Name -->
+    <h1 class="text-2xl font-bold mb-2">
+        <%= item.name %>
+    </h1>
+
+    <!-- Price -->
+<% if(item.type === "note"){ %>
+
+    <% if(currentUser.college === item.user.college){ %>
+        <p class="text-green-500">Free for your college 🎓</p>
+
+        <p>📞 <%= item.user.phone %></p>
+
+    <% } else { %>
+
+        <% if(isUnlocked){ %>
+            <p>📞 <%= item.user.phone %></p>
+        <% } else { %>
+            <button class="bg-blue-500 text-white p-2">
+                Unlock Notes (₹10)
+            </button>
+        <% } %>
+
+    <% } %>
+
+<% } %>
+
+    <!-- Description -->
+    <p class="text-gray-700 mb-4">
+        <%= item.desc %>
+    </p>
+
+    <!-- Seller Info -->
+    <div class="border-t pt-4">
+
+        <h2 class="font-semibold">Seller Info</h2>
+
+        <p>Name: <%= item.user?.name %></p>
+        <p>College: <%= item.user?.college %></p>
+        <p>Branch: <%= item.user?.branch %></p>
+
+        <!-- Trust -->
+        <p>Trust Score: ⭐ <%= item.user?.trustScore %></p>
+
+        <% if(item.user?.isVerified){ %>
+            <p class="text-green-500">🎓 Verified Student</p>
+        <% } %>
+
+    </div>
+
+    <!-- WhatsApp Button -->
+    <%
+let hour = new Date().getHours();
+let greeting = "Hello";
+
+if(hour < 12){
+    greeting = "Good Morning";
+} else if(hour < 18){
+    greeting = "Good Afternoon";
+} else {
+    greeting = "Good Evening";
+}
+
+let message = `${greeting} 👋
+
+I am ${currentUser?.name || "a student"}.
+
+I am interested in your item:
+
+Item: ${item.name}
+Price: ₹${item.price}
+
+Please let me know if it's still available.`;
+%>
+<%
+let encodedMessage = encodeURIComponent(message);
+%>
+<a href="https://wa.me/<%= item.user?.phone %>?text=<%= encodedMessage %>"
+class="block mt-4 bg-green-500 text-white text-center p-3 rounded">
+    Chat on WhatsApp
+</a>
+
+</div>
+
+<h2 class="text-lg font-bold mt-6 mb-2">Recommended Items</h2>
+
+<div class="grid grid-cols-2 gap-4">
+
+<% recommended.forEach(r => { %>
+
+<div class="bg-gray-100 p-2 rounded">
+    <p><%= r.name %></p>
+    <p>₹ <%= r.price %></p>
+
+    <a href="/item/<%= r._id %>" class="text-blue-500">
+        View
+    </a>
+</div>
+
+<% }) %>
+
+</div>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+document.getElementById("unlockBtn").onclick = async function () {
+
+    const res = await fetch("/unlock/<%= item._id %>", { method: "POST" });
+    const order = await res.json();
+
+    const options = {
+        key: "<%= process.env.RAZORPAY_KEY %>",
+        amount: order.amount,
+        currency: "INR",
+        order_id: order.id,
+
+        handler: async function (response) {
+
+            const verify = await fetch("/verify-payment", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    ...response,
+                    itemId: "<%= item._id %>"
+                })
+            });
+
+            const data = await verify.json();
+
+            if (data.success) {
+                alert("Unlocked!");
+                location.reload();
+            }
+        }
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.open();
+};
+</script>
+
+</body>
+</html>

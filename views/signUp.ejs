@@ -1,0 +1,21 @@
+<form action="/profile" method="POST">
+
+<input name="phone" placeholder="Phone Number" class="w-full p-2 mb-2">
+
+<input name="college" placeholder="College Name" class="w-full p-2 mb-2">
+
+<input name="branch" placeholder="Branch (IT, CS, etc)" class="w-full p-2 mb-2">
+
+<input name="year" placeholder="Year (FY, SY, TY)" class="w-full p-2 mb-2">
+
+<input name="division" placeholder="Division" class="w-full p-2 mb-2">
+
+<button class="bg-blue-500 text-white p-2 w-full">
+Save Profile
+</button>
+
+</form>
+
+<p class="text-xs text-gray-600">
+    <%= item.user?.college %> • <%= item.user?.branch %>
+</p>

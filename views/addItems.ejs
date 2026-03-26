@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Add Item</title>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="bg-zinc-900 text-white">
+
+<div class="max-w-md mx-auto mt-10">
+
+<h1 class="text-xl mb-4">Add New Item</h1>
+
+<form action="/add" method="POST" enctype="multipart/form-data">
+
+<input name="name" placeholder="Item Name"
+class="w-full p-2 text-black mb-2">
+
+<input name="price" placeholder="Price"
+class="w-full p-2 text-black mb-2">
+
+<input name="desc" placeholder="Description"
+class="w-full p-2 text-black mb-2">
+
+<input type="file" name="image" class="w-full mb-2">
+<select name="category" class="w-full p-2 text-black mb-2">
+    <option value="Books">Books</option>
+    <option value="Electronics">Electronics</option>
+    <option value="Notes">Notes</option>
+    <option value="Instruments">Instruments</option>
+    <option value="Others">Others</option>
+</select>
+
+<input name="price" placeholder="Price (₹0–₹10 for Notes)">
+<select name="type">
+    <option value="note">Notes</option>
+    <option value="book">Book PDF</option>
+    <option value="product">Product</option>
+</select>
+
+<button class="bg-orange-400 p-2 w-full">
+Add Item
+</button>
+
+</form>
+
+</div>
+
+</body>
+</html>

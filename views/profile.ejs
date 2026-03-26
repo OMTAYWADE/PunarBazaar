@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>My Profile</title>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="bg-zinc-100">
+
+<div class="max-w-2xl mx-auto mt-10 bg-white p-6 rounded shadow">
+
+    <% if(!user.phone || !user.college || !user.branch || !user.year){ %>
+    <p class="text-red-500 mb-3">
+        ⚠ Complete your profile to start selling items
+    </p>
+<% } %>
+    <h1 class="text-xl font-bold mb-4">My Profile</h1>
+
+    <!-- USER BASIC INFO -->
+    <div class="mb-4">
+        <p><strong>Name:</strong> <%= user.name %></p>
+        <p><strong>Email:</strong> <%= user.email %></p>
+    </div>
+
+    <!-- VERIFICATION STATUS -->
+    <div class="mb-4">
+        <% if(user.verificationStatus === "verified"){ %>
+            <p class="text-green-600">🎓 Verified Student</p>
+        <% } else if(user.verificationStatus === "pending"){ %>
+            <p class="text-yellow-500">Verification Pending</p>
+        <% } else { %>
+            <p class="text-red-500">Not Verified</p>
+        <% } %>
+    </div>
+
+    <!-- PROFILE FORM -->
+    <form action="/profile" method="POST" enctype="multipart/form-data">
+
+        <input name="phone" value="<%= user.phone || '' %>" 
+        placeholder="Phone Number"
+        class="w-full p-2 mb-2 border">
+
+        <input name="college" value="<%= user.college || '' %>" 
+        placeholder="College Name"
+        class="w-full p-2 mb-2 border">
+
+        <input name="branch" value="<%= user.branch || '' %>" 
+        placeholder="Branch"
+        class="w-full p-2 mb-2 border">
+
+        <input name="year" value="<%= user.year || '' %>" 
+        placeholder="Year"
+        class="w-full p-2 mb-2 border">
+
+        <input name="division" value="<%= user.division || '' %>" 
+        placeholder="Division"
+        class="w-full p-2 mb-2 border">
+
+        <!-- Upload College ID -->
+        <label class="block mb-1">Upload College ID</label>
+        <input type="file" name="collegeIdImage" class="mb-3">
+
+        <!-- Show uploaded ID -->
+        <% if(user.collegeIdImage){ %>
+            <img src="<%= user.collegeIdImage %>" class="h-32 mb-3">
+        <% } %>
+
+        <button class="bg-blue-500 text-white p-2 w-full rounded">
+            Save Profile
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

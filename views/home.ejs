@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Reuse Market</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="bg-zinc-100">
+
+    <!-- 🔵 NAVBAR -->
+    <div class="bg-blue-600 p-4 flex items-center justify-between">
+
+        <h1 class="text-white text-xl font-bold">
+            🛍️ PunarBazaar
+        </h1>
+
+        <div>
+            <% if(currentUser){ %>
+                <span>Hello <%= currentUser.name %></span>
+                <a href="/profile">Profile</a>
+                <a href="/logout">Logout</a>
+                <% } else { %>
+                    <a href="/login">Login</a>
+                    <a href="/signUp">Signup</a>
+                    
+                    <% } %>
+
+                        <!-- Search -->
+                        <form action="/search" class="flex w-1/2">
+                            <input name="q" placeholder="Search for items..."
+                                class="w-full p-2 rounded-l text-black outline-none">
+
+                            <button class="bg-yellow-400 px-4 rounded-r">
+                                🔍
+                            </button>
+                        </form>
+
+        </div>
+
+        <!-- 🟡 CATEGORY BAR -->
+        <div class="bg-white p-3 flex gap-6 justify-center shadow">
+
+            <a href="/category/Books" class="hover:text-blue-600">Books</a>
+            <a href="/category/Electronics" class="hover:text-blue-600">Electronics</a>
+            <a href="/category/Notes" class="hover:text-blue-600">Notes</a>
+            <a href="/category/Instruments" class="hover:text-blue-600">Instruments</a>
+            <a href="/category/Others" class="hover:text-blue-600">Others</a>
+
+        </div>
+
+        <!-- ➕ ADD BUTTON -->
+        <div class="max-w-6xl mx-a  uto mt-4 px-4">
+            <a href="/add" class="inline-block bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">
+                + Add Item
+            </a>
+        </div>
+
+        <!-- 🧱 PRODUCT GRID -->
+        <div class="max-w-6xl mx-auto mt-4 px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
+            <% items.forEach(item=> { %>
+
+                <div class="bg-white p-3 rounded shadow hover:shadow-lg transition">
+                    <<% if(item.isFeatured && item.featuredUntil){ %>
+    <p class="text-xs text-yellow-600">
+        Featured till: <%= item.featuredUntil.toDateString() %>
+    </p>
+    
+<% } %>
+
+<% if(item.type === "note"){ %>
+    <span class="text-green-600 text-xs font-bold">
+        📚 Notes
+    </span>
+<% } %>
+                    <!-- Image (optional future) -->
+                    <div class="h-40 bg-gray-200 flex items-center justify-center rounded mb-2">
+                        <span class="text-gray-400">Image</span>
+                    </div>
+
+                    <!-- Name -->
+                    <h2 class="font-semibold text-gray-800 truncate">
+                        <%= item.name %>
+                    </h2>
+
+                    <!-- Price -->
+                    <% if(item.category === "Notes" && item.price == 0){ %>
+    <span class="text-green-500 text-xs font-bold">FREE</span>
+<% } %>
+                    <p class="text-green-600 font-bold">
+                        ₹ <%= item.price %>
+                    </p>
+
+                    <!-- College Name -->
+                    <h2 class="text-lg font-bold mt-4 mb-2">From Your College</h2>
+                    <p class="text-xs text-gray-500">
+                        <%= item.user?.college || "Unknown College" %>
+                    </p>
+
+                    <p class="text-xs text-blue-500">
+                        <%= item.category %>
+                    </p>
+                    <% if(currentUser && item.user?.college===currentUser.college){ %>
+                        <p class="text-green-600 text-xs font-semibold">
+                            Same College
+                        </p>
+                        <% } %>
+
+                            <!-- Actions -->
+                            <div class="flex justify-between mt-2">
+                                <a href="/wishlist/add/<%= item._id %>"
+class="text-pink-500 text-sm">
+❤️ Save
+</a>
+<% if(item.user == userId){ %>
+    <a href="/feature/<%= item._id %>"
+    class="text-yellow-500 text-sm">
+        Boost 🚀
+    </a>
+<% } %>
+
+<% if(item.isFeatured){ %>
+    <p class="text-yellow-500 text-xs font-bold">
+        ⭐ Featured
+    </p>
+<% } %>
+
+
+                                <p class="text-xs text-gray-500">
+                                    <%= item.user?.college || "Unknown College" %>
+                                </p>
+                                <a href="/item/<%= item._id %>"
+                                    class="bg-blue-500 text-white px-2 py-1 rounded text-sm">
+                                    View Details
+                                </a>
+
+                                <a href="/delete/<%= item._id %>" class="text-red-500 text-sm">
+                                    Delete
+                                </a>
+
+
+                            </div>
+
+                </div>
+
+                <% }) %>
+
+        </div>
+
+</body>
+
+</html>
