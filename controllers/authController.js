@@ -13,15 +13,15 @@ exports.loginPage = (req, res) => {
 };
 
 exports.signUp = async (req, res) => {
-    const { name, password, email, contact } = req.body;
+    const { name, password, email, phone } = req.body;
     const hashed = await bcrypt.hash(password, 10);
 
     const newUser = await User.create({
         name,
         password: hashed,
-        email, contact
+        email, phone
     });
-    res.session.userId = newUser._id
+    req.session.userId = newUser._id
     res.redirect('/profile');
 };
 
@@ -48,6 +48,7 @@ exports.profilePage = async(req, res) => {
 } 
 
 exports.profile = async (req, res) => {
+    const { phone, college, branch, division, year } = req.body;
     let updateData = { phone, college, branch, division, year };
 
     if (req.file) {
