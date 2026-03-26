@@ -49,6 +49,8 @@ exports.profilePage = async(req, res) => {
 
 exports.profile = async (req, res) => {
     const { phone, college, branch, division, year } = req.body;
+    console.log(phone);
+    
     let updateData = { phone, college, branch, division, year };
 
     if (req.file) {
