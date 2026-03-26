@@ -149,7 +149,7 @@ border border-transparent hover:border-yellow-400">
 class="text-pink-500 text-sm">
 ❤️ Save
 </a>
-<% if(item.user == userId){ %>
+<% if(currentUser && item.user?.toString() === currentUser._id.toString()){ %>
     <a href="/feature/<%= item._id %>"
     class="text-yellow-500 text-sm">
         Boost 🚀
