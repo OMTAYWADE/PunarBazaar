@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const upload = require('../utils/upload');
 
 const authController = require('../controllers/authController');
 
@@ -16,6 +17,6 @@ router.post('/login', authController.login);
 router.get('/logout', authController.logout);
 
 router.get('/profile',isLoggedIn, authController.profilePage);
-router.post('/profile', isLoggedIn, authController.profile);
+router.post('/profile', isLoggedIn, upload.single('collegeIdImage'),authController.profile);
 
 module.exports = router;
