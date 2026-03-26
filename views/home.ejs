@@ -1,67 +1,79 @@
 <!DOCTYPE html>
+
 <html>
 
 <head>
-    <title>Reuse Market</title>
+    <title>PunarBazaar</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body class="bg-zinc-100">
-    <div class="bg-black text-white py-10 text-center relative overflow-hidden">
+<body id="page" class="bg-zinc-100 opacity-0 transition-opacity duration-700">
 
-    <h1 class="text-3xl font-bold mb-2">
-        ⚡ PunarBazaar
-    </h1>
+    <!-- ⚡ LOADER -->
 
-    <p class="text-gray-400 mb-6">
-        From student hustle → to powerful marketplace 🚀
-    </p>
-
-    <!-- Goku Journey -->
-    <div class="flex justify-center items-center gap-8 text-xl">
-
-        <div class="text-yellow-400 animate-pulse">
-            👶 Goku
+    <div id="pageLoader"
+        class="fixed inset-0 bg-black flex items-center justify-center z-50 transition-opacity duration-500">
+        <div class="text-white text-center">
+            <div class="text-4xl animate-pulse text-yellow-400">
+                ⚡ Charging Energy...
+            </div>
         </div>
+    </div>
 
-        <div class="w-16 h-1 bg-yellow-400"></div>
+    <!-- ⚡ HERO -->
 
-        <div class="text-orange-400 animate-pulse">
-            🧑 Goku
+    <div class="bg-black text-white py-10 text-center">
+
+        ```
+        <h1 class="text-2xl sm:text-3xl font-bold mb-2">
+            ⚡ PunarBazaar
+        </h1>
+
+        <p class="text-gray-400 text-sm sm:text-base mb-6">
+            From student hustle → to powerful marketplace 🚀
+        </p>
+
+        <div class="flex justify-center items-center gap-4 sm:gap-8 text-lg sm:text-xl">
+
+            <div class="text-yellow-400 animate-bounce">👶</div>
+            <div class="w-10 sm:w-16 h-1 bg-yellow-400 animate-pulse"></div>
+
+            <div class="text-orange-400 animate-bounce delay-200">🧑</div>
+            <div class="w-10 sm:w-16 h-1 bg-blue-400 animate-pulse"></div>
+
+            <div class="text-blue-400 text-xl sm:text-2xl animate-ping">⚡</div>
+
         </div>
-
-        <div class="w-16 h-1 bg-blue-400"></div>
-
-        <div class="text-blue-400 animate-pulse text-2xl">
-            ⚡ Super Saiyan
-        </div>
+        ```
 
     </div>
 
-</div>
-
     <!-- 🔵 NAVBAR -->
-    <div class="bg-blue-600 p-4 flex items-center justify-between">
 
-        <h1 class="text-white text-xl font-bold">
+    <div
+        class="bg-blue-600/90 backdrop-blur-md p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sticky top-0 z-40 transition-all duration-300">
+
+        ```
+        <h1 class="text-white text-lg sm:text-xl font-bold text-center sm:text-left">
             🛍️ PunarBazaar
         </h1>
 
-        <div>
+        <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+
             <% if(currentUser){ %>
-                <span>Hello <%= currentUser.name %></span>
-                <a href="/profile">Profile</a>
-                <a href="/logout">Logout</a>
+                <span class="text-white text-sm">Hello <%= currentUser.name %></span>
+                <a href="/profile" class="text-white text-sm">Profile</a>
+                <a href="/logout" class="text-white text-sm">Logout</a>
                 <% } else { %>
-                    <a href="/login">Login</a>
-                    <a href="/signUp">Signup</a>
-                    
+                    <a href="/login" class="text-white text-sm">Login</a>
+                    <a href="/signUp" class="bg-yellow-400 px-3 py-1 rounded text-sm">Signup</a>
                     <% } %>
 
                         <!-- Search -->
-                        <form action="/search" class="flex w-1/2">
-                            <input name="q" placeholder="Search for items..."
-                                class="w-full p-2 rounded-l text-black outline-none">
+                        <form action="/search" class="flex w-full sm:w-auto">
+                            <input name="q" placeholder="Search..."
+                                class="p-2 w-full sm:w-40 rounded-l text-black outline-none">
 
                             <button class="bg-yellow-400 px-4 rounded-r">
                                 🔍
@@ -69,146 +81,167 @@
                         </form>
 
         </div>
+        ```
 
-        <!-- 🟡 CATEGORY BAR -->
-        <div class="bg-white p-3 flex gap-6 justify-center shadow">
-
-            <a href="/category/Books" class="hover:text-blue-600">Books</a>
-            <a href="/category/Electronics" class="hover:text-blue-600">Electronics</a>
-            <a href="/category/Notes" class="hover:text-blue-600">Notes</a>
-            <a href="/category/Instruments" class="hover:text-blue-600">Instruments</a>
-            <a href="/category/Others" class="hover:text-blue-600">Others</a>
-
-        </div>
-
-        <!-- ➕ ADD BUTTON -->
-        <div class="max-w-6xl mx-a  uto mt-4 px-4">
-            <a href="/add" class="inline-block bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">
-                + Add Item
-            </a>
-        </div>
-
-        <!-- 🧱 PRODUCT GRID -->
-        <div class="max-w-6xl mx-auto mt-4 px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-
-            <% items.forEach(item=> { %>
-
-                <div class="bg-white p-3 rounded-xl shadow 
-hover:shadow-2xl hover:scale-105 
-transition-all duration-300 
-border border-transparent hover:border-yellow-400">
-<div class="absolute inset-0 bg-yellow-300 opacity-0 hover:opacity-10 transition"></div>
-                    <% if(item.isFeatured && item.featuredUntil){ %>
-    <p class="text-xs text-yellow-600">
-        Featured till: <%= item.featuredUntil.toDateString() %>
-    </p>
-    
-<% } %>
-
-<% if(item.type === "note"){ %>
-    <span class="text-green-600 text-xs font-bold">
-        📚 Notes
-    </span>
-<% } %>
-                    <!-- Image (optional future) -->
-                    <div class="h-40 bg-gray-200 flex items-center justify-center rounded mb-2">
-                        <span class="text-gray-400">Image</span>
-                    </div>
-
-                    <!-- Name -->
-                    <h2 class="font-semibold text-gray-800 truncate">
-                        <%= item.name %>
-                    </h2>
-
-                    <!-- Price -->
-                    <% if(item.category === "Notes" && item.price == 0){ %>
-    <span class="text-green-500 text-xs font-bold">FREE</span>
-<% } %>
-                    <p class="text-green-600 font-bold">
-                        ₹ <%= item.price %>
-                    </p>
-
-                    <!-- College Name -->
-                    <h2 class="text-lg font-bold mt-4 mb-2">From Your College</h2>
-                    <p class="text-xs text-gray-500">
-                        <%= item.user?.college || "Unknown College" %>
-                    </p>
-
-                    <p class="text-xs text-blue-500">
-                        <%= item.category %>
-                    </p>
-                    <% if(currentUser && item.user?.college===currentUser.college){ %>
-                        <p class="text-green-600 text-xs font-semibold">
-                            Same College
-                        </p>
-                        <% } %>
-
-                            <!-- Actions -->
-                            <div class="flex justify-between mt-2">
-                                <a href="/wishlist/add/<%= item._id %>"
-class="text-pink-500 text-sm">
-❤️ Save
-</a>
-<% if(currentUser && item.user?.toString() === currentUser._id.toString()){ %>
-    <a href="/feature/<%= item._id %>"
-    class="text-yellow-500 text-sm">
-        Boost 🚀
-    </a>
-<% } %>
-
-<% if(item.isFeatured){ %>
-<span class="absolute top-2 right-2 bg-yellow-400 text-black text-xs px-2 py-1 rounded-full">
-    ⚡ Power Item
-</span>
-<% } %>
-
-
-                                <p class="text-xs text-gray-500">
-                                    <%= item.user?.college || "Unknown College" %>
-                                </p>
-                                <a href="/item/<%= item._id %>"
-                                    class="bg-blue-500 text-white px-2 py-1 rounded text-sm">
-                                    View Details
-                                </a>
-
-                                <a href="/delete/<%= item._id %>" class="text-red-500 text-sm">
-                                    Delete
-                                </a>
-
-
-                            </div>
-
-                </div>
-
-                <% }) %>
-
-        </div>
-        <div id="pageLoader" class="fixed inset-0 bg-black flex items-center justify-center z-50">
-
-    <div class="text-white text-center">
-        <div class="text-4xl animate-pulse text-yellow-400">
-            ⚡ Charging Energy...
-        </div>
     </div>
 
-</div>
+    <!-- 🟡 CATEGORY BAR -->
 
-<script>
-window.onload = () => {
-    document.getElementById("pageLoader").style.display = "none";
-};
+    <div class="bg-white p-3 flex flex-wrap gap-4 justify-center shadow text-sm sm:text-base">
 
-const cards = document.querySelectorAll('.card');
+        ```
+        <a href="/category/Books" class="hover:text-blue-600">Books</a>
+        <a href="/category/Electronics" class="hover:text-blue-600">Electronics</a>
+        <a href="/category/Notes" class="hover:text-blue-600">Notes</a>
+        <a href="/category/Instruments" class="hover:text-blue-600">Instruments</a>
+        <a href="/category/Others" class="hover:text-blue-600">Others</a>
+        ```
 
-window.addEventListener('scroll', () => {
-    cards.forEach(card => {
-        const rect = card.getBoundingClientRect();
-        if (rect.top < window.innerHeight) {
-            card.classList.add('opacity-100', 'translate-y-0');
-        }
-    });
-});
-</script>
+    </div>
+
+    <!-- ➕ ADD BUTTON -->
+
+    <div class="max-w-6xl mx-auto mt-4 px-4 text-center sm:text-left">
+        <a href="/addItems"
+            class="inline-block bg-orange-500 hover:bg-orange-600 active:scale-95 transition-all text-white px-4 py-2 rounded">
+            + Add Item
+        </a>
+    </div>
+
+    <!-- 🧱 PRODUCT GRID -->
+
+    <div class="max-w-6xl mx-auto mt-4 px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
+        <% items.forEach(item=> { %>
+
+            <div class="card bg-white p-3 rounded-xl shadow 
+hover:shadow-2xl hover:scale-105 
+transition-all duration-300 
+border border-transparent hover:border-yellow-400
+opacity-0 translate-y-10 relative overflow-hidden">
+
+                ```
+                <!-- Glow -->
+                <div class="absolute inset-0 bg-yellow-300 opacity-0 hover:opacity-10 transition"></div>
+
+                <% if(item.isFeatured){ %>
+                    <span class="absolute top-2 right-2 bg-yellow-400 text-black text-xs px-2 py-1 rounded-full">
+                        ⚡ Power
+                    </span>
+                    <% } %>
+
+                        <% if(item.type==="note" ){ %>
+                            <span class="text-green-600 text-xs font-bold">📚 Notes</span>
+                            <% } %>
+
+                                <!-- Image -->
+                                <div class="h-40 overflow-hidden rounded mb-2">
+                                    <div class="h-full w-full bg-gray-200 flex items-center justify-center
+    hover:scale-110 transition duration-300">
+                                        <span class="text-gray-400 text-sm">Image</span>
+                                    </div>
+                                </div>
+
+                                <!-- Name -->
+                                <h2 class="font-semibold text-gray-800 truncate text-sm sm:text-base">
+                                    <%= item.name %>
+                                </h2>
+
+                                <!-- Price -->
+                                <% if(item.category==="Notes" && item.price==0){ %>
+                                    <span class="text-green-500 text-xs font-bold">FREE</span>
+                                    <% } %>
+
+                                        <p class="text-green-600 font-bold text-sm sm:text-base">
+                                            ₹ <%= item.price %>
+                                        </p>
+
+                                        <!-- College -->
+                                        <p class="text-xs text-gray-500">
+                                            🏫 <%= item.user?.college || "Unknown College" %>
+                                        </p>
+
+                                        <p class="text-xs text-blue-500">
+                                            <%= item.category %>
+                                        </p>
+
+                                        <% if(currentUser && item.user?.college===currentUser.college){ %>
+                                            <p class="text-green-600 text-xs font-semibold">
+                                                Same College
+                                            </p>
+                                            <% } %>
+
+                                                <!-- Actions -->
+                                                <div class="flex justify-between mt-2 items-center flex-wrap gap-1">
+
+                                                    <a href="/wishlist/add/<%= item._id %>"
+                                                        class="text-pink-500 text-xs hover:scale-110 transition">
+                                                        ❤️ Save
+                                                    </a>
+
+                                                    <% if(currentUser &&
+                                                        item.user?.toString()===currentUser._id.toString()){ %>
+                                                        <a href="/feature/<%= item._id %>"
+                                                            class="text-yellow-500 text-xs">
+                                                            Boost 🚀
+                                                        </a>
+                                                        <% } %>
+
+                                                            <a href="/item/<%= item._id %>"
+                                                                class="bg-blue-500 hover:bg-blue-600 active:scale-95 text-white px-2 py-1 rounded text-xs transition">
+                                                                View
+                                                            </a>
+
+                                                            <a href="/delete/<%= item._id %>"
+                                                                class="text-red-500 text-xs hover:underline">
+                                                                Delete
+                                                            </a>
+
+                                                </div>
+                                                ```
+
+            </div>
+
+            <% }) %>
+
+    </div>
+
+    <!-- ⚡ SCRIPTS -->
+
+    <script>
+
+        // page fade + loader
+        window.onload = () => {
+            document.getElementById("page").classList.remove("opacity-0");
+
+            const loader = document.getElementById("pageLoader");
+            loader.style.opacity = "0";
+            setTimeout(() => loader.style.display = "none", 500);
+        };
+
+        // navbar shrink
+        window.addEventListener("scroll", () => {
+            const nav = document.querySelector(".bg-blue-600");
+            if (window.scrollY > 50) {
+                nav.classList.add("py-2");
+            } else {
+                nav.classList.remove("py-2");
+            }
+        });
+
+        // scroll animation
+        const cards = document.querySelectorAll('.card');
+
+        window.addEventListener('scroll', () => {
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 50) {
+                    card.classList.add('opacity-100', 'translate-y-0');
+                }
+            });
+        });
+
+    </script>
 
 </body>
 
