@@ -1,33 +1,20 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PunarBazaar</title>
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 min-h-screen">
 
 <!-- 🔵 NAVBAR -->
 
-<!DOCTYPE html>
+<div class="bg-white shadow sticky top-0 z-50">
 
-<html>
-<head>
-<title>PunarBazaar</title>
-<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-
-<body class="bg-zinc-50">
-
-<!-- 🌟 NAVBAR -->
-
-<div class="bg-white/80 backdrop-blur-md shadow sticky top-0 z-50">
-
-```
-<div class="max-w-7xl mx-auto flex items-center justify-between p-4">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between p-3 gap-3">
 
     <!-- Logo -->
     <h1 class="text-xl font-bold text-indigo-600">
@@ -35,8 +22,8 @@
     </h1>
 
     <!-- Search -->
-    <form action="/search" class="hidden md:flex w-1/2">
-        <input name="q" placeholder="Search anything..."
+    <form action="/search" class="flex w-full md:w-1/2">
+        <input name="q" placeholder="Search items..."
         class="w-full p-2 border rounded-l outline-none">
 
         <button class="bg-indigo-600 text-white px-4 rounded-r">
@@ -45,10 +32,10 @@
     </form>
 
     <!-- Auth -->
-    <div class="flex gap-3 items-center">
+    <div class="flex gap-3 items-center text-sm">
 
         <% if(currentUser){ %>
-            <span class="text-sm">Hi, <%= currentUser.name %></span>
+            <span class="text-gray-700">Hi, <%= currentUser.name %></span>
             <a href="/profile" class="text-indigo-600">Profile</a>
             <a href="/logout" class="text-red-500">Logout</a>
         <% } else { %>
@@ -62,8 +49,8 @@
 
 </div>
 
-<!-- CATEGORY -->
-<div class="flex justify-center gap-6 text-sm pb-2 text-gray-600">
+<!-- CATEGORY BAR -->
+<div class="flex flex-wrap justify-center gap-4 text-sm p-2 text-gray-600 border-t">
 
     <a href="/category/Books" class="hover:text-indigo-600">Books</a>
     <a href="/category/Electronics" class="hover:text-indigo-600">Electronics</a>
@@ -72,40 +59,36 @@
     <a href="/category/Others" class="hover:text-indigo-600">Others</a>
 
 </div>
-```
 
 </div>
 
-<!-- ➕ ADD BUTTON -->
+<!-- HEADER -->
 
-<div class="max-w-7xl mx-auto mt-5 px-4 flex justify-between items-center">
+<div class="max-w-7xl mx-auto mt-6 px-4 flex flex-col sm:flex-row justify-between items-center gap-3">
 
-```
-<h2 class="text-lg font-semibold text-gray-700">
-    Explore Items 🔥
+<h2 class="text-xl font-semibold text-gray-700">
+    🔥 Explore Items
 </h2>
 
 <a href="/addItems"
 class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-4 py-2 rounded-lg shadow hover:scale-105 transition">
     + Add Item
 </a>
-```
 
 </div>
 
 <!-- 🧱 GRID -->
 
-<div class="max-w-7xl mx-auto mt-4 px-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
+<div class="max-w-7xl mx-auto mt-5 px-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
 
 <% items.forEach(item => { %>
 
-<div class="bg-white rounded-2xl shadow-sm hover:shadow-xl transition duration-300 overflow-hidden group">
+<div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden group relative">
 
-```
 <!-- IMAGE -->
-<div class="h-40 bg-gray-100 flex items-center justify-center overflow-hidden relative">
+<div class="h-40 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center relative overflow-hidden">
 
-    <div class="group-hover:scale-110 transition duration-300 w-full h-full flex items-center justify-center">
+    <div class="group-hover:scale-110 transition duration-300">
         <span class="text-gray-400 text-sm">Image</span>
     </div>
 
@@ -132,12 +115,19 @@ class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-4 py-2 round
 
     <!-- COLLEGE -->
     <p class="text-xs text-gray-500">
-        🏫 <%= item.user?.college || "Unknown" %>
+        🏫 <%= item.user?.college || "Unknown College" %>
     </p>
 
     <!-- FEATURED -->
     <% if(item.isFeatured){ %>
         <span class="text-xs text-purple-600">⚡ Featured</span>
+    <% } %>
+
+    <!-- SAME COLLEGE -->
+    <% if(currentUser && item.user?.college === currentUser.college){ %>
+        <p class="text-xs text-green-600 font-semibold">
+            Same College 🎓
+        </p>
     <% } %>
 
     <!-- BUTTON -->
@@ -147,7 +137,6 @@ class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-4 py-2 round
     </a>
 
 </div>
-```
 
 </div>
 

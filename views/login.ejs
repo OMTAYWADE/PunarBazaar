@@ -1,64 +1,81 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="en">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login</title>
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
-<body class="bg-black text-white flex items-center justify-center h-screen">
+<body class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-indigo-100 to-purple-100 relative overflow-hidden">
 
-<!-- ⚡ LOADER (Goku Charging) -->
-<div id="loader" class="fixed inset-0 bg-black flex items-center justify-center z-50 hidden">
-    <div class="text-center">
-        <p class="text-yellow-400 text-xl animate-pulse">⚡ Charging Energy...</p>
-    </div>
+<!-- 🌊 FLOATING BLOBS (WATER EFFECT) -->
+
+<div class="absolute w-72 h-72 bg-blue-300 rounded-full blur-3xl opacity-30 top-10 left-10 animate-pulse"></div>
+<div class="absolute w-72 h-72 bg-purple-300 rounded-full blur-3xl opacity-30 bottom-10 right-10 animate-pulse"></div>
+
+<!-- ⚡ LOADER -->
+
+<div id="loader" class="fixed inset-0 bg-white flex items-center justify-center z-50 hidden">
+    <p class="text-indigo-600 text-lg animate-pulse">⚡ Logging in...</p>
 </div>
 
-<!-- 🔥 LOGIN CARD -->
-<div class="bg-zinc-900 p-8 rounded-2xl shadow-2xl w-80 relative overflow-hidden">
+<!-- 💎 LOGIN CARD -->
 
-    <!-- Glow Effect -->
-    <div class="absolute inset-0 bg-yellow-400 opacity-10 blur-2xl"></div>
+<div class="backdrop-blur-lg bg-white/70 border border-white/40 p-8 rounded-3xl shadow-xl w-[90%] max-w-sm relative transition-all duration-500 hover:scale-[1.02]">
 
-    <!-- Title -->
-    <h1 class="text-2xl font-bold text-center mb-2">
-        ⚡ Welcome Back
+```
+<!-- 🌟 FLOAT ANIMATION -->
+<style>
+    @keyframes float {
+        0%,100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+    }
+</style>
+
+<div style="animation: float 4s ease-in-out infinite;">
+
+    <!-- TITLE -->
+    <h1 class="text-2xl font-bold text-center text-indigo-600 mb-2">
+        Welcome Back 👋
     </h1>
 
-    <p class="text-center text-gray-400 mb-6 text-sm">
-        Power up and enter marketplace 🚀
+    <p class="text-center text-gray-500 mb-6 text-sm">
+        Login to continue your journey 🚀
     </p>
-
-    <!-- Goku Journey -->
-    <div class="flex justify-center gap-4 text-sm mb-4">
-        <span class="text-yellow-400 animate-pulse">👶</span>
-        <span class="text-orange-400 animate-pulse">🧑</span>
-        <span class="text-blue-400 animate-pulse">⚡</span>
-    </div>
 
     <!-- FORM -->
     <form action="/login" method="POST" id="loginForm">
 
-        <input name="email" placeholder="Email"
-        class="w-full p-2 mb-3 rounded text-black outline-none">
+        <!-- EMAIL -->
+        <input name="email" placeholder="📧 Email"
+        class="w-full p-2 mb-3 rounded-lg border focus:ring-2 focus:ring-indigo-400 outline-none transition">
 
-        <input name="password" type="password" placeholder="Password"
-        class="w-full p-2 mb-4 rounded text-black outline-none">
+        <!-- PASSWORD -->
+        <input name="password" type="password" placeholder="🔒 Password"
+        class="w-full p-2 mb-4 rounded-lg border focus:ring-2 focus:ring-indigo-400 outline-none transition">
 
-        <button class="bg-blue-500 hover:bg-blue-600 w-full p-2 rounded font-semibold transition">
+        <!-- BUTTON -->
+        <button class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white w-full p-2 rounded-lg font-semibold hover:scale-105 transition">
             Login 🚀
         </button>
 
     </form>
 
-    <!-- Footer -->
+    <!-- FOOTER -->
     <p class="text-center text-xs text-gray-500 mt-4">
-        New here? <a href="/signUp" class="text-blue-400">Create Account</a>
+        New here? 
+        <a href="/signUp" class="text-indigo-600 font-semibold">Create Account</a>
     </p>
+
+</div>
+```
 
 </div>
 
 <!-- ⚡ SCRIPT -->
+
 <script>
 const form = document.getElementById("loginForm");
 const loader = document.getElementById("loader");

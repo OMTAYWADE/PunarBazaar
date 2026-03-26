@@ -1,67 +1,113 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complete Profile</title>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
-    
-    <form action="/profile" method="POST" enctype="multipart/form-data" id="profileForm"
-    class="bg-zinc-900 p-5 rounded-xl shadow-lg text-white relative overflow-hidden">
-    
-        <!-- Glow -->
-        <div class="absolute inset-0 bg-blue-500 opacity-10 blur-2xl"></div>
-    
-        <h2 class="text-lg font-semibold mb-3 text-center">
-            ⚡ Complete Your Profile
-        </h2>
-    
+
+<body class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-blue-100 to-purple-100 relative overflow-hidden">
+
+<!-- 🌊 FLOATING BLOBS -->
+
+<div class="absolute w-72 h-72 bg-indigo-300 rounded-full blur-3xl opacity-30 top-10 left-10 animate-pulse"></div>
+<div class="absolute w-72 h-72 bg-purple-300 rounded-full blur-3xl opacity-30 bottom-10 right-10 animate-pulse"></div>
+
+<!-- ⚡ LOADER -->
+
+<div id="loader" class="fixed inset-0 bg-white flex items-center justify-center z-50 hidden">
+    <p class="text-indigo-600 text-lg animate-pulse">⚡ Saving Profile...</p>
+</div>
+
+<!-- 💎 CARD -->
+
+<div class="backdrop-blur-lg bg-white/70 border border-white/40 p-6 rounded-3xl shadow-xl w-[90%] max-w-md transition-all duration-500 hover:scale-[1.02]">
+
+```
+<!-- FLOAT EFFECT -->
+<style>
+    @keyframes float {
+        0%,100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+    }
+</style>
+
+<div style="animation: float 4s ease-in-out infinite;">
+
+    <!-- TITLE -->
+    <h2 class="text-xl font-bold text-center text-indigo-600 mb-2">
+        🎓 Complete Your Profile
+    </h2>
+
+    <p class="text-center text-gray-500 text-sm mb-5">
+        Build trust & start selling 🚀
+    </p>
+
+    <!-- FORM -->
+    <form action="/profile" method="POST" enctype="multipart/form-data" id="profileForm">
+
         <!-- PHONE -->
         <input name="phone" placeholder="📱 Phone Number"
-        class="w-full p-2 mb-2 rounded text-black outline-none">
-    
+        class="w-full p-2 mb-2 rounded-lg border focus:ring-2 focus:ring-indigo-400 outline-none">
+
         <!-- COLLEGE -->
         <input name="college" placeholder="🏫 College Name"
-        class="w-full p-2 mb-2 rounded text-black outline-none">
-    
+        class="w-full p-2 mb-2 rounded-lg border focus:ring-2 focus:ring-indigo-400 outline-none">
+
         <!-- BRANCH -->
         <input name="branch" placeholder="📚 Branch (IT, CS, etc)"
-        class="w-full p-2 mb-2 rounded text-black outline-none">
-    
+        class="w-full p-2 mb-2 rounded-lg border focus:ring-2 focus:ring-indigo-400 outline-none">
+
         <!-- YEAR -->
-        <select name="year" class="w-full p-2 mb-2 rounded text-black">
+        <select name="year"
+        class="w-full p-2 mb-2 rounded-lg border focus:ring-2 focus:ring-indigo-400 outline-none">
             <option value="">🎓 Select Year</option>
             <option value="FY">FY</option>
             <option value="SY">SY</option>
             <option value="TY">TY</option>
         </select>
-    
+
         <!-- DIVISION -->
         <input name="division" placeholder="🏷 Division"
-        class="w-full p-2 mb-3 rounded text-black outline-none">
-    
-        <!-- COLLEGE ID -->
-        <label class="text-sm mb-1 block">Upload College ID</label>
-        <input type="file" name="collegeIdImage" class="mb-3">
-    
-        <!-- SUBMIT -->
-        <button class="bg-blue-500 hover:bg-blue-600 text-white p-2 w-full rounded font-semibold transition">
+        class="w-full p-2 mb-3 rounded-lg border focus:ring-2 focus:ring-indigo-400 outline-none">
+
+        <!-- FILE -->
+        <label class="text-sm text-gray-600 mb-1 block">
+            Upload College ID (for verification)
+        </label>
+
+        <input type="file" name="collegeIdImage"
+        class="mb-4 w-full text-sm">
+
+        <!-- BUTTON -->
+        <button class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white w-full p-2 rounded-lg font-semibold hover:scale-105 transition">
             Save Profile 🚀
         </button>
-    
+
     </form>
-    <div id="loader" class="fixed inset-0 bg-black flex items-center justify-center z-50 hidden">
-        <p class="text-yellow-400 text-xl animate-pulse">⚡ Powering Up...</p>
-    </div>
-    
-    <script>
-    const form = document.getElementById("profileForm");
-    const loader = document.getElementById("loader");
-    
-    form.addEventListener("submit", () => {
-        loader.classList.remove("hidden");
-    });
-    </script>
+
+    <!-- TRUST NOTE -->
+    <p class="text-xs text-center text-gray-500 mt-4">
+        🔒 Your data is secure & used for trust verification only
+    </p>
+
+</div>
+```
+
+</div>
+
+<!-- ⚡ SCRIPT -->
+
+<script>
+const form = document.getElementById("profileForm");
+const loader = document.getElementById("loader");
+
+form.addEventListener("submit", () => {
+    loader.classList.remove("hidden");
+});
+</script>
+
 </body>
 </html>
