@@ -1,99 +1,110 @@
 <!DOCTYPE html>
-<html lang="en">
 
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Item</title>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
-<body class="bg-gradient-to-br from-zinc-900 to-black text-white">
+<body class="bg-gray-50">
 
-<div id="loader" class="fixed inset-0 bg-black flex flex-col items-center justify-center text-white z-50">
+<!-- HEADER -->
 
-    <h1 class="text-xl mb-4">⚡ Loading Battle...</h1>
-
-    <!-- Goku -->
-    <div class="flex items-center gap-6">
-
-        <div class="text-yellow-400 text-lg animate-pulse">
-            🧑‍🚀 Goku
-        </div>
-
-        <!-- Beam -->
-        <div id="beam" class="h-2 bg-blue-400 w-0 transition-all duration-2000"></div>
-
-        <div class="text-green-400 text-lg animate-pulse">
-            👾 Cell
-        </div>
-
-    </div>
-
-    <p id="status" class="mt-4 text-sm">Charging Kamehameha...</p>
-
+<div class="bg-white border-b p-4">
+    <h1 class="text-lg font-semibold text-gray-700 text-center">
+        Sell an Item
+    </h1>
 </div>
 
-    <h1 class="text-2xl font-bold mb-4 text-center">
-📦 Sell Your Item
-</h1>
-    <div class="max-w-md mx-auto mt-10 bg-zinc-800 p-6 rounded-xl shadow-lg">
+<!-- MAIN -->
 
-        <form action="/addItems" method="POST" enctype="multipart/form-data">
+<div class="max-w-2xl mx-auto mt-6 px-4">
 
-            <input name="name" placeholder="Item Name" class="w-full p-3 text-black mb-3 rounded">
+<div class="bg-white p-6 rounded-lg border shadow-sm">
 
-            <input name="price" placeholder="Price" class="w-full p-3 text-black mb-3 rounded">
+    <form action="/addItems" method="POST" enctype="multipart/form-data" id="form">
 
-            <textarea name="desc" placeholder="Description" class="w-full p-3 text-black mb-3 rounded"></textarea>
+        <!-- NAME -->
+        <div class="mb-4">
+            <label class="block text-sm text-gray-600 mb-1">Item Name</label>
+            <input name="name" 
+            class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-400 outline-none"
+            required>
+        </div>
 
-            <input type="file" name="image" class="w-full mb-3">
+        <!-- PRICE -->
+        <div class="mb-4">
+            <label class="block text-sm text-gray-600 mb-1">Price (₹)</label>
+            <input name="price" 
+            class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-400 outline-none"
+            required>
+        </div>
 
-            <select name="category" class="w-full p-3 text-black mb-3 rounded">
+        <!-- DESCRIPTION -->
+        <div class="mb-4">
+            <label class="block text-sm text-gray-600 mb-1">Description</label>
+            <textarea name="desc" rows="3"
+            class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-400 outline-none"></textarea>
+        </div>
+
+        <!-- IMAGE -->
+        <div class="mb-4">
+            <label class="block text-sm text-gray-600 mb-1">Upload Image</label>
+            <input type="file" name="image" class="w-full text-sm">
+        </div>
+
+        <!-- CATEGORY -->
+        <div class="mb-4">
+            <label class="block text-sm text-gray-600 mb-1">Category</label>
+            <select name="category"
+            class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-400 outline-none">
+
                 <option value="Books">Books</option>
                 <option value="Electronics">Electronics</option>
                 <option value="Notes">Notes</option>
                 <option value="Instruments">Instruments</option>
                 <option value="Others">Others</option>
+
             </select>
+        </div>
 
-            <select name="type" class="w-full p-3 text-black mb-3 rounded">
-                <option value="note">📚 Notes</option>
-                <option value="book">📖 Book PDF</option>
-                <option value="product">🛍 Product</option>
+        <!-- TYPE -->
+        <div class="mb-5">
+            <label class="block text-sm text-gray-600 mb-1">Item Type</label>
+            <select name="type"
+            class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-400 outline-none">
+
+                <option value="note">Notes</option>
+                <option value="book">Book PDF</option>
+                <option value="product">Product</option>
+
             </select>
+        </div>
 
-            <button class="bg-orange-500 hover:bg-orange-600 p-3 w-full rounded font-bold">
-                Add Item 🚀
-            </button>
+        <!-- BUTTON -->
+        <button class="bg-indigo-600 text-white w-full py-2 rounded hover:bg-indigo-700 transition">
+            Post Item
+        </button>
 
-        </form>
+    </form>
 
+</div>
 
-    </div>
-    <script>
-let beam = document.getElementById("beam");
-let status = document.getElementById("status");
+</div>
 
-setTimeout(() => {
-    beam.style.width = "200px";
-    status.innerText = "Goku attacking...";
-}, 500);
+<!-- LOADER -->
 
-setTimeout(() => {
-    beam.style.background = "red";
-    status.innerText = "Cell countering...";
-}, 2000);
+<div id="loader" class="fixed inset-0 bg-white hidden flex items-center justify-center">
+    <p class="text-indigo-600">Posting item...</p>
+</div>
 
-setTimeout(() => {
-    beam.style.background = "blue";
-    beam.style.width = "300px";
-    status.innerText = "Final Kamehameha 💥";
-}, 3500);
-
-setTimeout(() => {
-    document.getElementById("loader").style.display = "none";
-}, 5000);
+<script>
+document.getElementById("form").addEventListener("submit", () => {
+    document.getElementById("loader").classList.remove("hidden");
+});
 </script>
-</body>
 
+</body>
 </html>

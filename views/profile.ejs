@@ -12,108 +12,136 @@
 
 <!-- HEADER -->
 
-<div class="bg-white shadow-sm border-b p-4">
-    <h1 class="text-xl font-semibold text-gray-700 text-center">
-        My Profile
-    </h1>
+<div class="bg-white border-b">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+        <h1 class="text-lg font-semibold text-gray-800">My Profile</h1>
+        <a href="/" class="text-sm text-indigo-600">Back to Home</a>
+    </div>
 </div>
 
 <!-- MAIN -->
 
-<div class="max-w-4xl mx-auto mt-6 px-4">
+<div class="max-w-6xl mx-auto mt-6 px-4">
 
 ```
-<!-- WARNING -->
+<!-- ALERT -->
 <% if(!user.phone || !user.college || !user.branch || !user.year){ %>
-    <div class="bg-red-100 text-red-600 p-3 rounded mb-4 text-center">
-        ⚠ Complete your profile to start selling
+    <div class="bg-yellow-50 border border-yellow-200 text-yellow-700 p-3 rounded mb-5 text-sm flex justify-between items-center">
+        <span>Complete your profile to start selling</span>
+        <span class="font-medium">Required</span>
     </div>
 <% } %>
 
-<!-- GRID -->
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-    <!-- LEFT PANEL -->
-    <div class="bg-white p-4 rounded-lg shadow-sm border">
+    <!-- LEFT: USER CARD -->
+    <div class="bg-white rounded-lg border shadow-sm p-5">
 
-        <h2 class="font-semibold mb-3 text-gray-700">
-            Basic Info
-        </h2>
-
-        <p class="text-sm"><strong>Name:</strong> <%= user.name %></p>
-        <p class="text-sm"><strong>Email:</strong> <%= user.email %></p>
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 bg-indigo-100 text-indigo-600 flex items-center justify-center rounded-full font-semibold">
+                <%= user.name.charAt(0) %>
+            </div>
+            <div>
+                <p class="font-medium text-gray-800"><%= user.name %></p>
+                <p class="text-xs text-gray-500"><%= user.email %></p>
+            </div>
+        </div>
 
         <!-- STATUS -->
-        <div class="mt-4">
+        <div class="mb-4">
+            <p class="text-xs text-gray-500 mb-1">Verification Status</p>
 
             <% if(user.verificationStatus === "verified"){ %>
-                <span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">
-                    🎓 Verified
+                <span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-medium">
+                    Verified Student
                 </span>
             <% } else if(user.verificationStatus === "pending"){ %>
                 <span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs">
-                    Pending
+                    Pending Review
                 </span>
             <% } else { %>
                 <span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs">
                     Not Verified
                 </span>
             <% } %>
+        </div>
 
+        <!-- TRUST SCORE -->
+        <div>
+            <p class="text-xs text-gray-500 mb-1">Trust Score</p>
+            <div class="w-full bg-gray-200 h-2 rounded">
+                <div class="bg-indigo-600 h-2 rounded"
+                    style="width: <%= user.trustScore %>%;">
+                </div>
+            </div>
+            <p class="text-xs text-gray-600 mt-1">
+                <%= user.trustScore %> / 100
+            </p>
         </div>
 
     </div>
 
-    <!-- RIGHT PANEL -->
-    <div class="md:col-span-2 bg-white p-5 rounded-lg shadow-sm border">
+    <!-- RIGHT: FORM -->
+    <div class="md:col-span-2 bg-white rounded-lg border shadow-sm p-6">
 
-        <h2 class="font-semibold mb-4 text-gray-700">
+        <h2 class="text-md font-semibold text-gray-800 mb-4">
             Update Profile
         </h2>
 
         <form action="/profile" method="POST" enctype="multipart/form-data" id="profileForm">
 
-            <!-- GRID FORM -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <!-- GRID -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-                <input name="phone" value="<%= user.phone || '' %>" 
-                placeholder="Phone"
-                class="p-2 border rounded outline-none focus:ring-2 focus:ring-blue-400">
+                <div>
+                    <label class="text-xs text-gray-500">Phone</label>
+                    <input name="phone" value="<%= user.phone || '' %>"
+                    class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-400 outline-none">
+                </div>
 
-                <input name="college" value="<%= user.college || '' %>" 
-                placeholder="College"
-                class="p-2 border rounded outline-none focus:ring-2 focus:ring-blue-400">
+                <div>
+                    <label class="text-xs text-gray-500">College</label>
+                    <input name="college" value="<%= user.college || '' %>"
+                    class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-400 outline-none">
+                </div>
 
-                <input name="branch" value="<%= user.branch || '' %>" 
-                placeholder="Branch"
-                class="p-2 border rounded outline-none focus:ring-2 focus:ring-blue-400">
+                <div>
+                    <label class="text-xs text-gray-500">Branch</label>
+                    <input name="branch" value="<%= user.branch || '' %>"
+                    class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-400 outline-none">
+                </div>
 
-                <input name="year" value="<%= user.year || '' %>" 
-                placeholder="Year"
-                class="p-2 border rounded outline-none focus:ring-2 focus:ring-blue-400">
+                <div>
+                    <label class="text-xs text-gray-500">Year</label>
+                    <input name="year" value="<%= user.year || '' %>"
+                    class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-400 outline-none">
+                </div>
 
-                <input name="division" value="<%= user.division || '' %>" 
-                placeholder="Division"
-                class="p-2 border rounded outline-none focus:ring-2 focus:ring-blue-400">
+                <div>
+                    <label class="text-xs text-gray-500">Division</label>
+                    <input name="division" value="<%= user.division || '' %>"
+                    class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-400 outline-none">
+                </div>
 
             </div>
 
             <!-- FILE -->
-            <label class="block mt-4 text-sm text-gray-600">
-                Upload College ID
-            </label>
+            <div class="mt-5">
+                <label class="text-xs text-gray-500 block mb-1">
+                    Upload College ID
+                </label>
 
-            <input type="file" name="collegeIdImage"
-            class="mb-3 w-full text-sm">
+                <input type="file" name="collegeIdImage"
+                class="w-full text-sm">
 
-            <!-- PREVIEW -->
-            <% if(user.collegeIdImage){ %>
-                <img src="<%= user.collegeIdImage %>" 
-                class="h-24 rounded border mb-3">
-            <% } %>
+                <% if(user.collegeIdImage){ %>
+                    <img src="<%= user.collegeIdImage %>"
+                    class="h-20 mt-2 rounded border">
+                <% } %>
+            </div>
 
             <!-- BUTTON -->
-            <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded w-full transition">
+            <button class="mt-6 bg-indigo-600 text-white w-full py-2 rounded hover:bg-indigo-700 transition">
                 Save Changes
             </button>
 
@@ -128,16 +156,13 @@
 
 <!-- LOADER -->
 
-<div id="loader" class="fixed inset-0 bg-white flex items-center justify-center z-50 hidden">
-    <p class="text-blue-500 animate-pulse">Saving...</p>
+<div id="loader" class="fixed inset-0 bg-white hidden flex items-center justify-center">
+    <p class="text-indigo-600">Saving...</p>
 </div>
 
 <script>
-const form = document.getElementById("profileForm");
-const loader = document.getElementById("loader");
-
-form.addEventListener("submit", () => {
-    loader.classList.remove("hidden");
+document.getElementById("profileForm").addEventListener("submit", () => {
+    document.getElementById("loader").classList.remove("hidden");
 });
 </script>
 

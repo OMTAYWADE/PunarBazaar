@@ -8,80 +8,62 @@
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
-<body class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-indigo-100 to-purple-100 relative overflow-hidden">
+<body class="bg-gray-50 min-h-screen flex items-center justify-center">
 
-<!-- 🌊 FLOATING BLOBS (WATER EFFECT) -->
+<!-- MAIN CARD -->
 
-<div class="absolute w-72 h-72 bg-blue-300 rounded-full blur-3xl opacity-30 top-10 left-10 animate-pulse"></div>
-<div class="absolute w-72 h-72 bg-purple-300 rounded-full blur-3xl opacity-30 bottom-10 right-10 animate-pulse"></div>
+<div class="bg-white p-6 rounded-lg shadow-sm border w-[90%] max-w-sm">
 
-<!-- ⚡ LOADER -->
+<!-- TITLE -->
+<h1 class="text-xl font-semibold text-center text-gray-800 mb-2">
+    Login to your account
+</h1>
 
-<div id="loader" class="fixed inset-0 bg-white flex items-center justify-center z-50 hidden">
-    <p class="text-indigo-600 text-lg animate-pulse">⚡ Logging in...</p>
-</div>
+<p class="text-center text-gray-500 text-sm mb-5">
+    Access your marketplace account
+</p>
 
-<!-- 💎 LOGIN CARD -->
+<!-- FORM -->
+<form action="/login" method="POST" id="loginForm">
 
-<div class="backdrop-blur-lg bg-white/70 border border-white/40 p-8 rounded-3xl shadow-xl w-[90%] max-w-sm relative transition-all duration-500 hover:scale-[1.02]">
+    <!-- EMAIL -->
+    <div class="mb-3">
+        <label class="text-sm text-gray-600">Email</label>
+        <input name="email"
+        class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-400 outline-none">
+    </div>
 
-```
-<!-- 🌟 FLOAT ANIMATION -->
-<style>
-    @keyframes float {
-        0%,100% { transform: translateY(0px); }
-        50% { transform: translateY(-10px); }
-    }
-</style>
+    <!-- PASSWORD -->
+    <div class="mb-4">
+        <label class="text-sm text-gray-600">Password</label>
+        <input name="password" type="password"
+        class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-400 outline-none">
+    </div>
 
-<div style="animation: float 4s ease-in-out infinite;">
+    <!-- BUTTON -->
+    <button class="bg-indigo-600 text-white w-full py-2 rounded hover:bg-indigo-700 transition">
+        Login
+    </button>
 
-    <!-- TITLE -->
-    <h1 class="text-2xl font-bold text-center text-indigo-600 mb-2">
-        Welcome Back 👋
-    </h1>
+</form>
 
-    <p class="text-center text-gray-500 mb-6 text-sm">
-        Login to continue your journey 🚀
-    </p>
-
-    <!-- FORM -->
-    <form action="/login" method="POST" id="loginForm">
-
-        <!-- EMAIL -->
-        <input name="email" placeholder="📧 Email"
-        class="w-full p-2 mb-3 rounded-lg border focus:ring-2 focus:ring-indigo-400 outline-none transition">
-
-        <!-- PASSWORD -->
-        <input name="password" type="password" placeholder="🔒 Password"
-        class="w-full p-2 mb-4 rounded-lg border focus:ring-2 focus:ring-indigo-400 outline-none transition">
-
-        <!-- BUTTON -->
-        <button class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white w-full p-2 rounded-lg font-semibold hover:scale-105 transition">
-            Login 🚀
-        </button>
-
-    </form>
-
-    <!-- FOOTER -->
-    <p class="text-center text-xs text-gray-500 mt-4">
-        New here? 
-        <a href="/signUp" class="text-indigo-600 font-semibold">Create Account</a>
-    </p>
-
-</div>
-```
+<!-- FOOTER -->
+<p class="text-center text-xs text-gray-500 mt-4">
+    Don’t have an account? 
+    <a href="/signUp" class="text-indigo-600 font-medium">Sign up</a>
+</p>
 
 </div>
 
-<!-- ⚡ SCRIPT -->
+<!-- LOADER -->
+
+<div id="loader" class="fixed inset-0 bg-white hidden flex items-center justify-center">
+    <p class="text-indigo-600">Logging in...</p>
+</div>
 
 <script>
-const form = document.getElementById("loginForm");
-const loader = document.getElementById("loader");
-
-form.addEventListener("submit", () => {
-    loader.classList.remove("hidden");
+document.getElementById("loginForm").addEventListener("submit", () => {
+    document.getElementById("loader").classList.remove("hidden");
 });
 </script>
 
