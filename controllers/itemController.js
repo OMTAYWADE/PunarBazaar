@@ -76,12 +76,12 @@ exports.searchItems = async (req, res) => {
         name: { $regex: q, $options: "i" }
     }).populate("user")
 
-    res.render('index', { items });
+    res.render('home', { items });
 };
 
 exports.getItemDetails = async(req, res) => {
     const item = await Item.findById(req.params.id).populate("user");
-    const user = await Item.findById(req.session.userId);
+    const user = await User.findById(req.session.userId);
 
     const recommended = await Item.find({
         category: item.category,
@@ -100,7 +100,7 @@ exports.getItemDetails = async(req, res) => {
     let isUnlocked = false
     
     //for different college restriction
-    if ((item.type === "note" || item.type === "book") && item.user.college !== currentUser.college) {
+    if ((item.type === "note" || item.type === "book") && item.user.college !== user.college) {
         return res.send("Only Same college stuents can access this");
     }
 
@@ -138,7 +138,7 @@ exports.addToWishList = async (req, res) => {
         await user.save();
     }
 
-    res.redirect("back");
+    res.redirect("/");
 }
 
 exports.getWishList = async (req, res) => {
@@ -169,7 +169,7 @@ exports.featureItem = async (req, res) => {
 // create razor pay order
 const razorpay = require('../utils/razorpay.js');
 exports.createOrder = async (req, res) => {
-    const item = Item.findById(req.params.itemId);
+    const item = await Item.findById(req.params.itemId);
     const options = {
         amount: 500, // 5 rupess(in paise)
         currency: "INR",
@@ -194,7 +194,7 @@ const crypto = require('crypto');
 const Unlock = require('../models/Unlock.js');
 
 exports.verifyPayment = async (req, res) => {
-    const { razorpay_order_id, razorpay_payment_id, ItemId, razorpay_signature } = req.body;
+    const { razorpay_order_id, razorpay_payment_id, itemId, razorpay_signature } = req.body;
     const body = razorpay_order_id + '|' + razorpay_payment_id;
 
     const expectedSignature = crypto.createHmac("sha256", process.env.RAZORPAY_SECRET)

@@ -15,7 +15,7 @@ router.get('/addItems',isLoggedIn,isProfileComplete, checkPendingPayment, itemCo
 router.post('/addItems',isLoggedIn, isProfileComplete,checkPendingPayment, upload.single('image'), itemControllers.createItem);
 router.get('/delete/:id',isLoggedIn, itemControllers.deleteItems);
 router.get('/search', itemControllers.searchItems);
-router.get('/item/:id', itemControllers.getItemDetails);
+router.get('/item/:itemId', itemControllers.getItemDetails);
 router.get('/category/:name', itemControllers.getByCategory);
 
 
