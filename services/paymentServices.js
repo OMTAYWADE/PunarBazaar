@@ -8,9 +8,11 @@ const Unlock = require('../models/Unlock');
 exports.createOrder = async (itemId, userId) => {
     const item = await Item.findById(itemId).populate("user");
 
+    if (!item) throw new Error("Item not Found");
+
     let amount = 500;
 
-    if (type === "note") {
+    if (item.type === "note") {
         const user = await User.findById(userId);
 
         if (user.college !== item.user.college) {
@@ -31,7 +33,7 @@ exports.verifyPayment = async (data, userId) => {
 
     const body = razorpay_order_id + "|" + razorpay_payment_id;
 
-    const expectedSignature = crypto.createHmac("sha256", process.env.RAZORPAY_SECRET).update(body).digest("hex"); 
+    const expectedSignature = crypto.createHmac("sha256", process.env.RAZORPAY_SECRET).update(body).digest("hex");
 
     if (expectedSignature !== razorpay_signature) {
         throw new Error("Invalid Payment");
@@ -40,8 +42,8 @@ exports.verifyPayment = async (data, userId) => {
     await Unlock.create({
         user: userId,
         item: itemId,
-        paymentId: razorpay_order_id,
+        paymentId: razorpay_payment_id,
         status: "paid"
     });
     return true;
-}
+};

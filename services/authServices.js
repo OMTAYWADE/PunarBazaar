@@ -19,18 +19,18 @@ exports.createUser = async (data) => {
 
 exports.loginUser = async ({ email, password }) => {
     let user = await User.findOne({ email });
-    if (!user) return res.send("User Not Found");
+    if (!user) throw new Error("User Not Found");
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.send("Wrong Password");
+    if (!isMatch) throw new Error("Wrong Password");
     return user;
 };
 
 exports.updateProfile = async (userId,data, file) => {
     let updateData = { ...data };
      if (file) {
-        updateData.collegeIdImage = "/uploads/" + req.file.filename;
+        updateData.collegeIdImage = "/uploads/" + file.filename;
         updateData.verificationStatus = "pending";
-    }
+    }   
     return await User.findByIdAndUpdate(userId, updateData, { new: true });
 };
