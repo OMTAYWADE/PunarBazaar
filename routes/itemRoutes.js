@@ -17,7 +17,7 @@ router.post('/addItems',isLoggedIn, isProfileComplete,checkPendingPayment, uploa
 router.get('/delete/:id',isLoggedIn, itemControllers.deleteItems);
 router.get('/search', itemControllers.searchItems);
 router.get('/item/:id', itemControllers.getItemDetails);
-router.get('/category/:name', itemControllers.getByCategory);
+// router.get('/category/:name', itemControllers.getByCategory);
 
 
 router.get('/wishList/add/:id', isLoggedIn,validateObject, itemControllers.addToWishList);

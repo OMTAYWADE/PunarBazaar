@@ -114,7 +114,6 @@ exports.featureItem = async (req, res) => {
     res.redirect("/");
 }   
 // create razor pay order
-const razorpay = require('../utils/razorpay.js');
 exports.createOrder = async (req, res) => {
     
     const order = await paymentServices.createOrder(req.params.id, req.session.userId);
@@ -123,9 +122,7 @@ exports.createOrder = async (req, res) => {
 }
 
 //verify payment
-const crypto = require('crypto');
-const Unlock = require('../models/Unlock.js');
-const { rawListeners } = require('process');
+
 
 exports.verifyPayment = async (req, res) => {
     let success = await paymentServices.verifyPayment(req.body, req.session.userId);
