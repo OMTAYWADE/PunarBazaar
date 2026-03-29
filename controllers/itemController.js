@@ -138,7 +138,7 @@ exports.addToWishList = async (req, res) => {
         await user.save();
     }
 
-    res.redirect("/");
+    res.redirect("back");
 }
 
 exports.getWishList = async (req, res) => {
