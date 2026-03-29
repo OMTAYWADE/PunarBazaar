@@ -4,88 +4,96 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Complete Profile</title>
+<title>Sign Up - PunarBazaar</title>
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
-<body class="bg-gray-50 min-h-screen flex items-center justify-center">
+<body class="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-indigo-50 to-slate-200">
 
-<!-- CARD -->
+<!-- BACKGROUND GLOW -->
 
-<div class="bg-white w-[90%] max-w-md p-6 rounded-lg border shadow-sm">
+<div class="absolute inset-0 opacity-40 pointer-events-none">
+    <div class="absolute w-72 h-72 bg-indigo-300 rounded-full blur-3xl top-10 left-10"></div>
+    <div class="absolute w-72 h-72 bg-purple-300 rounded-full blur-3xl bottom-10 right-10"></div>
+</div>
+
+<!-- SIGNUP CARD -->
+
+<div class="relative w-[90%] max-w-md bg-white/90 backdrop-blur-md border border-gray-200 
+rounded-2xl shadow-xl p-7">
 
 ```
-<!-- HEADER -->
-<h2 class="text-lg font-semibold text-gray-800 text-center mb-2">
-    Complete Your Profile
+<!-- BRAND -->
+<h1 class="text-xl font-bold text-center text-indigo-700 tracking-tight">
+    PunarBazaar
+</h1>
+
+<!-- TITLE -->
+<h2 class="text-lg font-semibold text-center text-gray-800 mt-2">
+    Create your account
 </h2>
 
-<p class="text-sm text-gray-500 text-center mb-5">
-    Add your details to start buying and selling
+<p class="text-center text-gray-500 text-sm mb-6">
+    Join the student marketplace
 </p>
 
 <!-- FORM -->
-<form action="/profile" method="POST" enctype="multipart/form-data" id="profileForm">
+<form action="/signUp" method="POST" id="signupForm">
+
+    <!-- NAME -->
+    <div class="mb-4">
+        <label class="text-sm text-gray-600">Full Name</label>
+        <input name="name" required
+        class="w-full p-2.5 border border-gray-300 rounded-lg outline-none 
+        focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition 
+        hover:border-indigo-400">
+    </div>
+
+    <!-- EMAIL -->
+    <div class="mb-4">
+        <label class="text-sm text-gray-600">Email</label>
+        <input name="email" type="email" required
+        class="w-full p-2.5 border border-gray-300 rounded-lg outline-none 
+        focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition 
+        hover:border-indigo-400">
+    </div>
 
     <!-- PHONE -->
-    <div class="mb-3">
-        <label class="text-xs text-gray-600">Phone Number</label>
-        <input name="phone"
-        class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-400 outline-none">
-    </div>
-
-    <!-- COLLEGE -->
-    <div class="mb-3">
-        <label class="text-xs text-gray-600">College Name</label>
-        <input name="college"
-        class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-400 outline-none">
-    </div>
-
-    <!-- BRANCH -->
-    <div class="mb-3">
-        <label class="text-xs text-gray-600">Branch</label>
-        <input name="branch"
-        class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-400 outline-none">
-    </div>
-
-    <!-- YEAR -->
-    <div class="mb-3">
-        <label class="text-xs text-gray-600">Year</label>
-        <select name="year"
-        class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-400 outline-none">
-            <option value="">Select Year</option>
-            <option value="FY">FY</option>
-            <option value="SY">SY</option>
-            <option value="TY">TY</option>
-        </select>
-    </div>
-
-    <!-- DIVISION -->
     <div class="mb-4">
-        <label class="text-xs text-gray-600">Division</label>
-        <input name="division"
-        class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-400 outline-none">
+        <label class="text-sm text-gray-600">Phone</label>
+        <input name="phone" required
+        class="w-full p-2.5 border border-gray-300 rounded-lg outline-none 
+        focus:ring-2 focus:ring-indigo-500 transition hover:border-indigo-400">
     </div>
 
-    <!-- FILE -->
-    <div class="mb-4">
-        <label class="text-xs text-gray-600 block mb-1">
-            Upload College ID
-        </label>
-        <input type="file" name="collegeIdImage"
-        class="w-full text-sm">
+    <!-- PASSWORD -->
+    <div class="mb-5">
+        <label class="text-sm text-gray-600">Password</label>
+        <input name="password" type="password" required
+        class="w-full p-2.5 border border-gray-300 rounded-lg outline-none 
+        focus:ring-2 focus:ring-indigo-500 transition hover:border-indigo-400">
     </div>
 
     <!-- BUTTON -->
-    <button class="bg-indigo-600 text-white w-full py-2 rounded hover:bg-indigo-700 transition">
-        Save Profile
+    <button 
+    class="bg-gradient-to-r from-indigo-600 to-indigo-500 text-white w-full py-2.5 rounded-lg 
+    font-medium shadow hover:scale-[1.02] hover:shadow-md transition">
+        Create Account
     </button>
 
 </form>
 
+<!-- FOOTER -->
+<p class="text-center text-xs text-gray-500 mt-5">
+    Already have an account? 
+    <a href="/login" class="text-indigo-600 font-semibold hover:underline">
+        Login
+    </a>
+</p>
+
 <!-- TRUST -->
-<p class="text-xs text-gray-500 text-center mt-4">
-    Your information is used only for verification and trust purposes.
+<p class="text-center text-[11px] text-gray-400 mt-3">
+    Your details are used only for verification and trust
 </p>
 ```
 
@@ -93,12 +101,15 @@
 
 <!-- LOADER -->
 
-<div id="loader" class="fixed inset-0 bg-white hidden flex items-center justify-center">
-    <p class="text-indigo-600">Saving...</p>
+<div id="loader" class="fixed inset-0 bg-white/80 backdrop-blur flex items-center justify-center hidden">
+    <div class="text-center">
+        <div class="w-6 h-6 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+        <p class="text-indigo-600 text-sm">Creating account...</p>
+    </div>
 </div>
 
 <script>
-document.getElementById("profileForm").addEventListener("submit", () => {
+document.getElementById("signupForm").addEventListener("submit", () => {
     document.getElementById("loader").classList.remove("hidden");
 });
 </script>

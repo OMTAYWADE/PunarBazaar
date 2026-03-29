@@ -4,16 +4,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Wishlist</title>
+<title>My Wishlist - PunarBazaar</title>
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
-<body class="bg-gray-50 min-h-screen">
+<body class="min-h-screen bg-gradient-to-br from-slate-100 via-indigo-50 to-slate-200">
 
 <!-- HEADER -->
 
-<div class="bg-white border-b p-4">
-    <h1 class="text-lg font-semibold text-gray-800 text-center">
+<div class="bg-white/90 backdrop-blur border-b shadow-sm">
+    <h1 class="text-lg font-semibold text-gray-800 text-center p-4">
         My Wishlist
     </h1>
 </div>
@@ -23,84 +23,96 @@
 <% if(items.length === 0){ %>
 
 <!-- EMPTY STATE -->
-<div class="text-center mt-16">
 
-    <p class="text-gray-600 text-lg">
-        Your wishlist is empty
-    </p>
+<div class="text-center mt-20">
 
-    <p class="text-gray-400 text-sm mt-2">
-        Save items to view them later
-    </p>
+```
+<div class="text-5xl mb-3">♡</div>
 
-    <a href="/" 
-    class="inline-block mt-4 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">
-        Explore Items
-    </a>
+<p class="text-gray-700 text-lg font-medium">
+    Your wishlist is empty
+</p>
+
+<p class="text-gray-500 text-sm mt-2">
+    Save items to view them later
+</p>
+
+<a href="/" 
+class="inline-block mt-5 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white px-5 py-2 rounded-lg shadow hover:scale-105 transition">
+    Explore Items
+</a>
+```
 
 </div>
 
 <% } %>
 
 <!-- GRID -->
-<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
+
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
 
 <% items.forEach(item => { %>
 
-<div class="bg-white border rounded-lg hover:shadow-md transition overflow-hidden">
+<div class="relative rounded-xl overflow-hidden group 
+bg-gradient-to-br from-slate-900 to-slate-800 text-white 
+shadow-md hover:shadow-2xl transition duration-300">
 
-    <!-- IMAGE -->
-    <div class="h-40 bg-gray-100 flex items-center justify-center">
+```
+<!-- GLOW -->
+<div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition 
+bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 blur-xl"></div>
 
-        <% if(item.image){ %>
-            <img src="<%= item.image %>" class="w-full h-full object-cover">
-        <% } else { %>
-            <span class="text-gray-400 text-sm">No Image</span>
-        <% } %>
+<!-- IMAGE -->
+<div class="h-44 bg-slate-800 flex items-center justify-center relative overflow-hidden">
 
-    </div>
+    <% if(item.image){ %>
+        <img src="<%= item.image %>" 
+        class="w-full h-full object-cover group-hover:scale-110 transition duration-300">
+    <% } else { %>
+        <span class="text-gray-400 text-sm">No Image</span>
+    <% } %>
 
-    <!-- CONTENT -->
-    <div class="p-3">
+    <!-- ❤️ REMOVE BUTTON -->
+    <a href="/wishlist/remove/<%= item._id %>"
+    class="absolute top-2 right-2 bg-white/10 backdrop-blur p-2 rounded-full 
+    hover:scale-110 transition">
+        ❤️
+    </a>
 
-        <!-- NAME -->
-        <h2 class="text-sm font-medium text-gray-800 truncate">
-            <%= item.name %>
-        </h2>
+</div>
 
-        <!-- PRICE -->
-        <p class="text-green-600 font-semibold text-sm mt-1">
-            ₹ <%= item.price %>
-        </p>
+<!-- CONTENT -->
+<div class="p-3 relative z-10">
 
-        <!-- COLLEGE -->
-        <p class="text-xs text-gray-500 mt-1">
-            <%= item.user?.college || "Unknown College" %>
-        </p>
+    <!-- NAME -->
+    <h2 class="text-sm font-semibold truncate">
+        <%= item.name %>
+    </h2>
 
-        <!-- ACTIONS -->
-        <div class="flex justify-between items-center mt-3">
+    <!-- PRICE -->
+    <p class="text-emerald-400 font-bold text-sm mt-1">
+        ₹ <%= item.price %>
+    </p>
 
-            <a href="/item/<%= item._id %>"
-            class="text-indigo-600 text-xs font-medium hover:underline">
-                View
-            </a>
+    <!-- COLLEGE -->
+    <p class="text-xs text-gray-400 mt-1">
+        <%= item.user?.college || "Unknown College" %>
+    </p>
 
-            <a href="/wishlist/remove/<%= item._id %>"
-            class="text-red-500 text-xs hover:underline">
-                Remove
-            </a>
+    <!-- BUTTON -->
+    <a href="/item/<%= item._id %>"
+    class="block text-center mt-3 bg-indigo-600 text-white py-1.5 rounded-lg text-sm hover:bg-indigo-700 transition">
+        View Details
+    </a>
 
-        </div>
-
-    </div>
+</div>
+```
 
 </div>
 
 <% }) %>
 
 </div>
-
 
 </div>
 

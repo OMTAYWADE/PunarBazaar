@@ -15,7 +15,7 @@ router.get('/addItems',isLoggedIn,isProfileComplete, checkPendingPayment, itemCo
 router.post('/addItems',isLoggedIn, isProfileComplete,checkPendingPayment, upload.single('image'), itemControllers.createItem);
 router.get('/delete/:id',isLoggedIn, itemControllers.deleteItems);
 router.get('/search', itemControllers.searchItems);
-router.get('/item/:itemId', itemControllers.getItemDetails);
+router.get('/item/:id', itemControllers.getItemDetails);
 router.get('/category/:name', itemControllers.getByCategory);
 
 
@@ -24,7 +24,7 @@ router.get('/wishList', isLoggedIn, itemControllers.getWishList);
 
 router.get('/feature/:id', isLoggedIn, itemControllers.featureItem);
 
-router.get('/unlock/:ItemId', isLoggedIn, itemControllers.createOrder);
+router.get('/unlock/:id', isLoggedIn, itemControllers.createOrder);
 router.post('/verifyPayment', isLoggedIn, itemControllers.verifyPayment);
 
 module.exports = router;

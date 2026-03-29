@@ -4,138 +4,152 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Item Details</title>
+<title><%= item.name %> - PunarBazaar</title>
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
-<body class="bg-gray-50">
+<body class="bg-gradient-to-br from-slate-100 via-indigo-50 to-slate-200">
 
 <div class="max-w-6xl mx-auto mt-8 px-4">
 
 <!-- GRID -->
+
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-    <!-- LEFT: IMAGE -->
-    <div class="bg-white p-4 rounded-lg border">
+```
+<!-- IMAGE -->
+<div class="bg-white/90 backdrop-blur border rounded-2xl shadow-md p-4">
 
-        <div class="h-80 bg-gray-100 flex items-center justify-center rounded overflow-hidden">
-            <% if(item.image){ %>
-                <img src="<%= item.image %>" class="w-full h-full object-cover">
-            <% } else { %>
-                <span class="text-gray-400">No Image</span>
-            <% } %>
-        </div>
-
+    <div class="h-80 bg-gray-100 flex items-center justify-center rounded-xl overflow-hidden">
+        <% if(item.image){ %>
+            <img src="<%= item.image %>" class="w-full h-full object-cover hover:scale-105 transition duration-300">
+        <% } else { %>
+            <span class="text-gray-400">No Image</span>
+        <% } %>
     </div>
 
-    <!-- RIGHT: DETAILS -->
-    <div class="bg-white p-6 rounded-lg border">
+</div>
 
-        <!-- TITLE -->
-        <h1 class="text-xl font-semibold text-gray-800 mb-2">
-            <%= item.name %>
-        </h1>
+<!-- DETAILS -->
+<div class="bg-white/90 backdrop-blur border rounded-2xl shadow-md p-6">
 
-        <!-- PRICE -->
-        <p class="text-2xl font-bold text-green-600 mb-3">
-            ₹ <%= item.price %>
-        </p>
+    <!-- TITLE -->
+    <h1 class="text-xl font-semibold text-gray-800 mb-2">
+        <%= item.name %>
+    </h1>
 
-        <!-- DESCRIPTION -->
-        <p class="text-gray-600 text-sm mb-4">
-            <%= item.desc %>
-        </p>
+    <!-- PRICE -->
+    <p class="text-3xl font-bold text-emerald-600 mb-4">
+        ₹ <%= item.price %>
+    </p>
 
-        <!-- UNLOCK BOX -->
-        <div class="bg-gray-100 p-4 rounded mb-4">
+    <!-- DESCRIPTION -->
+    <p class="text-gray-600 text-sm mb-5 leading-relaxed">
+        <%= item.desc %>
+    </p>
 
-            <% if(!isUnlocked){ %>
+    <!-- 🔥 UNLOCK CARD -->
+    <div class="rounded-xl border p-4 mb-5 bg-gradient-to-r from-indigo-50 to-indigo-100">
 
-                <p class="text-sm text-gray-700 mb-2">
-                    Unlock seller contact to proceed
-                </p>
+        <% if(!isUnlocked){ %>
 
-                <button id="unlockBtn"
-                class="bg-indigo-600 text-white px-4 py-2 rounded w-full hover:bg-indigo-700 transition">
-                    Unlock Contact (₹5)
-                </button>
+            <p class="text-sm text-gray-700 mb-3">
+                Unlock seller contact to continue
+            </p>
 
-            <% } else { %>
+            <button id="unlockBtn"
+            class="bg-indigo-600 text-white px-4 py-2 rounded-lg w-full font-medium 
+            shadow hover:scale-[1.02] hover:bg-indigo-700 transition">
+                Unlock Contact (₹5)
+            </button>
 
-                <p class="text-green-600 font-medium">
-                    Contact: <%= item.user.phone %>
-                </p>
+        <% } else { %>
 
-            <% } %>
-
-        </div>
-
-        <!-- WHATSAPP -->
-        <% if(isUnlocked){ %>
-
-        <%
-        let message = `Hello, I am interested in your item "${item.name}" listed for ₹${item.price}. Is it available?`;
-        %>
-
-        <a href="https://wa.me/<%= item.user?.phone %>?text=<%= encodeURIComponent(message) %>"
-        class="block bg-green-600 text-white text-center p-3 rounded hover:bg-green-700 transition">
-            Contact via WhatsApp
-        </a>
+            <div class="text-green-700 font-medium">
+                Contact: <%= item.user.phone %>
+            </div>
 
         <% } %>
 
-        <!-- SELLER -->
-        <div class="mt-6 border-t pt-4">
+    </div>
 
-            <h2 class="font-semibold text-gray-700 mb-2">
-                Seller Information
-            </h2>
+    <!-- WHATSAPP -->
+    <% if(isUnlocked){ %>
 
-            <p class="text-sm">Name: <%= item.user.name %></p>
-            <p class="text-sm">College: <%= item.user.college %></p>
-            <p class="text-sm">Branch: <%= item.user.branch %></p>
+    <%
+    let message = `Hello, I am interested in your item "${item.name}" listed for ₹${item.price}. Is it available?`;
+    %>
 
-            <div class="mt-2 flex items-center gap-2 text-sm">
-                <span>Trust Score: <%= item.user.trustScore %></span>
+    <a href="https://wa.me/<%= item.user?.phone %>?text=<%= encodeURIComponent(message) %>"
+    class="block bg-green-600 text-white text-center py-3 rounded-lg font-medium hover:bg-green-700 transition">
+        Contact via WhatsApp
+    </a>
 
-                <% if(item.user.isVerified){ %>
-                    <span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">
-                        Verified
-                    </span>
-                <% } %>
-            </div>
+    <% } %>
+
+    <!-- SELLER -->
+    <div class="mt-6 border-t pt-4">
+
+        <h2 class="font-semibold text-gray-700 mb-3">
+            Seller Information
+        </h2>
+
+        <div class="space-y-1 text-sm text-gray-600">
+            <p><strong>Name:</strong> <%= item.user.name %></p>
+            <p><strong>College:</strong> <%= item.user.college %></p>
+            <p><strong>Branch:</strong> <%= item.user.branch %></p>
+        </div>
+
+        <div class="mt-3 flex items-center gap-3 text-sm">
+
+            <span class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-xs">
+                Trust: <%= item.user.trustScore %>
+            </span>
+
+            <% if(item.user.isVerified){ %>
+                <span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">
+                    Verified
+                </span>
+            <% } %>
 
         </div>
 
     </div>
 
 </div>
+```
+
+</div>
 
 <!-- RECOMMENDED -->
+
 <div class="mt-10">
 
-    <h2 class="text-lg font-semibold text-gray-700 mb-4">
-        Recommended Items
-    </h2>
+```
+<h2 class="text-lg font-semibold text-gray-800 mb-4">
+    Recommended Items
+</h2>
 
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
 
-    <% recommended.forEach(r => { %>
+<% recommended.forEach(r => { %>
 
-        <div class="bg-white border p-3 rounded hover:shadow-md transition">
+    <div class="bg-white border rounded-xl p-3 hover:shadow-lg transition">
 
-            <p class="text-sm font-medium truncate"><%= r.name %></p>
-            <p class="text-green-600 text-sm">₹ <%= r.price %></p>
+        <p class="text-sm font-medium truncate"><%= r.name %></p>
+        <p class="text-emerald-600 text-sm font-semibold">₹ <%= r.price %></p>
 
-            <a href="/item/<%= r._id %>" class="text-indigo-600 text-xs">
-                View
-            </a>
-
-        </div>
-
-    <% }) %>
+        <a href="/item/<%= r._id %>"
+        class="text-indigo-600 text-xs font-medium hover:underline">
+            View
+        </a>
 
     </div>
+
+<% }) %>
+
+</div>
+```
 
 </div>
 

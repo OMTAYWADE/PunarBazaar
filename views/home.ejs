@@ -1,149 +1,80 @@
-<!DOCTYPE html>
-
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PunarBazaar</title>
-<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-</head>
-
-<body class="bg-gray-50">
-
-<!-- 🔵 NAVBAR -->
-
-<div class="bg-white border-b sticky top-0 z-50">
-
-<div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between p-3 gap-3">
-
-<!-- Logo -->
-<h1 class="text-xl font-bold text-indigo-600">
-    PunarBazaar
-</h1>
-
-<!-- Search -->
-<form action="/search" class="flex w-full md:w-1/2">
-    <input name="q" placeholder="Search books, electronics..."
-    class="w-full p-2 border border-gray-300 rounded-l outline-none focus:ring-2 focus:ring-indigo-400">
-
-    <button class="bg-indigo-600 text-white px-4 rounded-r hover:bg-indigo-700">
-        Search
-    </button>
-</form>
-
-<!-- Auth -->
-<div class="flex gap-3 items-center text-sm">
-
-    <% if(currentUser){ %>
-        <span class="text-gray-700">Hi, <%= currentUser.name %></span>
-        <a href="/profile" class="text-indigo-600 font-medium">Profile</a>
-        <a href="/logout" class="text-red-500">Logout</a>
-    <% } else { %>
-        <a href="/login" class="text-indigo-600">Login</a>
-        <a href="/signUp" class="bg-indigo-600 text-white px-3 py-1 rounded">
-            Signup
-        </a>
-    <% } %>
-
-</div>
-
-
-</div>
-
-<!-- CATEGORY -->
-
-<div class="flex justify-center gap-6 text-sm py-2 text-gray-600">
-
-
-<a href="/category/Books" class="hover:text-indigo-600">Books</a>
-<a href="/category/Electronics" class="hover:text-indigo-600">Electronics</a>
-<a href="/category/Notes" class="hover:text-indigo-600">Notes</a>
-<a href="/category/Instruments" class="hover:text-indigo-600">Instruments</a>
-<a href="/category/Others" class="hover:text-indigo-600">Others</a>
-
-
-</div>
-
-</div>
-
-<!-- HEADER -->
-
-<div class="max-w-7xl mx-auto mt-6 px-4 flex justify-between items-center">
-
-<h2 class="text-lg font-semibold text-gray-700">
-    Explore Items
-</h2>
-
-<a href="/addItems"
-class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">
-+ Add Item </a>
-
-</div>
-
-<!-- 🧱 GRID -->
-
-<div class="max-w-7xl mx-auto mt-5 px-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
+<div class="max-w-7xl mx-auto mt-5 px-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
 
 <% items.forEach(item => { %>
 
-<div class="bg-white border rounded-lg hover:shadow-md transition overflow-hidden">
+<div class="relative rounded-xl overflow-hidden group transition duration-300 
+bg-gradient-to-br from-slate-900 to-slate-800 text-white 
+shadow-md hover:shadow-2xl">
+
+```
+<!-- GLOW -->
+<div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition 
+bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 blur-xl"></div>
 
 <!-- IMAGE -->
-<div class="h-40 bg-gray-100 flex items-center justify-center relative">
+<div class="h-44 bg-slate-800 flex items-center justify-center relative overflow-hidden">
 
     <% if(item.image){ %>
-        <img src="<%= item.image %>" class="w-full h-full object-cover">
+        <img src="<%= item.image %>" 
+        class="w-full h-full object-cover group-hover:scale-110 transition duration-300">
     <% } else { %>
         <span class="text-gray-400 text-sm">No Image</span>
     <% } %>
 
-    <!-- Wishlist -->
-    <a href="/wishlist/add/<%= item._id %>"
-    class="absolute top-2 right-2 bg-white border p-1 rounded-full hover:scale-110 transition">
-        ❤️
-    </a>
+    <!-- ❤️ Wishlist -->
+    <button onclick="toggleWishlist(this, '<%= item._id %>')"
+    class="absolute top-2 right-2 bg-white/10 backdrop-blur p-2 rounded-full 
+    hover:scale-110 transition">
+
+        <span class="heart text-white text-sm">♡</span>
+
+    </button>
 
 </div>
 
 <!-- CONTENT -->
-<div class="p-3">
+<div class="p-3 relative z-10">
 
     <!-- TITLE -->
-    <h2 class="text-sm font-medium text-gray-800 truncate">
+    <h2 class="text-sm font-semibold truncate">
         <%= item.name %>
     </h2>
 
     <!-- PRICE -->
-    <p class="text-green-600 font-semibold text-sm mt-1">
+    <p class="text-emerald-400 font-bold text-sm mt-1">
         ₹ <%= item.price %>
     </p>
 
     <!-- COLLEGE -->
-    <p class="text-xs text-gray-500 mt-1">
+    <p class="text-xs text-gray-400 mt-1">
         <%= item.user?.college || "Unknown College" %>
     </p>
 
-    <!-- SAME COLLEGE -->
-    <% if(currentUser && item.user?.college === currentUser.college){ %>
-        <p class="text-xs text-green-600 mt-1">
-            Same College
-        </p>
-    <% } %>
+    <!-- BADGES -->
+    <div class="flex gap-2 mt-2 flex-wrap">
 
-    <!-- FEATURED -->
-    <% if(item.isFeatured){ %>
-        <p class="text-xs text-indigo-600 mt-1">
-            Featured
-        </p>
-    <% } %>
+        <% if(currentUser && item.user?.college === currentUser.college){ %>
+            <span class="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded">
+                Same College
+            </span>
+        <% } %>
+
+        <% if(item.isFeatured){ %>
+            <span class="text-xs bg-indigo-500/20 text-indigo-400 px-2 py-0.5 rounded">
+                Featured
+            </span>
+        <% } %>
+
+    </div>
 
     <!-- BUTTON -->
     <a href="/item/<%= item._id %>"
-    class="block text-center mt-2 bg-indigo-600 text-white py-1 rounded text-sm hover:bg-indigo-700 transition">
+    class="block text-center mt-3 bg-indigo-600 text-white py-1.5 rounded-lg text-sm hover:bg-indigo-700 transition">
         View Details
     </a>
 
 </div>
+```
 
 </div>
 
@@ -151,5 +82,21 @@ class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition
 
 </div>
 
-</body>
-</html>
+<!-- ❤️ SCRIPT -->
+
+<script>
+function toggleWishlist(btn, itemId) {
+    const heart = btn.querySelector(".heart");
+
+    if (heart.innerText === "♡") {
+        heart.innerText = "❤️";
+        heart.classList.add("text-red-500");
+    } else {
+        heart.innerText = "♡";
+        heart.classList.remove("text-red-500");
+    }
+
+    // Optional: call backend
+    fetch("/wishlist/toggle/" + itemId, { method: "POST" });
+}
+</script>

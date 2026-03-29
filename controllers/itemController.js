@@ -81,6 +81,10 @@ exports.searchItems = async (req, res) => {
 
 exports.getItemDetails = async(req, res) => {
     const item = await Item.findById(req.params.id).populate("user");
+    console.log("Item ID:", req.params.id);
+console.log("Item:", item);
+    if (!item) return res.send("Item Not found");
+    
     const user = await User.findById(req.session.userId);
 
     const recommended = await Item.find({
