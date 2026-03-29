@@ -48,7 +48,7 @@ exports.profile = async (req, res) => {
         await authServices.updateProfile(
             req.session.userId,
             req.body,
-            req, file
+            req.file
         );
         res.redirect('/profile');
     } catch (err) {

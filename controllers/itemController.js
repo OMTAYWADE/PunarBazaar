@@ -6,24 +6,9 @@ const paymentServices = require('../services/paymentServices');
 
 // home page
 exports.getAllItems = async (req, res) => {
-    let items;
-    if (req.session.userId) {
-        const user = await User.findById(req.session.userId);
 
-        const sameCollege = await Item.find().populate("user").sort({ createdAt: -1 });
-
-        const filteredSame = sameCollege.filter(item =>
-            item.user?.college === user.college
-            
-        );
-
-        const others = sameCollege.filter(item =>
-            item.user?.college !== user.college
-        )
-        items = [...filteredSame, ...others];
-    }
     // remove expiry items
-    await itemServices.getAllItems();
+    const items = await itemServices.getAllItems(req.session.userId);
     res.render('home', { items });
     
 };
@@ -48,7 +33,7 @@ exports.createItem = async (req, res) => {
 // delete items by his id
 exports.deleteItems = async (req, res) => {
     try {
-        await Item.findByIdAndDelete(req.params.id, req.session.userId);   
+        await itemServices.deleteItems(req.session.userId, req.params.id);   
         res.redirect('/'); 
     } catch (err) {
         res.send(err.message);
@@ -79,7 +64,7 @@ exports.getItemDetails = async (req, res) => {
 //wishList
 exports.addToWishList = async (req, res) => {
     try {
-        const user = await itemServices.addToWishList( req.params.id, req.session.UserId);
+        const user = await itemServices.addToWishList( req.params.id, req.session.userId);
 
         res.redirect("back");
     } catch (err) {
@@ -115,16 +100,20 @@ exports.featureItem = async (req, res) => {
 }   
 // create razor pay order
 exports.createOrder = async (req, res) => {
-    
-    const order = await paymentServices.createOrder(req.params.id, req.session.userId);
-
-    res.json(order);
-}
+    try {
+        const order = await paymentServices.createOrder(req.params.id, req.session.userId);
+        res.json(order);
+    } catch (err) {
+        res.status(500).send("Order error");
+    }
+};
 
 //verify payment
-
-
 exports.verifyPayment = async (req, res) => {
-    let success = await paymentServices.verifyPayment(req.body, req.session.userId);
-    res.json({ success });
+    try {
+        let success = await paymentServices.verifyPayment(req.body, req.session.userId);
+        res.json({ success });
+    } catch (err) {
+        res.json({ success: false });
+    }
 };

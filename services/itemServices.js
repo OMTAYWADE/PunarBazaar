@@ -6,8 +6,15 @@ exports.getAllItems = async () => {
         { featuredUntil: { $lt: new Date() } },
         { isFeatured: false }
     );
+    let items = await Item.find().populate("user").sort({ isFeatured: -1, createdAt: -1 })
+    if (!userId) return items;
 
-    return await Item.find().populate("user").sort({ isFeatured: -1, createdAt: -1 });
+    const user = await User.findById(userId);
+
+    const same = items.filter(i => i.user?.college === user.college);
+    const other = items.filter(i => i.user?.college !== user.college);
+
+    return [...same, ...other];
 };
 
 exports.createItem = async (data, userId, file) => {
