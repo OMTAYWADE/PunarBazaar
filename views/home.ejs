@@ -8,17 +8,17 @@
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
-<body class="bg-gradient-to-br from-slate-100 via-indigo-50 to-slate-200 min-h-screen">
+<body class="bg-gray-50 min-h-screen">
 
 <!-- 🔵 NAVBAR -->
 
-<div class="bg-white/90 backdrop-blur border-b sticky top-0 z-50 shadow-sm">
+<div class="bg-white border-b sticky top-0 z-50">
 
 <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between p-4 gap-3">
 
 ```
 <!-- Logo -->
-<h1 class="text-xl font-bold text-indigo-700">
+<h1 class="text-xl font-bold text-indigo-600">
     PunarBazaar
 </h1>
 
@@ -37,11 +37,11 @@
 
     <% if(currentUser){ %>
         <span class="text-gray-600">Hi, <%= currentUser.name %></span>
-        <a href="/profile" class="text-indigo-600 font-medium hover:underline">Profile</a>
-        <a href="/logout" class="text-red-500 hover:underline">Logout</a>
+        <a href="/profile" class="text-indigo-600 font-medium">Profile</a>
+        <a href="/logout" class="text-red-500">Logout</a>
     <% } else { %>
         <a href="/login" class="text-indigo-600">Login</a>
-        <a href="/signUp" class="bg-indigo-600 text-white px-3 py-1 rounded shadow hover:bg-indigo-700">
+        <a href="/signUp" class="bg-indigo-600 text-white px-3 py-1 rounded">
             Signup
         </a>
     <% } %>
@@ -53,7 +53,7 @@
 
 <!-- CATEGORY -->
 
-<div class="flex justify-center gap-6 text-sm py-2 text-gray-600 border-t bg-white">
+<div class="flex justify-center gap-6 text-sm py-2 text-gray-600 border-t">
 
 ```
 <a href="/category/Books" class="hover:text-indigo-600">Books</a>
@@ -67,23 +67,23 @@
 
 </div>
 
-<!-- 🌟 HERO SECTION -->
+<!-- 🌟 HERO -->
 
-<div class="max-w-7xl mx-auto mt-8 px-4">
+<div class="max-w-7xl mx-auto mt-6 px-4">
 
-<div class="bg-gradient-to-r from-indigo-600 to-indigo-500 text-white rounded-2xl p-6 shadow-lg">
+<div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl p-6">
 
 ```
-<h2 class="text-xl md:text-2xl font-bold">
+<h2 class="text-2xl font-bold">
     Buy & Sell within your College
 </h2>
 
 <p class="text-sm mt-2 opacity-90">
-    Trusted marketplace for students — books, notes, electronics & more
+    Books, notes, electronics & more — trusted student marketplace
 </p>
 
 <a href="/addItems"
-class="inline-block mt-4 bg-white text-indigo-600 px-4 py-2 rounded-lg font-medium hover:scale-105 transition">
+class="inline-block mt-4 bg-white text-indigo-600 px-4 py-2 rounded font-medium hover:scale-105 transition">
     Start Selling
 </a>
 ```
@@ -101,7 +101,7 @@ class="inline-block mt-4 bg-white text-indigo-600 px-4 py-2 rounded-lg font-medi
 </h2>
 
 <a href="/addItems"
-class="bg-indigo-600 text-white px-4 py-2 rounded-lg shadow hover:bg-indigo-700 transition">
+class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">
 
 * Add Item
 
@@ -115,50 +115,43 @@ class="bg-indigo-600 text-white px-4 py-2 rounded-lg shadow hover:bg-indigo-700 
 
 <% items.forEach(item => { %>
 
-<div class="relative rounded-xl overflow-hidden group 
-bg-gradient-to-br from-slate-900 to-slate-800 text-white 
-shadow-md hover:shadow-2xl transition duration-300">
+<div class="bg-white border rounded-xl overflow-hidden hover:shadow-lg transition">
 
 ```
-<!-- GLOW -->
-<div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition 
-bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 blur-xl"></div>
-
 <!-- IMAGE -->
-<div class="h-44 bg-slate-800 flex items-center justify-center relative overflow-hidden">
+<div class="h-40 bg-gray-100 flex items-center justify-center relative">
 
     <% if(item.image){ %>
-        <img src="<%= item.image %>" 
-        class="w-full h-full object-cover group-hover:scale-110 transition duration-300">
+        <img src="<%= item.image %>" class="w-full h-full object-cover">
     <% } else { %>
         <span class="text-gray-400 text-sm">No Image</span>
     <% } %>
 
     <!-- Wishlist -->
     <a href="/wishlist/add/<%= item._id %>"
-    class="absolute top-2 right-2 bg-white/10 backdrop-blur p-2 rounded-full hover:scale-110 transition">
+    class="absolute top-2 right-2 bg-white p-1 rounded-full shadow hover:scale-110 transition">
         ❤️
     </a>
 
 </div>
 
 <!-- CONTENT -->
-<div class="p-3 relative z-10">
+<div class="p-3">
 
-    <h2 class="text-sm font-semibold truncate">
+    <h2 class="text-sm font-medium text-gray-800 truncate">
         <%= item.name %>
     </h2>
 
-    <p class="text-emerald-400 font-bold text-sm mt-1">
+    <p class="text-green-600 font-semibold text-sm mt-1">
         ₹ <%= item.price %>
     </p>
 
-    <p class="text-xs text-gray-400 mt-1">
+    <p class="text-xs text-gray-500 mt-1">
         <%= item.user?.college || "Unknown College" %>
     </p>
 
     <a href="/item/<%= item._id %>"
-    class="block text-center mt-3 bg-indigo-600 text-white py-1.5 rounded-lg text-sm hover:bg-indigo-700 transition">
+    class="block text-center mt-2 bg-indigo-600 text-white py-1 rounded text-sm hover:bg-indigo-700 transition">
         View Details
     </a>
 
