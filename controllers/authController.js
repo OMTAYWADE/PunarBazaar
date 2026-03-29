@@ -1,62 +1,57 @@
 const User = require('../models/User');
-const bcrypt = require('bcrypt');
-const Item = require('../models/Item');
+const authServices = require('../services/authServices');
 
-// Sign UP
-exports.signUpPage = (req, res) => {
-    res.render('signUp');
-};
+// Sign UP page
+exports.signUpPage = (req, res) => res.render('signUp');
 
-//Login
-exports.loginPage = (req, res) => {
-    res.render('login');
-};
+//Login page
+exports.loginPage = (req, res) => res.render('login');
 
+// Sign UP post
 exports.signUp = async (req, res) => {
-    const { name, password, email, phone } = req.body;
-    const hashed = await bcrypt.hash(password, 10);
-
-    const newUser = await User.create({
-        name,
-        password: hashed,
-        email, phone
-    });
-    req.session.userId = newUser._id
-    res.redirect('/profile');
+    try {
+        const newUser = await authServices.createUser(req.body);
+        req.session.userId = newUser._id
+        res.redirect('/profile');
+    } catch (err) {
+        res.send(err.message);
+    }
 };
 
+//Login post
 exports.login = async (req, res) => {
-    const { email, password } = req.body;
-    let user = await User.findOne({ email });
-    if (!user) return res.send("User Not Found");
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.send("Wrong Password");
-    req.session.userId = user._id;
-    res.redirect('/');
+    try {
+        const user = await authServices.loginUser(req.body);
+        req.session.userId = user._id;
+        res.redirect('/');
+    } catch (err){
+        res.send(err.message);
+    }
 };
 
+//logout
 exports.logout = async (req, res) => {
     req.session.destroy(() => {
         res.redirect('/');
     });
 };
 
+//profile page
 exports.profilePage = async(req, res) => {
     const user = await User.findById(req.session.userId);
     res.render('profile', {user});
 } 
 
+//update profile 
 exports.profile = async (req, res) => {
-    const { phone, college, branch, division, year } = req.body;
-    console.log(phone);
-    
-    let updateData = { phone, college, branch, division, year };
-
-    if (req.file) {
-        updateData.collegeIdImage = "/uploads/" + req.file.filename;
-        updateData.verificationStatus = "pending";
+    try {
+        await authServices.updateProfile(
+            req.session.userId,
+            req.body,
+            req, file
+        );
+        res.redirect('/profile');
+    } catch (err) {
+        res.send("Profile update Error");
     }
-    await User.findByIdAndUpdate(req.session.userId, updateData);
-    res.redirect('/profile');
 };

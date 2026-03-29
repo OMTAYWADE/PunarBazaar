@@ -1,3 +1,5 @@
+const User = require('../models/User');
+
 exports.checkPendingPayment = async (req, res, next) => {
     const user = await User.findById(req.session.userId);
 

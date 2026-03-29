@@ -9,6 +9,7 @@ const upload = require('../utils/upload');
 const { isLoggedIn } = require('../middleware/authMiddleware');
 const { isProfileComplete } = require('../middleware/profileComplete');
 const { checkPendingPayment } = require('../middleware/paymentPending');
+const validateObject = require('../middleware/validateObject');
 
 router.get('/', itemControllers.getAllItems);
 router.get('/addItems',isLoggedIn,isProfileComplete, checkPendingPayment, itemControllers.addItemPage);
@@ -19,7 +20,7 @@ router.get('/item/:id', itemControllers.getItemDetails);
 router.get('/category/:name', itemControllers.getByCategory);
 
 
-router.get('/wishList/add/:id', isLoggedIn, itemControllers.addToWishList);
+router.get('/wishList/add/:id', isLoggedIn,validateObject, itemControllers.addToWishList);
 router.get('/wishList', isLoggedIn, itemControllers.getWishList);
 
 router.get('/feature/:id', isLoggedIn, itemControllers.featureItem);

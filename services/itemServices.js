@@ -1,0 +1,59 @@
+const Item = require('../models/Item.js');
+const User = require('../models/User.js');
+
+exports.getAllItems = async () => {
+    await Item.updateMany(
+        { featuredUntil: { $lt: new Date() } },
+        { isFeatured: false }
+    );
+
+    return await Item.find().populate("user").sort({ isFeatured: -1, createdAt: -1 });
+};
+
+exports.createItem = async (data, userId, file) => {
+    const { name, price, desc, category } = data;
+    
+    if (category === "Notes" && price > 10) {
+        throw new Error("Notes price must be 10 rupess or below");
+    }
+
+    const image = file ? '/uploads/' + file.filename : "";
+    
+    return await Item.create({
+        name, price, category, desc, image, user: userId,
+    });
+};
+
+exports.deleteItems = async (itemId, userId) => {
+    const item = await Item.findById(itemId);
+
+    if (!item.user.equals(userId)) throw new Error("Not Authorized");
+
+    return await Item.findByIdAndDelete(itemId);
+};
+
+exports.getItemDetails = async (itemId) => {
+    const item = await Item.findById(itemId).populate("user");
+    console.log("Item ID:", itemId);
+    console.log("Item:", item);
+    if (!item) throw new Error("Item Not found");
+    
+    const Recommended = await Item.find({
+        category: item.category,
+        _id: { $ne: itemId },
+    }).limit(4);
+
+    return { item, Recommended };
+};
+
+exports.addToWishList = async (userId, itemId) => {
+    if (!mongoose.Types.ObjectId.isValid(itemId)) throw new Error("Invalid Item Id");
+    const user = await User.findById(userId);
+        
+    // avoid duplicate
+    if (!user.wishList.includes(ItemId)) {
+        user.wishList.push(ItemId);
+        await user.save();
+    }
+    return user;
+};

@@ -17,6 +17,7 @@ const itemSchema = new mongoose.Schema({
         required: true,
         default: "Other",
     },
+    tags: [String],
     
     isFeatured: {
         type: Boolean,
@@ -39,6 +40,13 @@ const itemSchema = new mongoose.Schema({
         default: "product"
     }
 });
+
+itemSchema.index=({
+    name: "text",
+    desc: "text",
+    category: "text",
+    tags:"text",
+})
 
 const Item = mongoose.model('Item', itemSchema);
 
