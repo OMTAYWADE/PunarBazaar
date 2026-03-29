@@ -34,8 +34,7 @@ exports.deleteItems = async (itemId, userId) => {
 
 exports.getItemDetails = async (itemId) => {
     const item = await Item.findById(itemId).populate("user");
-    console.log("Item ID:", itemId);
-    console.log("Item:", item);
+
     if (!item) throw new Error("Item Not found");
     
     const Recommended = await Item.find({
@@ -47,7 +46,7 @@ exports.getItemDetails = async (itemId) => {
 };
 
 exports.addToWishList = async (userId, itemId) => {
-    if (!mongoose.Types.ObjectId.isValid(itemId)) throw new Error("Invalid Item Id");
+    if (!mongoose.Types.ObjectId.isValid(itemId)) {throw new Error("Invalid Item Id");}
     const user = await User.findById(userId);
         
     // avoid duplicate

@@ -2,7 +2,6 @@ const razorpay = require('../utils/razorpay');
 const User = require('../models/User');
 const Item = require('../models/Item');
 const crypto = require('crypto');
-const unlock = require('../models/Unlock');
 const Unlock = require('../models/Unlock');
 
 //create order
@@ -17,7 +16,7 @@ exports.createOrder = async (itemId, userId) => {
         if (user.college !== item.user.college) {
             amount = 1000;
         }
-    }
+    }  
 
     const order = await razorpay.orders.create({
         amount,
