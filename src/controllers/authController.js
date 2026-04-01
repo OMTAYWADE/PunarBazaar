@@ -10,7 +10,13 @@ exports.loginPage = (req, res) => res.render('login');
 exports.signUp = async (req, res) => {
     try {
         const newUser = await authServices.createUser(req.body);
-        req.user.userId = newUser._id
+        const token = authServices.generateToken(newUser);
+
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none"
+        });
         res.redirect('/profile');
     } catch (err) {
         res.send(err.message);
@@ -37,14 +43,13 @@ exports.login = async (req, res) => {
 
 //logout
 exports.logout = async (req, res) => {
-    req.session.destroy(() => {
-        res.redirect('/');
-    });
+    req.clearCookie("token");
+    res.redirect('/');  
 };
 
 //profile page
 exports.profilePage = async(req, res) => {
-    const user = await User.findById(req.session.userId);
+    const user = await User.findById(req.user?.userId);
     res.render('profile', {user});
 } 
 
@@ -52,7 +57,7 @@ exports.profilePage = async(req, res) => {
 exports.profile = async (req, res) => {
     try {
         await authServices.updateProfile(
-            req.user.userId,
+            req.user?.userId,
             req.body,
             req.file
         );
