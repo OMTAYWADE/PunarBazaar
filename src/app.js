@@ -2,8 +2,9 @@ const express = require('express');
 const app = express();
 require('dotenv').config();
 
-const connectdb = require('./config/db');
-connectdb();
+const connectDB = require('./config/db');
+console.log(connectDB);
+connectDB();
 
 const session = require('express-session');
 
