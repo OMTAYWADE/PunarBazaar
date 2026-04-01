@@ -71,7 +71,7 @@ exports.getItemDetails = async (req, res) => {
             if(unlock) isUnlocked = true
         }
 
-        res.render('details', { item, recommended, isUnlocked,  razorpay: process.env.RAZORPAY_KEY });
+        res.render('details', { item, recommended, isUnlocked,  razorpayKey: process.env.RAZORPAY_KEY });
     } catch (err) {
         res.send(err.message);
     } 
