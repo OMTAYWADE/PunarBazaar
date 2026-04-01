@@ -23,6 +23,7 @@ exports.login = async (req, res) => {
     try {
         const user = await authServices.loginUser(req.body);
         req.session.userId = user._id;
+        await req.session.save();
         res.redirect('/');
     } catch (err){
         res.send(err.message);
