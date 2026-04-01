@@ -11,6 +11,8 @@ const { isProfileComplete } = require('../middleware/profileComplete');
 const {checkPendingPayment}  = require('../middleware/paymentPending');
 const {validateObject} = require('../middleware/validateObject');
 console.log('validateObject',validateObject);
+console.log('islogged',isLoggedIn);
+console.log('adddToWishlist',itemControllers.addToWishList);
 
 
 router.get('/', itemControllers.getAllItems);
