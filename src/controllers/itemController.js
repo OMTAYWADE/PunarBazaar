@@ -58,7 +58,7 @@ exports.searchItems = async (req, res) => {
 exports.getItemDetails = async (req, res) => {
     try {
         const { item, recommended } = await itemServices.getItemDetails(req.params.id);
-        res.render('itemDetails', { item, recommended });
+        res.render('details', { item, recommended });
     } catch (err) {
         res.send(err.message);
     } 
