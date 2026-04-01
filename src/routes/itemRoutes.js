@@ -10,7 +10,7 @@ const { isLoggedIn } = require('../middleware/authMiddleware');
 const { isProfileComplete } = require('../middleware/profileComplete');
 const {checkPendingPayment}  = require('../middleware/paymentPending');
 const {validateObjectId} = require('../middleware/validateObject');
-console.log('validateObject',validateObjectId);
+console.log('validateObjectId',validateObjectId);
 console.log('islogged',isLoggedIn);
 console.log('adddToWishlist',itemControllers.addToWishList);
 
@@ -31,8 +31,5 @@ router.get('/feature/:id', isLoggedIn, itemControllers.featureItem);
 
 router.get('/unlock/:id', isLoggedIn, itemControllers.createOrder);
 router.post('/verifyPayment', isLoggedIn, itemControllers.verifyPayment);
-console.log("validateObject:", validateObject);
-console.log("checkPendingPayment:", checkPendingPayment);
-console.log("getAllItems:", itemControllers.getAllItems);
 
 module.exports = router;
