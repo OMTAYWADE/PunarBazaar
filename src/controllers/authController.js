@@ -1,7 +1,6 @@
 const User = require('../models/User');
 const authServices = require('../services/authServices');
 
-// Sign UP page
 exports.signUpPage = (req, res) => res.render('signUp');
 
 //Login page
@@ -11,7 +10,7 @@ exports.loginPage = (req, res) => res.render('login');
 exports.signUp = async (req, res) => {
     try {
         const newUser = await authServices.createUser(req.body);
-        req.session.userId = newUser._id
+        req.user.userId = newUser._id
         res.redirect('/profile');
     } catch (err) {
         res.send(err.message);
@@ -22,8 +21,14 @@ exports.signUp = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         const user = await authServices.loginUser(req.body);
-        req.session.userId = user._id;
-        await req.session.save();
+        const token = authServices.generateToken(user);
+
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none"
+        });
+
         res.redirect('/');
     } catch (err){
         res.send(err.message);
@@ -47,7 +52,7 @@ exports.profilePage = async(req, res) => {
 exports.profile = async (req, res) => {
     try {
         await authServices.updateProfile(
-            req.session.userId,
+            req.user.userId,
             req.body,
             req.file
         );

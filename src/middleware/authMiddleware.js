@@ -1,22 +1,21 @@
+const jwt = require('jsonwebtoken');
 exports.isLoggedIn = (req, res, next) => {
-    if (!req.session.userId) {
+    const token = req.cookies.token;
 
-        // if API request
-        if (req.headers.accept && req.headers.accept.includes("application/json")) {
-            return res.status(401).json({ error: "Not logged in" });
-        }
+    if (!token) return res.redirect('/login');
 
-        // normal page
-        console.log('User Session: ', req.session.userId);
-        
-        return res.redirect('/login');
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decoded;
+        next();
+    } catch (err) {
+        return res.redirect('/login')
     }
 
-    next();
 };
 
 exports.isLoggedOut = (req, res, next) => {
-    if (req.session.userId) {
+    if (req.user.userId) {
         return res.redirect('/');
     }
     next();

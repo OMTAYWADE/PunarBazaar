@@ -11,24 +11,9 @@ const session = require('express-session');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); 
 
-app.set('trust proxy', 1);
+const cookieParser = require('cookie-parser');
 
-app.use(session({
-    secret: process.env.SECRET || "Anonymous",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        secure: true,
-        httpOnly: true,
-        sameSite: "none",
-        maxAge: 1000 * 60 * 60 * 24
-    }
-}));
-app.use((req, res, next) => {
-    console.log('Session:', req.session);
-    next();
-    
-})
+app.use(cookieParser());
 
 //static
 app.use(express.static('public'));

@@ -10,7 +10,7 @@ const paymentServices = require('../services/paymentServices');
 exports.getAllItems = async (req, res) => {
 try{
     // remove expiry items
-    const items = await itemServices.getAllItems(req.session.userId);
+    const items = await itemServices.getAllItems(req.user.userId);
     res.render('home', { items });
 } catch (err) {
     res.send(err.message);
@@ -28,7 +28,7 @@ exports.addItemPage = (req, res) => {
 exports.createItem = async (req, res) => {
     try {
     
-        await itemServices.createItem(req.body, req.session.userId, req.file);
+        await itemServices.createItem(req.body, req.user.userId, req.file);
         res.redirect("/");
     } catch (err) {
         res.send(err.message);
@@ -38,7 +38,7 @@ exports.createItem = async (req, res) => {
 // delete items by his id
 exports.deleteItems = async (req, res) => {
     try {
-        await itemServices.deleteItems(req.session.userId, req.params.id);   
+        await itemServices.deleteItems(req.user.userId, req.params.id);   
         res.redirect('/'); 
     } catch (err) {
         res.send(err.message);
@@ -62,7 +62,7 @@ exports.getItemDetails = async (req, res) => {
         const { item, recommended } = await itemServices.getItemDetails(req.params.id);
         let isUnlocked = false;
 
-        if (req.session.userId) {
+        if (req.user.userId) {
             const unlock = await Unlock.findOne({
                 user: req.session.userId,
                 item: req.params.id
@@ -80,7 +80,7 @@ exports.getItemDetails = async (req, res) => {
 //wishList
 exports.addToWishList = async (req, res) => {
     try {
-        await itemServices.addToWishList( req.params.id, req.session.userId);
+        await itemServices.addToWishList( req.params.id, req.user.userId);
 
         res.redirect("back");
     } catch (err) {
@@ -90,7 +90,7 @@ exports.addToWishList = async (req, res) => {
 
 //get wishList
 exports.getWishList = async (req, res) => {
-    const user = await User.findById(req.session.userId).populate({
+    const user = await User.findById(req.user.userId).populate({
         path: "wishList",
         populate: { path: "user" }
 
@@ -101,7 +101,7 @@ exports.getWishList = async (req, res) => {
 exports.featureItem = async (req, res) => {
     const item = await Item.findById(req.params.id);
 
-    if (item.user != req.session.userId) {
+    if (item.user != req.user.userId) {
         res.send("Not Authorized");
     }
     const expiry = new Date();
@@ -117,7 +117,7 @@ exports.featureItem = async (req, res) => {
 // create razor pay order
 exports.createOrder = async (req, res) => {
     try {
-        const order = await paymentServices.createOrder(req.params.id, req.session.userId);
+        const order = await paymentServices.createOrder(req.params.id, req.user.userId);
         res.json(order);
     } catch (err) {
         res.status(500).json({error: err.message});
@@ -127,7 +127,7 @@ exports.createOrder = async (req, res) => {
 //verify payment
 exports.verifyPayment = async (req, res) => {
     try {
-        let success = await paymentServices.verifyPayment(req.body, req.session.userId);
+        let success = await paymentServices.verifyPayment(req.body, req.user.userId);
         res.json({ success });
     } catch (err) {
         res.json({ success: false });
