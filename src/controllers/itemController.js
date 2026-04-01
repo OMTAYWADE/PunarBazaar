@@ -1,4 +1,6 @@
+const Razorpay = require('razorpay');
 const Item = require('../models/Item.js');
+const Unlock = require('../models/Unlock.js');
 const User = require('../models/User.js');
 
 const itemServices = require('../services/itemServices.js');
@@ -58,7 +60,18 @@ exports.searchItems = async (req, res) => {
 exports.getItemDetails = async (req, res) => {
     try {
         const { item, recommended } = await itemServices.getItemDetails(req.params.id);
-        res.render('details', { item, recommended });
+        let isUnlocked = false;
+
+        if (req.session.userId) {
+            const unlock = await Unlock.findOne({
+                user: req.session.userId,
+                item: req.params.id
+            });
+
+            if(unlock) isUnlocked = true
+        }
+
+        res.render('details', { item, recommended, isUnlocked,  razorpay: process.env.RAZORPAY_KEY });
     } catch (err) {
         res.send(err.message);
     } 

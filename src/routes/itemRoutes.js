@@ -29,7 +29,7 @@ router.get('/wishlist', isLoggedIn, itemControllers.getWishList);
 
 router.get('/feature/:id', isLoggedIn, itemControllers.featureItem);
 
-router.get('/unlock/:id', isLoggedIn, itemControllers.createOrder);
+router.post('/unlock/:id', isLoggedIn, itemControllers.createOrder);
 router.post('/verifyPayment', isLoggedIn, itemControllers.verifyPayment);
 
 module.exports = router;
