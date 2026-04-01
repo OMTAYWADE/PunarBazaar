@@ -13,7 +13,7 @@ app.use(express.json());
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 app.use((req, res, next) => {
-    const token = req.session.token;
+    const token = req.cookies.token;
 
     if (token) {
         try {
