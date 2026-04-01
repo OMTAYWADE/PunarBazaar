@@ -12,8 +12,9 @@ app.use(express.json());
 //token 
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
+app.use(cookieParser());
 app.use((req, res, next) => {
-    const token = req.cookies.token;
+    const token = req.cookies?.token;
 
     if (token) {
         try {
@@ -28,8 +29,6 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(cookieParser());
-
 //static
 app.use(express.static('public'));
 app.use('/uploads', express.static('public/uploads'));
@@ -38,11 +37,11 @@ app.use('/uploads', express.static('public/uploads'));
 app.set('view engine', 'ejs');
 
 //global user
-const User = require('../src/models/User');
+const User = require('./models/User');
 app.use(async (req, res, next) => {
     try {
-        if (req.session.userId) {
-            res.locals.currentUser = await User.findById(req.session.userId);
+        if (req.user?.userId) {
+            res.locals.currentUser = await User.findById(req.user.userId);
         } else {
             res.locals.currentUser = null;
         }
