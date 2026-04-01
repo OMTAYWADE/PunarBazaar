@@ -28,7 +28,8 @@ exports.addItemPage = (req, res) => {
 exports.createItem = async (req, res) => {
     try {
     
-        await itemServices.createItem(req.body, req.user.userId, req.file);
+        await itemServices.createItem(req.body, req.user?.userId, req.file);
+        console.log("USER:", req.user);
         res.redirect("/");
     } catch (err) {
         res.send(err.message);
