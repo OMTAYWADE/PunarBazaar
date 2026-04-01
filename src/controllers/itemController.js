@@ -6,10 +6,13 @@ const paymentServices = require('../services/paymentServices');
 
 // home page
 exports.getAllItems = async (req, res) => {
-
+try{
     // remove expiry items
     const items = await itemServices.getAllItems(req.session.userId);
     res.render('home', { items });
+} catch (err) {
+    res.send(err.message);
+}
     
 };
 
@@ -64,7 +67,7 @@ exports.getItemDetails = async (req, res) => {
 //wishList
 exports.addToWishList = async (req, res) => {
     try {
-        const user = await itemServices.addToWishList( req.params.id, req.session.userId);
+        await itemServices.addToWishList( req.params.id, req.session.userId);
 
         res.redirect("back");
     } catch (err) {

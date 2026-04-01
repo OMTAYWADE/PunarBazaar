@@ -1,7 +1,8 @@
 const Item = require('../models/Item.js');
 const User = require('../models/User.js');
+const mongoose = require('mongoose');
 
-exports.getAllItems = async () => {
+exports.getAllItems = async (userId) => {
     await Item.updateMany(
         { featuredUntil: { $lt: new Date() } },
         { isFeatured: false }
@@ -44,12 +45,12 @@ exports.getItemDetails = async (itemId) => {
 
     if (!item) throw new Error("Item Not found");
     
-    const Recommended = await Item.find({
+    const recommended = await Item.find({
         category: item.category,
         _id: { $ne: itemId },
     }).limit(4);
 
-    return { item, Recommended };
+    return { item, recommended };
 };
 
 exports.addToWishList = async (userId, itemId) => {
@@ -57,8 +58,8 @@ exports.addToWishList = async (userId, itemId) => {
     const user = await User.findById(userId);
         
     // avoid duplicate
-    if (!user.wishList.includes(ItemId)) {
-        user.wishList.push(ItemId);
+    if (!user.wishList.includes(itemId)) {
+        user.wishList.push(itemId);
         await user.save();
     }
     return user;
