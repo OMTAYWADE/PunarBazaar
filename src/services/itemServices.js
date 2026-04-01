@@ -1,5 +1,5 @@
-const Item = require('../../src/models/Item.js');
-const User = require('../../src/models/User.js');
+const Item = require('../models/Item.js');
+const User = require('../models/User.js');
 
 exports.getAllItems = async () => {
     await Item.updateMany(

@@ -2,14 +2,14 @@ const express = require('express');
 const router = express.Router();
 
 //controllers
-const itemControllers = require('../../controllers/itemController');
-const upload = require('../../utils/upload');
+const itemControllers = require('../controllers/itemController');
+const upload = require('../utils/upload');
 
 //middleware
 const { isLoggedIn } = require('../../middleware/authMiddleware');
-const { isProfileComplete } = require('../../middleware/profileComplete');
-const {checkPendingPayment}  = require('../../middleware/paymentPending');
-const {validateObject} = require('../../middleware/validateObject');
+const { isProfileComplete } = require('../middleware/profileComplete');
+const {checkPendingPayment}  = require('../middleware/paymentPending');
+const {validateObject} = require('../middleware/validateObject');
 
 router.get('/', itemControllers.getAllItems);
 router.get('/addItems',isLoggedIn,isProfileComplete, checkPendingPayment, itemControllers.addItemPage);
