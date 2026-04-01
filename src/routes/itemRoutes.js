@@ -6,7 +6,7 @@ const itemControllers = require('../controllers/itemController');
 const upload = require('../utils/upload');
 
 //middleware
-const { isLoggedIn } = require('../../middleware/authMiddleware');
+const { isLoggedIn } = require('../middleware/authMiddleware');
 const { isProfileComplete } = require('../middleware/profileComplete');
 const {checkPendingPayment}  = require('../middleware/paymentPending');
 const {validateObject} = require('../middleware/validateObject');
