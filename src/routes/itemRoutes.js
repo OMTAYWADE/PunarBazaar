@@ -9,8 +9,8 @@ const upload = require('../utils/upload');
 const { isLoggedIn } = require('../middleware/authMiddleware');
 const { isProfileComplete } = require('../middleware/profileComplete');
 const {checkPendingPayment}  = require('../middleware/paymentPending');
-const {validateObject} = require('../middleware/validateObject');
-console.log('validateObject',validateObject);
+const {validateObjectId} = require('../middleware/validateObject');
+console.log('validateObject',validateObjectId);
 console.log('islogged',isLoggedIn);
 console.log('adddToWishlist',itemControllers.addToWishList);
 
@@ -24,7 +24,7 @@ router.get('/item/:id', itemControllers.getItemDetails);
 // router.get('/category/:name', itemControllers.getByCategory);
 
 
-router.get('/wishlist/add/:id', isLoggedIn,validateObject, itemControllers.addToWishList);
+router.get('/wishlist/add/:id', isLoggedIn,validateObjectId, itemControllers.addToWishList);
 router.get('/wishlist', isLoggedIn, itemControllers.getWishList);
 
 router.get('/feature/:id', isLoggedIn, itemControllers.featureItem);
