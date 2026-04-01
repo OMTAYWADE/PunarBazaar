@@ -6,12 +6,27 @@ const connectDB = require('./config/db');
 console.log(connectDB);
 connectDB();
 
-const session = require('express-session');
-
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); 
 
+//token 
 const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
+app.use((req, res, next) => {
+    const token = req.session.token;
+
+    if (token) {
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            req.user = decoded;
+        } catch {
+            req.user = null;
+        }
+    } else {
+        req.user = null;
+    }
+    next();
+});
 
 app.use(cookieParser());
 
