@@ -10,6 +10,8 @@ const { isLoggedIn } = require('../middleware/authMiddleware');
 const { isProfileComplete } = require('../middleware/profileComplete');
 const {checkPendingPayment}  = require('../middleware/paymentPending');
 const {validateObject} = require('../middleware/validateObject');
+console.log('validateObject',validateObject);
+
 
 router.get('/', itemControllers.getAllItems);
 router.get('/addItems',isLoggedIn,isProfileComplete, checkPendingPayment, itemControllers.addItemPage);
