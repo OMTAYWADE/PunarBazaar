@@ -120,7 +120,7 @@ exports.createOrder = async (req, res) => {
         const order = await paymentServices.createOrder(req.params.id, req.session.userId);
         res.json(order);
     } catch (err) {
-        res.status(500).send("Order error");
+        res.status(500).json({error: err.message});
     }
 };
 

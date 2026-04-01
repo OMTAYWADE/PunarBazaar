@@ -206,6 +206,9 @@
 document.getElementById("unlockBtn")?.addEventListener("click", async function () {
 
     const res = await fetch("/unlock/<%= item._id %>", { method: "POST" });
+
+    const text = await res.text();
+    console.log(text);
     const order = await res.json();
 
     const options = {
