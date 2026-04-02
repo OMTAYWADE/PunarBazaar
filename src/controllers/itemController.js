@@ -81,7 +81,7 @@ exports.getItemDetails = async (req, res) => {
 //wishList
 exports.addToWishList = async (req, res) => {
     try {
-        await itemServices.addToWishList(  req.user?.userId, req.params.id,)
+        await itemServices.addToWishList(req.user?.userId, req.params.id);
 
         res.redirect("back");
     } catch (err) {
