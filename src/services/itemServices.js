@@ -2,6 +2,8 @@ const Item = require('../models/Item.js');
 const User = require('../models/User.js');
 const mongoose = require('mongoose');
 
+const redisClient = require('../config/redis.js');
+
 exports.getAllItems = async (userId) => {
     await Item.updateMany(
         { featuredUntil: { $lt: new Date() } },
@@ -63,4 +65,40 @@ exports.addToWishList = async (userId, itemId) => {
         await user.save();
     }
     return user;
+};
+
+exports.getItemsBySearch = async (query) => {
+    const key = JSON.stringify(query);
+    const cachedData = await redisClient.get(key);
+
+    if (cachedData) {
+        console.log('From Redis Cache');
+        return JSON.parse(cachedData);
+    }
+
+    const search = query.search || "";
+    const page = parseInt(query.page) || 1;
+    const limit = parseInt(query.limit) || 5;
+    const skip = (page - 1) * limit
+    const sortType = query.sort || "latest";
+    const sortOptions = sortType === "oldest" ? { createdAt: 1 } : { createdAt: -1 };
+
+    const filter = {};
+    if (search) {
+        filter.$text = { $search: search };
+    }
+
+    if (query.user) {
+        filter.user = query.user;
+    }
+
+    if (query.status) {
+        filter.status = query.status;
+    }
+
+    const items = await Item.find(filter).skip(skip).limit(limit).sort(sortOptions).populate("user");
+
+    const total = await Item.countDocuments(filter);
+    const totalPages = Math.ceil(total / limit);
+    return { items, page, totalPages, hasPrevPage: page > 1, hasNextPage: page < totalPages };
 };

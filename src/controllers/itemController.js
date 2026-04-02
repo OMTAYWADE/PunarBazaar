@@ -78,6 +78,16 @@ exports.getItemDetails = async (req, res) => {
     } 
 };
 
+exports.getSearchItems = async (req, res, next) => {
+    
+    try{
+        const result = await itemServices.getItemsBySearch(req.query);
+        res.json(result);
+    } catch (err) {
+        next(err);
+    }
+}
+
 //wishList
 exports.addToWishList = async (req, res) => {
     try {
