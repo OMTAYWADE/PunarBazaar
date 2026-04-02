@@ -13,8 +13,6 @@ exports.generateToken = (user) => {
 exports.createUser = async (data) => {
     const { email, password, phone, name } = data;
     
-    if (!email || !password) throw new Error("Missing fields");
-    
     const existingUser = await User.findOne({ email });
     if (existingUser) throw new Error("Email Already Exsit");
     const hashed = await bcrypt.hash(password, 10);

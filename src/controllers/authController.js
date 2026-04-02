@@ -19,7 +19,7 @@ exports.signUp = async (req, res) => {
         });
         res.redirect('/profile');
     } catch (err) {
-        res.send(err.message);
+        res.status(400).json({message: err.message});
     }
 };
 
