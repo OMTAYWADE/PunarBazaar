@@ -79,9 +79,11 @@ exports.getItemDetails = async (req, res) => {
             const unlock = await Unlock.findOne({
                 user: req.user?.userId,
                 item: req.params.id
-            });
+            }).sort({ createdAt: -1 });
 
-            if(unlock) isUnlocked = true
+            if(unlock && unlock.status === "paid"){
+                isUnlocked = true;
+            }
         }
 
         res.render('details', { item, recommended, isUnlocked,  razorpayKey: process.env.RAZORPAY_KEY });
