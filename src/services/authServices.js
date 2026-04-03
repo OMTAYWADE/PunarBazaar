@@ -47,7 +47,7 @@ exports.updateProfile = async (userId,data, file) => {
         if (data[field]) updateData[field] = data[field];
     });
     if (file) {
-        updateData.collegeIdImage = "/uploads/" + file.filename;
+        updateData.collegeIdImage = file.path;
         updateData.verificationStatus = "pending";
     }   
     return await User.findByIdAndUpdate(userId, updateData, { new: true });
