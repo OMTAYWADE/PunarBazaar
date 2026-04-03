@@ -14,7 +14,7 @@ const { apiLimiter } = require('../middleware/rateLimiter');
 
 
 router.get('/', itemControllers.getAllItems);
-router.get('/addItems', itemControllers.addItemPage);
+router.get('/addItems',apiLimiter, isLoggedIn,isProfileComplete, itemControllers.addItemPage);
 router.post('/addItems',apiLimiter,isLoggedIn, isProfileComplete,checkPendingPayment, upload.single('image'), itemControllers.createItem);
 router.get('/delete/:id',isLoggedIn, itemControllers.deleteItems);
 router.get('/search', itemControllers.searchItems);

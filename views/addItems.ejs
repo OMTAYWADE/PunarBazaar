@@ -1,194 +1,108 @@
 <!DOCTYPE html>
-
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><%= item.name %> - PunarBazaar</title>
+<title>Add Item</title>
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
-<body class="bg-gradient-to-br from-slate-100 via-indigo-50 to-slate-200">
+<body class="bg-gradient-to-br from-slate-100 via-indigo-50 to-slate-200 min-h-screen">
 
-<div class="max-w-6xl mx-auto mt-8 px-4">
+<div class="max-w-5xl mx-auto px-4 py-10">
 
-<!-- GRID -->
-
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-<!-- IMAGE -->
-<div class="bg-white/90 backdrop-blur border rounded-2xl shadow-md p-4">
-
-    <div class="h-80 bg-gray-100 flex items-center justify-center rounded-xl overflow-hidden">
-        <% if(item.image){ %>
-            <img src="<%= item.image %>" class="w-full h-full object-cover hover:scale-105 transition duration-300">
-        <% } else { %>
-            <span class="text-gray-400">No Image</span>
-        <% } %>
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-semibold text-gray-800">Add New Item</h2>
+        <a href="/" class="text-indigo-600 hover:underline">Back</a>
     </div>
 
-</div>
+    <!-- Card -->
+    <div class="bg-white/90 backdrop-blur-lg border border-gray-200 rounded-2xl shadow-lg p-6">
 
-<!-- DETAILS -->
-<div class="bg-white/90 backdrop-blur border rounded-2xl shadow-md p-6">
+        <form action="/addItems" method="POST" enctype="multipart/form-data" id="form">
 
-    <!-- TITLE -->
-    <h1 class="text-xl font-semibold text-gray-800 mb-2">
-        <%= item.name %>
-    </h1>
+            <!-- GRID -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-    <!-- PRICE -->
-    <p class="text-3xl font-bold text-emerald-600 mb-4">
-        ₹ <%= item.price %>
-    </p>
+                <!-- Name -->
+                <div>
+                    <label class="text-sm text-gray-600">Item Name</label>
+                    <input name="name" required
+                    class="w-full mt-1 p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 transition">
+                </div>
 
-    <!-- DESCRIPTION -->
-    <p class="text-gray-600 text-sm mb-5 leading-relaxed">
-        <%= item.desc %>
-    </p>
+                <!-- Price -->
+                <div>
+                    <label class="text-sm text-gray-600">Price</label>
+                    <input type="number" name="price" required
+                    class="w-full mt-1 p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 transition">
+                </div>
 
-    <!-- 🔥 UNLOCK CARD -->
-    <div class="rounded-xl border p-4 mb-5 bg-gradient-to-r from-indigo-50 to-indigo-100">
+                <!-- Category -->
+                <div>
+                    <label class="text-sm text-gray-600">Category</label>
+                    <select name="category"
+                    class="w-full mt-1 p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 transition">
+                        <option>Notes</option>
+                        <option>Books</option>
+                        <option>Electronics</option>
+                    </select>
+                </div>
 
-        <% if(!isUnlocked){ %>
+                <!-- Image Upload -->
+                <div>
+                    <label class="text-sm text-gray-600">Upload Image</label>
+                    <input type="file" name="image" id="imgInput"
+                    class="w-full mt-1 text-sm">
+                </div>
 
-            <p class="text-sm text-gray-700 mb-3">
-                Unlock seller contact to continue
-            </p>
-
-            <button id="unlockBtn"
-            class="bg-indigo-600 text-white px-4 py-2 rounded-lg w-full font-medium 
-            shadow hover:scale-[1.02] hover:bg-indigo-700 transition">
-                Unlock Contact (₹5)
-            </button>
-
-        <% } else { %>
-
-            <div class="text-green-700 font-medium">
-                Contact: <%= item.user.phone %>
             </div>
 
-        <% } %>
+            <!-- Description -->
+            <div class="mt-5">
+                <label class="text-sm text-gray-600">Description</label>
+                <textarea name="desc"
+                class="w-full mt-1 p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 transition"></textarea>
+            </div>
 
-    </div>
+            <!-- Image Preview -->
+            <img id="preview" class="mt-4 rounded-lg hidden max-h-40 border shadow-sm">
 
-    <!-- WHATSAPP -->
-    <% if(isUnlocked){ %>
+            <!-- Submit -->
+            <button id="btn"
+            class="mt-6 w-full py-3 rounded-xl text-white font-medium
+            bg-gradient-to-r from-indigo-600 to-indigo-500
+            hover:scale-[1.02] active:scale-[0.98]
+            transition duration-200 shadow-md">
+                Add Item
+            </button>
 
-    <%
-    let message = `Hello, I am interested in your item "${item.name}" listed for ₹${item.price}. Is it available?`;
-    %>
-
-    <a href="https://wa.me/<%= item.user?.phone %>?text=<%= encodeURIComponent(message) %>"
-    class="block bg-green-600 text-white text-center py-3 rounded-lg font-medium hover:bg-green-700 transition">
-        Contact via WhatsApp
-    </a>
-
-    <% } %>
-
-    <!-- SELLER -->
-    <div class="mt-6 border-t pt-4">
-
-        <h2 class="font-semibold text-gray-700 mb-3">
-            Seller Information
-        </h2>
-
-        <div class="space-y-1 text-sm text-gray-600">
-            <p><strong>Name:</strong> <%= item.user.name %></p>
-            <p><strong>College:</strong> <%= item.user.college %></p>
-            <p><strong>Branch:</strong> <%= item.user.branch %></p>
-        </div>
-
-        <div class="mt-3 flex items-center gap-3 text-sm">
-
-            <span class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-xs">
-                Trust: <%= item.user.trustScore %>
-            </span>
-
-            <% if(item.user.isVerified){ %>
-                <span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">
-                    Verified
-                </span>
-            <% } %>
-
-        </div>
+        </form>
 
     </div>
 
 </div>
 
-</div>
-
-<!-- RECOMMENDED -->
-
-<div class="mt-10">
-
-<h2 class="text-lg font-semibold text-gray-800 mb-4">
-    Recommended Items
-</h2>
-
-<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
-
-<% recommended.forEach(r => { %>
-
-    <div class="bg-white border rounded-xl p-3 hover:shadow-lg transition">
-
-        <p class="text-sm font-medium truncate"><%= r.name %></p>
-        <p class="text-emerald-600 text-sm font-semibold">₹ <%= r.price %></p>
-
-        <a href="/item/<%= r._id %>"
-        class="text-indigo-600 text-xs font-medium hover:underline">
-            View
-        </a>
-
-    </div>
-
-<% }) %>
-
-</div>
-
-</div>
-
-</div>
-
-<!-- RAZORPAY -->
-
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
+<!-- SCRIPT -->
 <script>
-document.getElementById("unlockBtn")?.addEventListener("click", async function () {
+const input = document.getElementById('imgInput');
+const preview = document.getElementById('preview');
+const btn = document.getElementById('btn');
+const form = document.getElementById('form');
 
-    const res = await fetch("/unlock/<%= item._id %>", { method: "POST" });
-    const order = await res.json();
+// Image preview
+input.onchange = e => {
+    const file = e.target.files[0];
+    if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.classList.remove('hidden');
+    }
+};
 
-    const options = {
-        key: "<%= razorpayKey %>",
-        amount: order.amount,
-        currency: "INR",
-        order_id: order.id,
-
-        handler: async function (response) {
-
-            const verify = await fetch("/verify-payment", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    ...response,
-                    itemId: "<%= item._id %>"
-                })
-            });
-
-            const data = await verify.json();
-
-            if (data.success) {
-                location.reload();
-            }
-        }
-    };
-
-    const rzp = new Razorpay(options);
-    rzp.open();
-});
+// Loading state
+form.onsubmit = () => {
+    btn.innerText = "Uploading...";
+    btn.disabled = true;
+};
 </script>
 
 </body>

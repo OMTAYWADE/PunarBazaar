@@ -23,7 +23,12 @@ exports.getAllItems = async (req, res) => {
 
 // add items page route
 exports.addItemPage = (req, res) => {
-    res.render('addItems');
+   try{
+       res.render('addItems');
+   } catch (err) {
+       console.log(err);
+       res.send(err.message);
+   }
 };
 
 
