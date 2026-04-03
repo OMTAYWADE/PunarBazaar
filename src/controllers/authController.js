@@ -68,7 +68,7 @@ exports.profile = async (req, res) => {
             req.body,
             req.file
         );
-        res.redirect('/profile');
+        res.redirect('/addItems');
     } catch (err) {
         res.status(500).send("Profile update error");
     }
