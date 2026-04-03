@@ -1,3 +1,5 @@
+const multer = require('multer');
+const path = require('path');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('cloudinary').v2;
 
@@ -15,14 +17,14 @@ const storage = new CloudinaryStorage({
     }
 });
 
-const fileFilter = (req, file, cd) => {
+const fileFilter = (req, file, cb) => {
     const allowed = [".jpg", ".jpeg", ".png", ".pdf"];
     const ext = path.extname(file.originalname).toLowerCase();
 
     if (allowed.includes(ext)) {
-        cd(null, true);
+        cb(null, true);
     } else {
-        cd(new Error("Only images and pdf is allowed"), false);
+        cb(new Error("Only images and pdf is allowed"), false);
     }
 };
 
