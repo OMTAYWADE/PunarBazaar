@@ -28,7 +28,7 @@ exports.createItem = async (data, userId, file) => {
         throw new Error("Notes price must be 10 rupess or below");
     }
     
-    const image = file ? '/uploads/' + file.filename : "";
+    const image = file.path;
     await redisClient.del(`search:*`);
     return await Item.create({
         name, price, category, desc, image, user: userId,
