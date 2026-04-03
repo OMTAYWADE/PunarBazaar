@@ -1,21 +1,21 @@
 const User = require('../models/User');
 const authServices = require('../services/authServices');
 
+// pages
 exports.signUpPage = (req, res) => res.render('signUp');
-
-//Login page
 exports.loginPage = (req, res) => res.render('login');
 
 // Sign UP post
 exports.signUp = async (req, res) => {
     try {
+
         const newUser = await authServices.createUser(req.body);
         const token = authServices.generateToken(newUser);
 
         res.cookie("token", token, {
             httpOnly: true,
-            secure: true,
-            sameSite: "none"
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax"
         });
         res.redirect('/profile');
     } catch (err) {
@@ -31,27 +31,34 @@ exports.login = async (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: true,
-            secure: true,
-            sameSite: "none"
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax"
         });
 
         res.redirect('/');
     } catch (err){
-        res.send(err.message);
+        res.status(400).json({ message: err.message });
     }
 };
 
 //logout
 exports.logout = async (req, res) => {
-    req.clearCookie("token");
+    res.clearCookie("token");
     res.redirect('/');  
 };
 
 //profile page
-exports.profilePage = async(req, res) => {
-    const user = await User.findById(req.user?.userId);
-    res.render('profile', {user});
-} 
+exports.profilePage = async (req, res) => {
+    try {
+        if (!req.user) {
+            return res.redirect('/login');
+        }
+        const user = await User.findById(req.user.userId);
+        res.render('profile', { user });
+    } catch (err) {
+        res.status(500).send("Error loading profile");
+    }
+};
 
 //update profile 
 exports.profile = async (req, res) => {
@@ -63,6 +70,6 @@ exports.profile = async (req, res) => {
         );
         res.redirect('/profile');
     } catch (err) {
-        res.send("Profile update Error");
+        res.status(500).send("Profile update error");
     }
 };

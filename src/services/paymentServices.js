@@ -7,7 +7,6 @@ const Unlock = require('../models/Unlock');
 //create order
 exports.createOrder = async (itemId, userId) => {
     const item = await Item.findById(itemId).populate("user");
-
     if (!item) throw new Error("Item not Found");
 
     let amount = 500;
@@ -23,13 +22,21 @@ exports.createOrder = async (itemId, userId) => {
     const order = await razorpay.orders.create({
         amount,
         currency: "INR",
-        receipt: "unlock_" + Date.now()
+        receipt: `unlock_${itemId}_${userId}_${Date.now()}`
+    });
+
+    //store mapping
+    await Unlock.create({
+        user: userId,
+        item: itemId,
+        orderId: order._id,
+        status: "pending"
     });
     return order;
 };
 
 exports.verifyPayment = async (data, userId) => {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, itemId } = data;
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature} = data;
 
     const body = razorpay_order_id + "|" + razorpay_payment_id;
 
@@ -39,11 +46,20 @@ exports.verifyPayment = async (data, userId) => {
         throw new Error("Invalid Payment");
     }
 
-    await Unlock.create({
-        user: userId,
-        item: itemId,
-        paymentId: razorpay_payment_id,
-        status: "paid"
+    const unlock = await Unlock.findOne({
+        orderId: razorpay_order_id,
+        user: userId
     });
+    if (!unlock) {
+        throw new Error("Order not found");
+    }
+
+    if (unlock.status === "paid") {
+        return true;
+    }
+
+    unlock.paymentId = razorpay_payment_id;
+    unlock.status = "paid"
+    await Unlock.save();
     return true;
 };

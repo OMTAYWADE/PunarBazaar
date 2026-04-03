@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 exports.generateToken = (user) => {
     return jwt.sign(
-        { userId: user._id },
+        { userId: user._id, role: user },
         process.env.JWT_SECRET,
         { expiresIn: '7d' }
     );
@@ -12,8 +12,13 @@ exports.generateToken = (user) => {
 
 exports.createUser = async (data) => {
     const { email, password, phone, name } = data;
+
+    if (!email || !password || !name) {
+    throw new Error("Required fields missing");
+}
     
-    const existingUser = await User.findOne({ email });
+    const normalizedEmail = email.toLowerCase();
+    const existingUser = await User.findOne({ email: normalizedEmail });
     if (existingUser) throw new Error("Email Already Exsit");
     const hashed = await bcrypt.hash(password, 10);
 
@@ -35,8 +40,13 @@ exports.loginUser = async ({ email, password }) => {
 };
 
 exports.updateProfile = async (userId,data, file) => {
-    let updateData = { ...data };
-     if (file) {
+    const allowedField = ["name", "phone"];
+    let updateData = {};
+
+    allowedField.forEach(field => {
+        if (data[field]) updateData[field] = data[field];
+    });
+    if (file) {
         updateData.collegeIdImage = "/uploads/" + file.filename;
         updateData.verificationStatus = "pending";
     }   

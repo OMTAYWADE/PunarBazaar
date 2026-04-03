@@ -8,7 +8,10 @@ const paymentServices = require('../services/paymentServices');
 
 // home page
 exports.getAllItems = async (req, res) => {
-try{
+    try {
+    if (!req.user) {
+    return res.redirect('/login');
+}
     // remove expiry items
     const items = await itemServices.getAllItems(req.user?.userId);
     res.render('home', { items });
@@ -27,9 +30,10 @@ exports.addItemPage = (req, res) => {
 // create item using input box
 exports.createItem = async (req, res) => {
     try {
-    
+    if (!req.user) {
+    return res.redirect('/login');
+}
         await itemServices.createItem(req.body, req.user?.userId, req.file);
-        console.log("USER:", req.user);
         res.redirect("/");
     } catch (err) {
         res.send(err.message);
@@ -39,6 +43,9 @@ exports.createItem = async (req, res) => {
 // delete items by his id
 exports.deleteItems = async (req, res) => {
     try {
+        if (!req.user) {
+    return res.redirect('/login');
+}
         await itemServices.deleteItems(req.user?.userId, req.params.id);   
         res.redirect('/'); 
     } catch (err) {
@@ -91,6 +98,9 @@ exports.getSearchItems = async (req, res, next) => {
 //wishList
 exports.addToWishList = async (req, res) => {
     try {
+        if (!req.user) {
+    return res.redirect('/login');
+}
         await itemServices.addToWishList(req.user?.userId, req.params.id);
 
         res.redirect("back");
@@ -110,9 +120,11 @@ exports.getWishList = async (req, res) => {
 };
 
 exports.featureItem = async (req, res) => {
+    if (!req.user) return res.redirect('/login');
+
     const item = await Item.findById(req.params.id);
 
-    if (item.user != req.user?.userId) {
+    if (item.user.toString() !== req.user?.userId) {
         res.send("Not Authorized");
     }
     const expiry = new Date();
@@ -128,7 +140,9 @@ exports.featureItem = async (req, res) => {
 // create razor pay order
 exports.createOrder = async (req, res) => {
     try {
-        const order = await paymentServices.createOrder(req.params.id, req.user?.userId);
+       if (!req.user) return res.status(401).json({ error: "Login required" });
+
+        const order = await paymentServices.createOrder(req.params.id, req.user.userId);
         res.json(order);
     } catch (err) {
         res.status(500).json({error: err.message});
@@ -138,6 +152,14 @@ exports.createOrder = async (req, res) => {
 //verify payment
 exports.verifyPayment = async (req, res) => {
     try {
+        if (!req.user) {
+    return res.redirect('/login');
+        }
+        await Unlock.create({
+    user: userId,
+    item: itemId,
+    paymentId: razorpay_payment_id
+});
         let success = await paymentServices.verifyPayment(req.body, req.user?.userId);
         res.json({ success });
     } catch (err) {
