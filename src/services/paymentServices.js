@@ -29,7 +29,7 @@ exports.createOrder = async (itemId, userId) => {
     await Unlock.create({
         user: userId,
         item: itemId,
-        orderId: order._id,
+        orderId: order.id,
         status: "pending"
     });
     return order;
@@ -60,6 +60,6 @@ exports.verifyPayment = async (data, userId) => {
 
     unlock.paymentId = razorpay_payment_id;
     unlock.status = "paid"
-    await Unlock.save();
+    await unlock.save();
     return true;
 };

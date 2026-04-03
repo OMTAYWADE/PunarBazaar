@@ -7,40 +7,41 @@
 
 <body class="bg-gradient-to-br from-slate-100 via-indigo-50 to-slate-200 min-h-screen">
 
-<div class="max-w-5xl mx-auto px-4 py-10">
+<div class="max-w-4xl mx-auto px-4 py-6 sm:py-10">
 
     <!-- Header -->
-    <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-semibold text-gray-800">Add New Item</h2>
-        <a href="/" class="text-indigo-600 hover:underline">Back</a>
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-6">
+        <h2 class="text-xl sm:text-2xl font-semibold text-gray-800">Add New Item</h2>
+        <a href="/" class="text-indigo-600 text-sm hover:underline">Back</a>
     </div>
 
     <!-- Card -->
-    <div class="bg-white/90 backdrop-blur-lg border rounded-2xl shadow-lg p-6">
+    <div class="bg-white/90 backdrop-blur border rounded-2xl shadow-md p-4 sm:p-6">
 
         <form action="/addItems" method="POST" enctype="multipart/form-data" id="form">
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <!-- GRID -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
                 <!-- Name -->
                 <div>
-                    <label class="text-sm text-gray-600">Item Name</label>
+                    <label class="text-xs text-gray-500">Item Name</label>
                     <input name="name" required
-                    class="w-full mt-1 p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500">
+                    class="w-full mt-1 p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm">
                 </div>
 
                 <!-- Price -->
                 <div>
-                    <label class="text-sm text-gray-600">Price</label>
+                    <label class="text-xs text-gray-500">Price</label>
                     <input type="number" name="price" required
-                    class="w-full mt-1 p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500">
+                    class="w-full mt-1 p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm">
                 </div>
 
                 <!-- Category -->
                 <div>
-                    <label class="text-sm text-gray-600">Category</label>
+                    <label class="text-xs text-gray-500">Category</label>
                     <select name="category" id="category"
-                    class="w-full mt-1 p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500">
+                    class="w-full mt-1 p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm">
                         <option value="Notes">Notes</option>
                         <option value="Books">Books</option>
                         <option value="Electronics">Electronics</option>
@@ -49,57 +50,50 @@
                 </div>
 
                 <!-- Custom Category -->
-                <div id="customCategoryBox" class="hidden">
-                    <label class="text-sm text-gray-600">Enter Category</label>
+                <div id="customBox" class="hidden">
+                    <label class="text-xs text-gray-500">Custom Category</label>
                     <input type="text" id="customCategory"
-                    class="w-full mt-1 p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-                    placeholder="e.g. Engineering Graphics">
-                </div>
-
-                <!-- Image Upload -->
-                <div class="md:col-span-2">
-                    <label class="text-sm text-gray-600">Upload Image</label>
-
-                    <div class="flex gap-3 mt-2">
-
-                        <!-- Gallery -->
-                        <input type="file" name="image" id="imgInput" accept="image/*"
-                        class="hidden">
-
-                        <button type="button" onclick="imgInput.click()"
-                        class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200">
-                            Choose Image
-                        </button>
-
-                        <!-- Camera -->
-                        <input type="file" accept="image/*" capture="environment" id="cameraInput" class="hidden">
-
-                        <button type="button" onclick="cameraInput.click()"
-                        class="px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200">
-                            Use Camera
-                        </button>
-
-                    </div>
+                    class="w-full mt-1 p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm">
                 </div>
 
             </div>
 
             <!-- Description -->
-            <div class="mt-5">
-                <label class="text-sm text-gray-600">Description</label>
+            <div class="mt-4">
+                <label class="text-xs text-gray-500">Description</label>
                 <textarea name="desc"
-                class="w-full mt-1 p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500"></textarea>
+                class="w-full mt-1 p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm"></textarea>
+            </div>
+
+            <!-- Upload Buttons -->
+            <div class="mt-4">
+                <label class="text-xs text-gray-500">Upload Image</label>
+
+                <div class="flex flex-col sm:flex-row gap-2 mt-2">
+
+                    <input type="file" id="imgInput" name="image" accept="image/*" class="hidden">
+                    <button type="button" onclick="imgInput.click()"
+                    class="w-full sm:w-auto px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg text-sm">
+                        Choose Image
+                    </button>
+
+                    <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden">
+                    <button type="button" onclick="cameraInput.click()"
+                    class="w-full sm:w-auto px-4 py-2 bg-green-100 text-green-700 rounded-lg text-sm">
+                        Use Camera
+                    </button>
+
+                </div>
             </div>
 
             <!-- Preview -->
-            <img id="preview" class="mt-4 rounded-lg hidden max-h-40 border shadow-sm">
+            <img id="preview" class="mt-4 hidden max-h-40 rounded-lg border shadow-sm w-full object-cover">
 
             <!-- Submit -->
             <button id="btn"
-            class="mt-6 w-full py-3 rounded-xl text-white font-medium
+            class="mt-6 w-full py-3 rounded-xl text-white font-medium text-sm
             bg-gradient-to-r from-indigo-600 to-indigo-500
-            hover:scale-[1.02] active:scale-[0.98]
-            transition shadow-md">
+            active:scale-[0.98] transition shadow">
                 Add Item
             </button>
 
@@ -111,26 +105,24 @@
 
 <script>
 const category = document.getElementById("category");
-const customBox = document.getElementById("customCategoryBox");
+const customBox = document.getElementById("customBox");
 const customInput = document.getElementById("customCategory");
 
 const imgInput = document.getElementById("imgInput");
 const cameraInput = document.getElementById("cameraInput");
 const preview = document.getElementById("preview");
+
 const form = document.getElementById("form");
 const btn = document.getElementById("btn");
 
-// Show custom category
+// Category toggle
 category.onchange = () => {
-    if (category.value === "Other") {
-        customBox.classList.remove("hidden");
-    } else {
-        customBox.classList.add("hidden");
-    }
+    customBox.classList.toggle("hidden", category.value !== "Other");
 };
 
-// Handle image preview
+// Preview
 function showPreview(file){
+    if (!file) return;
     preview.src = URL.createObjectURL(file);
     preview.classList.remove("hidden");
 }
@@ -138,12 +130,11 @@ function showPreview(file){
 imgInput.onchange = e => showPreview(e.target.files[0]);
 cameraInput.onchange = e => showPreview(e.target.files[0]);
 
-// Before submit → replace category if custom
+// Submit
 form.onsubmit = () => {
     if (category.value === "Other" && customInput.value.trim()) {
         category.value = customInput.value;
     }
-
     btn.innerText = "Uploading...";
     btn.disabled = true;
 };
