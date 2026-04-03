@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 exports.generateToken = (user) => {
     return jwt.sign(
-        { userId: user._id, role: user },
+        { userId: user._id},
         process.env.JWT_SECRET,
         { expiresIn: '7d' }
     );
@@ -25,7 +25,7 @@ exports.createUser = async (data) => {
     return await User.create({
         name,
         password: hashed,
-        email, phone
+        email, phone, role: "user"
     });
 };
 
@@ -40,15 +40,15 @@ exports.loginUser = async ({ email, password }) => {
 };
 
 exports.updateProfile = async (userId,data, file) => {
-    const allowedField = ["name", "phone"];
+    const allowedField = ["name", "phone", "college", "branch", "year", "division"];
     let updateData = {};
 
     allowedField.forEach(field => {
-        if (data[field]) updateData[field] = data[field];
+        if (data[field] !== undefined) {updateData[field] = data[field];}
     });
     if (file) {
         updateData.collegeIdImage = file.path;
         updateData.verificationStatus = "pending";
     }   
-    return await User.findByIdAndUpdate(userId, updateData, { new: true });
+    return await User.findByIdAndUpdate(userId, updateData, { returnDocument: "after" });
 };

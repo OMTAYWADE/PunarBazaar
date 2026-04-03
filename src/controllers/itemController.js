@@ -155,11 +155,7 @@ exports.verifyPayment = async (req, res) => {
         if (!req.user) {
     return res.redirect('/login');
         }
-        await Unlock.create({
-    user: userId,
-    item: itemId,
-    paymentId: razorpay_payment_id
-});
+        
         let success = await paymentServices.verifyPayment(req.body, req.user?.userId);
         res.json({ success });
     } catch (err) {
