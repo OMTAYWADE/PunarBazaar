@@ -20,23 +20,34 @@ exports.createUser = async (data) => {
     const normalizedEmail = email.toLowerCase();
     const existingUser = await User.findOne({ email: normalizedEmail });
     if (existingUser) throw new Error("Email Already Exsit");
-    const hashed = await bcrypt.hash(password, 10);
 
+    if (password.length < 6) {
+        throw new Error('Password must be at least 6 characters');
+    }
+
+    const hashed = await bcrypt.hash(password, 12);
+    
     return await User.create({
         name,
         password: hashed,
-        email, phone, role: "user"
+        email: normalizedEmail, phone, role: "user"
     });
 };
 
 exports.loginUser = async ({ email, password }) => {
-    let user = await User.findOne({ email });
+    const normalizedEmail = email.toLowerCase();
+    let user = await User.findOne({ email: normalizedEmail });
     if (!user) throw new Error("User Not Found");
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) throw new Error("Wrong Password");
 
-    return user;
+    user = user.toObject();
+    delete user.password;
+
+    const token = this.generateToken(user);
+
+    return {user, token};
 };
 
 exports.updateProfile = async (userId,data, file) => {
@@ -46,9 +57,9 @@ exports.updateProfile = async (userId,data, file) => {
     allowedField.forEach(field => {
         if (data[field] !== undefined) {updateData[field] = data[field];}
     });
-    if (file) {
-        updateData.collegeIdImage = file.path;
+    if (file?.path) {
+        updateData.collegeIdImage = file.path; 
         updateData.verificationStatus = "pending";
     }   
-    return await User.findByIdAndUpdate(userId, updateData, { returnDocument: "after" });
+    return await User.findByIdAndUpdate(userId, updateData, { new: true});
 };

@@ -2,9 +2,16 @@ const express = require('express');
 const app = express();
 require('dotenv').config();
 
+//view engine
+app.set('view engine', 'ejs');
+
+app.set('trust proxy', 1);
+
 const connectDB = require('./config/db');
-console.log(connectDB);
-connectDB();
+connectDB().catch(err => {
+    console.error("DB connection Failed", err);
+    process.exit(1);
+});
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); 
@@ -15,17 +22,17 @@ const jwt = require('jsonwebtoken');
 app.use(cookieParser());
 app.use((req, res, next) => {
     const token = req.cookies?.token;
+    if (!token) {
+        req.user = null;
+        return next();
+    }
 
-    if (token) {
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             req.user = decoded;
         } catch {
             req.user = null;
         }
-    } else {
-        req.user = null;
-    }
     next();
 });
 
@@ -33,15 +40,13 @@ app.use((req, res, next) => {
 app.use(express.static('public'));
 app.use('/uploads', express.static('public/uploads'));
 
-//view engine
-app.set('view engine', 'ejs');
-
 //global user
 const User = require('./models/User');
 app.use(async (req, res, next) => {
     try {
         if (req.user?.userId) {
-            res.locals.currentUser = await User.findById(req.user.userId);
+            const user = await User.findById(req.user.userId).select('-password');
+            res.locals.currentUser = user;
         } else {
             res.locals.currentUser = null;
         }
@@ -52,7 +57,7 @@ app.use(async (req, res, next) => {
 });
 
 //routes
-const itemRoutes = require('../src/routes/itemRoutes');
+const itemRoutes = require('./routes/itemRoutes');
 const authRoutes = require('./routes/authRoutes');
 
 app.use('/', itemRoutes);
@@ -60,7 +65,7 @@ app.use('/', authRoutes);
 
 app.use((err, req, res, next) => {
     console.error(err);
-    res.status(500).send("Something went wrong");
+    res.status(500).json({message: "Something went wrong"});
 });
 
 module.exports = app;

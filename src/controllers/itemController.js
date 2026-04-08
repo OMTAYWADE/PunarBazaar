@@ -74,19 +74,24 @@ exports.getItemDetails = async (req, res) => {
     try {
         const { item, recommended } = await itemServices.getItemDetails(req.params.id);
         let isUnlocked = false;
+        let isOwner = false;
 
         if (req.user?.userId) {
             const unlock = await Unlock.findOne({
                 user: req.user?.userId,
-                item: req.params.id
             }).sort({ createdAt: -1 });
 
             if(unlock && unlock.status === "paid"){
                 isUnlocked = true;
+
+            }
+
+            if (item.user._id.toString() === req.user.userId) {
+                isOwner = true;
             }
         }
 
-        res.render('details', { item, recommended, isUnlocked,  razorpayKey: process.env.RAZORPAY_KEY });
+        res.render('details', { item, recommended, isUnlocked,isOwner,  razorpayKey: process.env.RAZORPAY_KEY });
     } catch (err) {
         res.send(err.message);
     } 
@@ -150,6 +155,7 @@ exports.createOrder = async (req, res) => {
        if (!req.user) return res.status(401).json({ error: "Login required" });
 
         const order = await paymentServices.createOrder(req.params.id, req.user.userId);
+
         res.json(order);
     } catch (err) {
         res.status(500).json({error: err.message});
@@ -159,13 +165,12 @@ exports.createOrder = async (req, res) => {
 //verify payment
 exports.verifyPayment = async (req, res) => {
     try {
-        if (!req.user) {
-    return res.redirect('/login');
-        }
+        console.log("VERIFY BODY:", req.body);
         
-        let success = await paymentServices.verifyPayment(req.body, req.user?.userId);
+        let success = await paymentServices.verifyPayment(req.body, req.user?.userId, req.body.itemId);
         res.json({ success });
     } catch (err) {
+        console.log('"Verify Error: ', err);
         res.json({ success: false });
     }
 };

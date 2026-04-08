@@ -9,18 +9,32 @@ exports.createOrder = async (itemId, userId) => {
     const item = await Item.findById(itemId).populate("user");
     if (!item) throw new Error("Item not Found");
 
+    const user = await User.findById(userId);
+    if (!user) throw new Error("User not Found");
+    
+    //check payment is already done or not
+
+    const existing = await Unlock.findOne({
+        user: userId,
+        item: itemId,
+        status: "paid"
+    });
+
+    if (existing) {
+        throw new Error("Item already Purchased");
+    }
+
     let amount = 500;
 
-    if (item.type === "note") {
-        const user = await User.findById(userId);
-
+    if (item.category === "Notes") {
         if (user.college !== item.user.college) {
             amount = 1000;
         }
-    }  
+    }
+    console.log("FINAL AMOUNT:", amount);
 
     const order = await razorpay.orders.create({
-        amount,
+        amount: Number(amount),
         currency: "INR",
         receipt: `unlock_${itemId}_${userId}_${Date.now()}`
     });
@@ -30,13 +44,13 @@ exports.createOrder = async (itemId, userId) => {
         user: userId,
         item: itemId,
         orderId: order.id,
-        status: "pending"
     });
+    status: "pending"
     return order;
 };
 
 exports.verifyPayment = async (data, userId) => {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature} = data;
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = data;
 
     const body = razorpay_order_id + "|" + razorpay_payment_id;
 
@@ -45,15 +59,17 @@ exports.verifyPayment = async (data, userId) => {
     if (expectedSignature !== razorpay_signature) {
         throw new Error("Invalid Payment");
     }
+    console.log("FINDING:", razorpay_order_id, userId);
 
     const unlock = await Unlock.findOne({
         orderId: razorpay_order_id,
-        user: userId
+        user: userId,
+        status: "pending",
     });
     if (!unlock) {
         throw new Error("Order not found");
     }
-
+    
     if (unlock.status === "paid") {
         return true;
     }

@@ -3,12 +3,14 @@ const path = require('path');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('cloudinary').v2;
 
+// Cloudinary config
 cloudinary.config({
     cloud_name: process.env.CLOUD_NAME,
     api_key: process.env.API_KEY,
     api_secret: process.env.API_SECRET
 });
 
+// Storage config
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
@@ -17,6 +19,7 @@ const storage = new CloudinaryStorage({
     }
 });
 
+// File filter
 const fileFilter = (req, file, cb) => {
     const allowed = [".jpg", ".jpeg", ".png", ".pdf"];
     const ext = path.extname(file.originalname).toLowerCase();
@@ -24,10 +27,11 @@ const fileFilter = (req, file, cb) => {
     if (allowed.includes(ext)) {
         cb(null, true);
     } else {
-        cb(new Error("Only images and pdf is allowed"), false);
+        cb(new Error("Only images and pdf allowed"), false);
     }
 };
 
+// Multer instance
 const upload = multer({
     storage,
     fileFilter,
@@ -36,4 +40,5 @@ const upload = multer({
     }
 });
 
+// EXPORT (VERY IMPORTANT)
 module.exports = upload;

@@ -1,7 +1,7 @@
 const Razorpay = require('razorpay');
 
 if (!process.env.RAZORPAY_KEY || !process.env.RAZORPAY_SECRET) {
-    console.log('RazorPay Key is missing in .env');
+    throw new Error('Razorpay keys are missing in environment variables');
     
 }
 const instance = new Razorpay({

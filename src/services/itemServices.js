@@ -25,10 +25,10 @@ exports.createItem = async (data, userId, file) => {
     if (!name || !price) throw new Error("Missing fields");
     
     if (category === "Notes" && price > 10) {
-        throw new Error("Notes price must be 10 rupess or below");
+        throw new Error("Notes price must be 10 rupees or below");
     }
     
-    const image = file.path;
+    const image = file?.path || "";
     await redisClient.del(`search:*`);
     return await Item.create({
         name, price, category, desc, image, user: userId,
@@ -37,6 +37,7 @@ exports.createItem = async (data, userId, file) => {
 
 exports.deleteItems = async (userId, itemId) => {
     const item = await Item.findById(itemId);
+    if (!item) throw new Error("Item not found");
     
     if (!item.user.equals(userId)) throw new Error("Not Authorized");
     
@@ -57,17 +58,15 @@ exports.getItemDetails = async (itemId) => {
     return { item, recommended };
 };
 
-exports.addToWishList = async (userId, itemId) => {
-    if (!mongoose.Types.ObjectId.isValid(itemId)) {throw new Error("Invalid Item Id");}
-    const user = await User.findById(userId);
-    
-    // avoid duplicate
-    return await User.findByIdAndUpdate(userId, {
-        $addToSet: { wishList: itemId }
-    }, {new: true});
-};
-
 exports.getItemsBySearch = async (query) => {
+    
+    const search = query.search || "";
+    const page = parseInt(query.page) || 1;
+    const limit = parseInt(query.limit) || 5;
+    const skip = (page - 1) * limit
+    const sortType = query.sort || "latest";
+    const sortOptions = sortType === "oldest" ? { createdAt: 1 } : { createdAt: -1 };
+    
     const key = `search:${search}:${page}:${limit}:${sortType}`;
     const cachedData = await redisClient.get(key);
     
@@ -75,14 +74,6 @@ exports.getItemsBySearch = async (query) => {
         console.log('From Redis Cache');
         return JSON.parse(cachedData);
     }
-
-    const search = query.search || "";
-    const page = parseInt(query.page) || 1;
-    const limit = parseInt(query.limit) || 5;
-    const skip = (page - 1) * limit
-    const sortType = query.sort || "latest";
-    const sortOptions = sortType === "oldest" ? { createdAt: 1 } : { createdAt: -1 };
-
     const filter = {};
     if (search) {
         filter.$text = { $search: search };

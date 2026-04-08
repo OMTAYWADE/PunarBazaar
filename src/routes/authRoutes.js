@@ -5,10 +5,9 @@ const upload = require('../utils/upload');
 const authController = require('../controllers/authController');
 
 //middleware
-const { isLoggedIn } = require('../middleware/authMiddleware');
-const { isLoggedOut } = require('../middleware/authMiddleware');
+const { isLoggedIn,isLoggedOut,verifyToken } = require('../middleware/authMiddleware');
 const { loginLimiter } = require('../middleware/rateLimiter');
-const { validateLogin, validateSignUp } = require('../middleware/validate');
+const { validateLogin, validateSignUp, } = require('../middleware/validate');
 
 router.get('/signUp', isLoggedOut,authController.signUpPage);
 router.post('/signUp',loginLimiter,validateSignUp,authController.signUp);
@@ -16,9 +15,9 @@ router.post('/signUp',loginLimiter,validateSignUp,authController.signUp);
 router.get('/login', isLoggedOut, authController.loginPage);
 router.post('/login',loginLimiter, validateLogin, authController.login);
 
-router.get('/logout', authController.logout);
+router.get('/logout',verifyToken, authController.logout);
 
-router.get('/profile',isLoggedIn, authController.profilePage);
-router.post('/profile', isLoggedIn, upload.single('collegeIdImage'),authController.profile);
+router.get('/profile',verifyToken,isLoggedIn, authController.profilePage);
+router.post('/profile',verifyToken, isLoggedIn, upload.single('collegeIdImage'),authController.profile);
 
 module.exports = router;

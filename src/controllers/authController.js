@@ -15,7 +15,8 @@ exports.signUp = async (req, res) => {
         res.cookie("token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "lax"
+            sameSite: "lax",
+            maxAge: 7 * 24 * 60 * 60 * 1000 //7 days
         });
         res.redirect('/profile');
     } catch (err) {
@@ -26,13 +27,13 @@ exports.signUp = async (req, res) => {
 //Login post
 exports.login = async (req, res) => {
     try {
-        const user = await authServices.loginUser(req.body);
-        const token = authServices.generateToken(user);
-
+        const{ user, token} = await authServices.loginUser(req.body);
+        
         res.cookie("token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "lax"
+            sameSite: "lax",
+            maxAge: 7 * 24 * 60 * 60 * 1000 //7 days
         });
 
         res.redirect('/');
@@ -54,22 +55,27 @@ exports.profilePage = async (req, res) => {
             return res.redirect('/login');
         }
         const user = await User.findById(req.user.userId);
-        res.render('profile', { user });
+        if (!user) return res.redirect('/login');
+
+        const safeData = user.toObject();
+        delete safeData.password
+        res.render('profile', {user: safeData });
     } catch (err) {
-        res.status(500).send("Error loading profile");
+        res.status(500).json({message: err.message});
     }
 };
 
 //update profile 
 exports.profile = async (req, res) => {
     try {
+        if (!req.user) return res.redirect('/login');
         await authServices.updateProfile(
-            req.user?.userId,
+            req.user.userId,
             req.body,
             req.file
         );
         res.redirect('/');
     } catch (err) {
-        res.status(500).send("Profile update error");
+        res.status(500).json({message: err.message});
     }
 };
