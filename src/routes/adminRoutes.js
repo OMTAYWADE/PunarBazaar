@@ -6,4 +6,4 @@ const redisClient = require('../config/redis');
 const { verifyToken, isAdmin } = require('../middleware/authMiddleware');
 const adminController = require('../controllers/adminController');
 
-router.post('/admin/unlock', verifyToken, isAdmin, adminController.unblockedUser);
+router.post('/unlock', verifyToken, isAdmin, adminController.unblockedUser);

@@ -152,6 +152,8 @@ exports.featureItem = async (req, res) => {
 // create razor pay order
 exports.createOrder = async (req, res) => {
     try {
+        console.log(req.body);
+        
        if (!req.user) return res.status(401).json({ error: "Login required" });
 
         const order = await paymentServices.createOrder(req.params.id, req.user.userId);

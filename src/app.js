@@ -59,9 +59,11 @@ app.use(async (req, res, next) => {
 //routes
 const itemRoutes = require('./routes/itemRoutes');
 const authRoutes = require('./routes/authRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 app.use('/', itemRoutes);
 app.use('/', authRoutes);
+app.use('admin/', adminRoutes);
 
 app.use((err, req, res, next) => {
     console.error(err);
