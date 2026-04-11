@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const redisClient = require('../config/redis');
 
 exports.generateToken = (user) => {
     return jwt.sign(
@@ -39,15 +40,35 @@ exports.loginUser = async ({ email, password }) => {
     let user = await User.findOne({ email: normalizedEmail });
     if (!user) throw new Error("User Not Found");
 
+    const attemptKey = `login:attempts:${email}`;
+    const blockKey = `login:block:${email}`;
+    const ipKey = `login:ip:${req.ip}`;
+
+    const isBlocked = await redisClient.get(blockKey);
+    if (!isBlocked) throw new Error("Account blocked. Try tomorrow or contact admin");
+
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) throw new Error("Wrong Password");
+    if (!isMatch) {
+        const attempts = await redisClient.incr(attemptKey);
+
+        if (attempts === 1) {
+            await redisClient.expire(attemptKey, 60 * 60 * 24);
+        }
+
+        if (attempts >= 5) {
+            await redisClient.setEx(blockKey, 60 * 60 * 24, "blocked");
+            throw new Error("Account Blocked dut to multiple failed attempts. Try tomorrow.");
+        }
+        throw new Error(`Invalid credentials. Attempts left: ${5 - attempts}`);
+    }
+    await redisClient.del(attemptKey);
 
     user = user.toObject();
     delete user.password;
 
     const token = this.generateToken(user);
 
-    return {user, token};
+    return {user: {id: user._id, email: user.email}, token};
 };
 
 exports.updateProfile = async (userId,data, file) => {

@@ -18,6 +18,6 @@ router.post('/login',loginLimiter, validateLogin, authController.login);
 router.get('/logout',verifyToken, authController.logout);
 
 router.get('/profile',verifyToken,isLoggedIn, authController.profilePage);
-router.post('/profile',verifyToken, isLoggedIn, upload.single('collegeIdImage'),authController.profile);
+router.post('/profile', verifyToken, isLoggedIn, upload.single('collegeIdImage'), authController.profile);
 
 module.exports = router;
