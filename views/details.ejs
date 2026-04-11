@@ -168,7 +168,7 @@
     const order = await res.json();
 
     const options = {
-        key: "<%= razorpayKey %>",
+        key: "rzp_test_SVtLWAFVv9iBtk",
         amount: order.amount,
         currency: "INR",
         order_id: order.id,
@@ -200,7 +200,8 @@
         }
     };
 
-    new Razorpay(options).open();
+    const rzp = new Razorpay(options)
+    rzp.open();
 });
 </script>
 
