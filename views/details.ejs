@@ -116,6 +116,10 @@
                         handler: async function (response) {
 
                             console.log("PAYMENT SUCCESS:", response);
+                            console.log('payment id: ', response.razorpay_payment_id);
+                            console.log('order id: ', response.razorpay_order_id);
+                            console.log('signature: ', response.razorpay_signature);
+                            
 
                             // VERIFY PAYMENT
                             const verify = await fetch("https://punarbazaar-production.up.railway.app/verifyPayment", {
