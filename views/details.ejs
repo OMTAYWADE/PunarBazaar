@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
 console.log("RECEIVED:", razorpay_signature);
 
                     // VERIFY PAYMENT
-                    const verify = await fetch("https://punarbazaar-production.up.railway.app/verifyPayment", {
+                    const verify = await fetch("https://punarbazaar-production.up.railway.app/item/verifyPayment", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",

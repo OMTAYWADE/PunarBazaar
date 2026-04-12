@@ -22,7 +22,6 @@ router.get('/addItems',verifyToken, isLoggedIn,isProfileComplete, itemController
 router.post('/addItems',apiLimiter,verifyToken, isLoggedIn, isProfileComplete,checkPendingPayment, upload.single('image'), itemControllers.createItem);
 
 router.delete('/item/:id',verifyToken,isLoggedIn, validateObjectId, itemControllers.deleteItems);
-// router.get('/category/:name', itemControllers.getByCategory);
 
 router.get('/feature/:id',verifyToken, isLoggedIn,validateObjectId, itemControllers.featureItem);
 router.post('/createOrder/:id',verifyToken, isLoggedIn,validateObjectId, itemControllers.createOrder);
