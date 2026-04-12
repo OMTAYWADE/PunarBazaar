@@ -106,6 +106,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 handler: async function (response) {
 
                     console.log("PAYMENT SUCCESS:", response);
+                    console.log("EXPECTED:", expectedSignature);
+console.log("RECEIVED:", razorpay_signature);
 
                     // VERIFY PAYMENT
                     const verify = await fetch("https://punarbazaar-production.up.railway.app/verifyPayment", {
@@ -114,6 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             "Content-Type": "application/json",
                             "Authorization": "Bearer " + localStorage.getItem("token")
                         },
+
                         body: JSON.stringify({
                             razorpay_order_id: response.razorpay_order_id,
                             razorpay_payment_id: response.razorpay_payment_id,
