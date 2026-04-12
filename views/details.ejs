@@ -1,158 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><%= item.name %></title>
 
-<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= item.name %>
+    </title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 </head>
 
 <body class="bg-gradient-to-br from-slate-100 via-indigo-50 to-slate-200 min-h-screen">
 
-<div class="max-w-6xl mx-auto px-4 py-8">
+    <div class="max-w-6xl mx-auto px-4 py-8">
 
-    <!-- NAV -->
-    <div class="flex justify-between items-center mb-8">
-        <h1 class="text-xl font-bold text-indigo-600">PunarBazaar</h1>
-        <a href="/" class="text-sm text-gray-600 hover:text-indigo-600">← Back</a>
-    </div>
+        <!-- NAV -->
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-xl font-bold text-indigo-600">PunarBazaar</h1>
+            <a href="/" class="text-sm text-gray-600 hover:text-indigo-600">← Back</a>
+        </div>
 
-    <!-- GRID -->
-    <div class="grid md:grid-cols-2 gap-10">
+        <!-- GRID -->
+        <div class="grid md:grid-cols-2 gap-10">
 
-        <!-- IMAGE -->
-        <div class="bg-white rounded-2xl shadow p-4">
-            <% if(item.image){ %>
-                <img src="<%= item.image %>" class="w-full h-96 object-cover rounded-xl">
-            <% } else { %>
-                <div class="h-96 flex items-center justify-center text-gray-400">
-                    No Image
+            <!-- IMAGE -->
+            <div class="bg-white rounded-2xl shadow p-4">
+                <% if(item.image){ %>
+                    <img src="<%= item.image %>" class="w-full h-96 object-cover rounded-xl">
+                    <% } else { %>
+                        <div class="h-96 flex items-center justify-center text-gray-400">
+                            No Image
+                        </div>
+                        <% } %>
+            </div>
+
+            <!-- DETAILS -->
+            <div class="space-y-6">
+
+                <div>
+                    <h1 class="text-3xl font-bold">
+                        <%= item.name %>
+                    </h1>
+                    <p class="text-2xl text-green-600 font-bold mt-2">₹ <%= item.price %>
+                    </p>
                 </div>
-            <% } %>
+
+                <p class="text-gray-600">
+                    <%= item.desc %>
+                </p>
+
+                <!-- CONTACT (FREE) -->
+                <div class="bg-green-50 p-4 rounded-xl border border-green-200">
+                    <p class="text-green-700 font-semibold">📞 Seller Contact</p>
+                    <p class="text-lg font-bold mt-1">
+                        <%= item.user.phone %>
+                    </p>
+                </div>
+
+                <!-- BUY BUTTON -->
+                <button id="buyBtn"
+                    class="w-full py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition text-lg font-semibold">
+                    🛒 Buy Item
+                </button>
+
+                <!-- WHATSAPP -->
+                <a href="https://wa.me/<%= item.user.phone %>"
+                    class="block text-center bg-green-600 text-white py-3 rounded-xl hover:bg-green-700">
+                    💬 Chat on WhatsApp
+                </a>
+
+            </div>
         </div>
 
-        <!-- DETAILS -->
-        <div class="space-y-6">
-
-            <div>
-                <h1 class="text-3xl font-bold"><%= item.name %></h1>
-                <p class="text-2xl text-green-600 font-bold mt-2">₹ <%= item.price %></p>
-            </div>
-
-            <p class="text-gray-600"><%= item.desc %></p>
-
-            <!-- CONTACT (FREE) -->
-            <div class="bg-green-50 p-4 rounded-xl border border-green-200">
-                <p class="text-green-700 font-semibold">📞 Seller Contact</p>
-                <p class="text-lg font-bold mt-1"><%= item.user.phone %></p>
-            </div>
-
-            <!-- BUY BUTTON -->
-            <button id="buyBtn"
-                class="w-full py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition text-lg font-semibold">
-                🛒 Buy Item
-            </button>
-
-            <!-- WHATSAPP -->
-            <a href="https://wa.me/<%= item.user.phone %>"
-                class="block text-center bg-green-600 text-white py-3 rounded-xl hover:bg-green-700">
-                💬 Chat on WhatsApp
-            </a>
-
-        </div>
     </div>
 
-</div>
+    <!-- SCRIPT -->
 
-<!-- SCRIPT -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
 
-<script>
-document.addEventListener("DOMContentLoaded", () => {
+            const btn = document.getElementById("buyBtn");
 
-    const btn = document.getElementById("buyBtn");
+            if (!btn) return;
 
-    if (!btn) return;
+            btn.addEventListener("click", async () => {
 
-    btn.addEventListener("click", async () => {
+                console.log("BUY CLICKED 🛒");
 
-        console.log("BUY CLICKED 🛒");
-
-        try {
-            // CREATE ORDER
-            const res = await fetch("https://punarbazaar-production.up.railway.app/item/createOrder/<%= item._id %>", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + localStorage.getItem("token")
-                }
-            });
-
-            const order = await res.json();
-            console.log("ORDER:", order);
-
-            // RAZORPAY OPTIONS
-            const options = {
-                key: "rzp_test_SVtLWAFVv9iBtk",
-                amount: order.amount,
-                currency: "INR",
-                order_id: order.id,
-                name: "PunarBazaar",
-                description: "Purchase Item",
-                theme: { color: "#4f46e5" },
-
-                handler: async function (response) {
-
-                    console.log("PAYMENT SUCCESS:", response);
-                    console.log("EXPECTED:", expectedSignature);
-console.log("RECEIVED:", razorpay_signature);
-
-                    // VERIFY PAYMENT
-                    const verify = await fetch("https://punarbazaar-production.up.railway.app/item/verifyPayment", {
+                try {
+                    // CREATE ORDER
+                    const res = await fetch("https://punarbazaar-production.up.railway.app/createOrder/<%= item._id %>", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                             "Authorization": "Bearer " + localStorage.getItem("token")
-                        },
-
-                        body: JSON.stringify({
-                            razorpay_order_id: response.razorpay_order_id,
-                            razorpay_payment_id: response.razorpay_payment_id,
-                            razorpay_signature: response.razorpay_signature,
-                            itemId: "<%= item._id %>"
-                        })
+                        }
                     });
 
-                    const data = await verify.json();
-                    console.log("VERIFY:", data);
+                    const order = await res.json();
+                    console.log("ORDER:", order);
 
-                    if (data.success) {
-                        alert("✅ Purchase Successful!");
+                    // RAZORPAY OPTIONS
+                    const options = {
+                        key: "rzp_test_SVtLWAFVv9iBtk",
+                        amount: order.amount,
+                        currency: "INR",
+                        order_id: order.id,
+                        name: "PunarBazaar",
+                        description: "Purchase Item",
+                        theme: { color: "#4f46e5" },
 
-                        btn.innerText = "Purchased ✅";
-                        btn.disabled = true;
-                        btn.classList.remove("bg-indigo-600");
-                        btn.classList.add("bg-green-600");
+                        handler: async function (response) {
 
-                    } else {
-                        alert("❌ Payment verification failed");
-                    }
+                            console.log("PAYMENT SUCCESS:", response);
+
+                            // VERIFY PAYMENT
+                            const verify = await fetch("https://punarbazaar-production.up.railway.app/verifyPayment", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "Authorization": "Bearer " + localStorage.getItem("token")
+                                },
+
+                                body: JSON.stringify({
+                                    razorpay_order_id: response.razorpay_order_id,
+                                    razorpay_payment_id: response.razorpay_payment_id,
+                                    razorpay_signature: response.razorpay_signature,
+                                    itemId: "<%= item._id %>"
+                                })
+                            });
+
+                            const data = await verify.json();
+                            console.log("VERIFY:", data);
+
+                            if (data.success) {
+                                alert("✅ Purchase Successful!");
+
+                                btn.innerText = "Purchased ✅";
+                                btn.disabled = true;
+                                btn.classList.remove("bg-indigo-600");
+                                btn.classList.add("bg-green-600");
+
+                            } else {
+                                alert("❌ Payment verification failed");
+                            }
+                        }
+                    };
+
+                    const rzp = new Razorpay(options);
+                    rzp.open();
+
+                } catch (err) {
+                    console.error("ERROR:", err);
+                    alert("Something went wrong ❌");
                 }
-            };
+            });
 
-            const rzp = new Razorpay(options);
-            rzp.open();
-
-        } catch (err) {
-            console.error("ERROR:", err);
-            alert("Something went wrong ❌");
-        }
-    });
-
-});
-</script>
+        });
+    </script>
 
 </body>
+
 </html>
