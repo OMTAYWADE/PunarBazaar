@@ -25,7 +25,7 @@ router.delete('/item/:id',verifyToken,isLoggedIn, validateObjectId, itemControll
 // router.get('/category/:name', itemControllers.getByCategory);
 
 router.get('/feature/:id',verifyToken, isLoggedIn,validateObjectId, itemControllers.featureItem);
-router.post('/unlock/:id',verifyToken, isLoggedIn,validateObjectId, itemControllers.createOrder);
+router.post('/createOrder/:id',verifyToken, isLoggedIn,validateObjectId, itemControllers.createOrder);
 
 router.post('/verifyPayment',verifyToken, isLoggedIn, itemControllers.verifyPayment);
 
