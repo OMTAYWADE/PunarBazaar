@@ -164,7 +164,11 @@
 <script>
     document.getElementById("payBtn")?.addEventListener("click", async () => {
 
-    const res = await fetch("/unlock/<%= item._id %>", { method: "POST" });
+    const res = await fetch("/unlock/<%= item._id %>", { 
+        method: "POST",
+        headers: { "Content-Type": "application/json"},
+        body: json.stringify({amount: 5})
+     });
     const order = await res.json();
 
     const options = {
@@ -192,7 +196,7 @@
 
             const data = await verify.json();
 
-            if (data.success) {
+            if (data.message === "Payment successful") {
                 location.reload();
             } else {
                 alert("Payment failed");

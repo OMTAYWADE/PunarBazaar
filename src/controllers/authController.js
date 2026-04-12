@@ -27,7 +27,7 @@ exports.signUp = async (req, res) => {
 //Login post
 exports.login = async (req, res) => {
     try {
-        const{ user, token} = await authServices.loginUser(req.body);
+        const{ user, token} = await authServices.loginUser(req.body, req.ip);
         
         res.cookie("token", token, {
             httpOnly: true,

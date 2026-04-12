@@ -35,17 +35,17 @@ exports.createUser = async (data) => {
     });
 };
 
-exports.loginUser = async ({ email, password }) => {
+exports.loginUser = async ({ email, password }, ip) => {
     const normalizedEmail = email.toLowerCase();
     let user = await User.findOne({ email: normalizedEmail });
     if (!user) throw new Error("User Not Found");
 
     const attemptKey = `login:attempts:${email}`;
     const blockKey = `login:block:${email}`;
-    const ipKey = `login:ip:${req.ip}`;
+    const ipKey = `login:ip:${ip}`;
 
     const isBlocked = await redisClient.get(blockKey);
-    if (!isBlocked) throw new Error("Account blocked. Try tomorrow or contact admin");
+    if (isBlocked) throw new Error("Account blocked. Try tomorrow or contact admin");
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
