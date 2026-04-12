@@ -44,8 +44,8 @@ exports.createOrder = async (itemId, userId) => {
         user: userId,
         item: itemId,
         orderId: order.id,
+        status: "pending"
     });
-    status: "pending"
     return order;
 };
 
@@ -57,7 +57,7 @@ exports.verifyPayment = async (data, userId) => {
     const expectedSignature = crypto.createHmac("sha256", process.env.RAZORPAY_SECRET).update(body).digest("hex");
 
     if (expectedSignature !== razorpay_signature) {
-        throw new Error("Invalid Payment");
+        return false;
     }
     console.log("FINDING:", razorpay_order_id, userId);
 
@@ -67,7 +67,7 @@ exports.verifyPayment = async (data, userId) => {
         status: "pending",
     });
     if (!unlock) {
-        throw new Error("Order not found");
+        return false;
     }
     
     if (unlock.status === "paid") {
