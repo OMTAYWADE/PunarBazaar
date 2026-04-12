@@ -167,7 +167,7 @@
     const res = await fetch("/unlock/<%= item._id %>", { 
         method: "POST",
         headers: { "Content-Type": "application/json"},
-        body: json.stringify({amount: 5})
+        body: JSON.stringify({amount: 5})
      });
     const order = await res.json();
 
