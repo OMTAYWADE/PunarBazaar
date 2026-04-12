@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             // CREATE ORDER
-            const res = await fetch("https://punarbazaar-production.up.railway.app/createOrder/<%= item._id %>", {
+            const res = await fetch("https://punarbazaar-production.up.railway.app/item/createOrder/<%= item._id %>", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
