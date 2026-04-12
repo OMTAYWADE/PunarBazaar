@@ -1,20 +1,27 @@
 const express = require('express');
 const app = express();
 require('dotenv').config();
+const cors = require('cors');
 
 //view engine
 app.set('view engine', 'ejs');
 
-app.set('trust proxy', 1);
 
 const connectDB = require('./config/db');
 connectDB().catch(err => {
     console.error("DB connection Failed", err);
     process.exit(1);
 });
+app.set('trust proxy', 1);
 
-app.use(express.urlencoded({ extended: true }));
+//cors 
+app.use(cors({
+    origin: true,
+    credentials: true
+}));
+
 app.use(express.json()); 
+app.use(express.urlencoded({ extended: true }));
 
 //token 
 const cookieParser = require('cookie-parser');
@@ -63,7 +70,7 @@ const adminRoutes = require('./routes/adminRoutes');
 
 app.use('/', itemRoutes);
 app.use('/', authRoutes);
-app.use('admin/', adminRoutes);
+app.use('/admin', adminRoutes);
 
 app.use((err, req, res, next) => {
     console.error(err);
