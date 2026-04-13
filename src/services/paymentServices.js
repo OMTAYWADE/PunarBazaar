@@ -33,7 +33,7 @@ console.log("USER ID:", userId);
         order = await razorpay.orders.create({
             amount: amount,
             currency: "INR",
-            receipt: `unlock_${itemId}_${userId}_${Date.now()}`
+            receipt: `unlock_${Date.now()}`
         });
         console.log("CREATING ORDER WITH:", amount * 100);
         
