@@ -152,7 +152,9 @@ exports.featureItem = async (req, res) => {
 // create razor pay order
 exports.createOrder = async (req, res) => {
       try {
-        console.log("Create Order req.body: " , req.body);
+          console.log("Create Order req.body: ", req.body);
+        console.log("TOKEN USER:", req.user);
+        console.log("ITEM ID:", req.params.id);
         
        if (!req.user) return res.status(401).json({ error: "Login required" });
 
@@ -168,6 +170,7 @@ exports.createOrder = async (req, res) => {
 //verify payment
 exports.verifyPayment = async (req, res) => {
     try {
+
         console.log("VERIFY BODY:", req.body);
         
         let success = await paymentServices.verifyPayment(req.body, req.user?.userId, req.params.id);
