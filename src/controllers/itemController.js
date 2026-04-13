@@ -158,7 +158,10 @@ exports.createOrder = async (req, res) => {
         
        if (!req.user) return res.status(401).json({ error: "Login required" });
 
-        const order = await paymentServices.createOrder(req.params.id, req.user.userId);
+          const order = await paymentServices.createOrder(req.params.id, req.user.userId);
+                if (!order || !order.id) {
+            return res.status(500).json({ error: "Order not created" }); // ✅ STOP HERE
+        }
         console.log('Order checking: ', order);
 
         res.json(order);
