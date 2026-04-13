@@ -49,12 +49,12 @@ exports.createOrder = async (itemId, userId) => {
     return order;
 };
 
-exports.verifyPayment = async (data, userId) => {
+exports.verifyPayment = async (data, userId, itemId) => {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = data;
 
     const body = razorpay_order_id + "|" + razorpay_payment_id;
 
-    const expectedSignature = crypto.createHmac("sha256", process.env.RAZORPAY_SECRET).update(body).digest("hex");
+    const expectedSignature = crypto.createHmac("sha256", process.env.RAZORPAY_SECRET).update(body.toString()).digest("hex");
 
     if (expectedSignature !== razorpay_signature) {
         return false;
@@ -64,7 +64,7 @@ exports.verifyPayment = async (data, userId) => {
     const unlock = await Unlock.findOne({
         orderId: razorpay_order_id,
         user: userId,
-        status: "pending",
+        item: itemId,   
     });
     if (!unlock) {
         return false;
