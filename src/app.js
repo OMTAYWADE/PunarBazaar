@@ -12,6 +12,8 @@ connectDB().catch(err => {
     console.error("DB connection Failed", err);
     process.exit(1);
 });
+console.log("Connected DB:", mongoose.connection.name);
+
 app.set('trust proxy', 1);
 
 //cors 
