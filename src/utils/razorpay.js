@@ -5,8 +5,10 @@ if (!process.env.RAZORPAY_KEY || !process.env.RAZORPAY_SECRET) {
     
 }
 const instance = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY,
-    key_secret: process.env.RAZORPAY_SECRET
+    key_id: "rzp_test_SVtLWAFVv9iBtk",
+    key_secret: "xYO2sfdTqg5DNwPqrwFvOCjy"
 });
+console.log("KEY:", process.env.RAZORPAY_KEY);
+console.log("SECRET:", process.env.RAZORPAY_SECRET);
 
 module.exports = instance;
