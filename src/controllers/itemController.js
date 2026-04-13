@@ -165,7 +165,8 @@ exports.createOrder = async (req, res) => {
         console.log('Order checking: ', order);
 
         res.json(order);
-    } catch (err) {
+      } catch (err) {
+           console.log("🔥 FULL ERROR:", err); 
         res.status(500).json({error: err.message});
     }
 };

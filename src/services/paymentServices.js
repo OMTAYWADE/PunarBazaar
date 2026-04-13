@@ -13,6 +13,9 @@ exports.createOrder = async (itemId, userId) => {
     if (!user) throw new Error("User not Found");
     
     //check payment is already done or not
+    console.log("🚀 CREATE ORDER START");
+console.log("ITEM ID:", itemId);
+console.log("USER ID:", userId);
 
     const existing = await Unlock.findOne({
         user: userId,
