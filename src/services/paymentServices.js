@@ -23,20 +23,11 @@ exports.createOrder = async (itemId, userId) => {
     if (existing) {
         throw new Error("Item already Purchased");
     }
-
-    let amount = 500;
-
-    if (item.category === "Notes") {
-        if (user.college !== item.user.college) {
-            amount = 1000;
-        }
-    }
-    console.log("FINAL AMOUNT:", amount);
     let order;
 
     try {
         order = await razorpay.orders.create({
-            amount: Number(amount) * 100,
+            amount: 500 ,
             currency: "INR",
             receipt: `unlock_${itemId}_${userId}_${Date.now()}`
         });

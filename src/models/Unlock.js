@@ -9,6 +9,10 @@ const unlockSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Item"
     },
+    orderId: {
+        type:String,
+        required: true
+    },
     paymentId: String,
     status: {
         type: String,
