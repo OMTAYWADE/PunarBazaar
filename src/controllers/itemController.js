@@ -170,7 +170,7 @@ exports.verifyPayment = async (req, res) => {
     try {
         console.log("VERIFY BODY:", req.body);
         
-        let success = await paymentServices.verifyPayment(req.body, req.user?.userId, req.body.itemId);
+        let success = await paymentServices.verifyPayment(req.body, req.user?.userId, req.params.id);
         res.json({ success });
     } catch (err) {
         console.log('"Verify Error: ', err);
