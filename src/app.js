@@ -6,7 +6,7 @@ const cors = require('cors');
 //view engine
 app.set('view engine', 'ejs');
 
-
+const mongoose = require('mongoose');
 const connectDB = require('./config/db');
 connectDB().catch(err => {
     console.error("DB connection Failed", err);
