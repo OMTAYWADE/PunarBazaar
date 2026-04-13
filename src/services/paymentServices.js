@@ -34,11 +34,11 @@ exports.createOrder = async (itemId, userId) => {
     console.log("FINAL AMOUNT:", amount);
 
     const order = await razorpay.orders.create({
-        amount: Number(amount),
+        amount: Number(amount) * 100,
         currency: "INR",
         receipt: `unlock_${itemId}_${userId}_${Date.now()}`
     });
-
+    console.log("CREATING ORDER WITH:", amount * 100);
     //store mapping
     await Unlock.create({
         user: userId,
