@@ -79,14 +79,16 @@ exports.getItemDetails = async (req, res) => {
         if (req.user?.userId) {
             const unlock = await Unlock.findOne({
                 user: req.user?.userId,
-            }).sort({ createdAt: -1 });
+                item: item._id,
+                status:"paid"
+            });
 
-            if(unlock && unlock.status === "paid"){
+            if(unlock){
                 isUnlocked = true;
 
             }
 
-            if (item.user._id.toString() === req.user.userId) {
+            if (item.user._id.toString() === req.user.userId.toString()) {
                 isOwner = true;
             }
         }
