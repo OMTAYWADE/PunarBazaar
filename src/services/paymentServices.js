@@ -26,8 +26,9 @@ exports.createOrder = async (itemId, userId) => {
     let order;
 
     try {
+        const amount = 500;
         order = await razorpay.orders.create({
-            amount: 500 ,
+            amount: amount,
             currency: "INR",
             receipt: `unlock_${itemId}_${userId}_${Date.now()}`
         });
@@ -35,7 +36,7 @@ exports.createOrder = async (itemId, userId) => {
         
     } catch (err) {
         console.log("Razorpat order is not created", err);
-        throw new Error("Razorpay order creation failed");
+        throw err;
     }
     //store mapping
     await Unlock.create({
