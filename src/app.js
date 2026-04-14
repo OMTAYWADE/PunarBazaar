@@ -6,21 +6,31 @@ const cors = require('cors');
 //view engine
 app.set('view engine', 'ejs');
 
-const mongoose = require('mongoose');
 const connectDB = require('./config/db');
 connectDB().catch(err => {
     console.error("DB connection Failed", err);
     process.exit(1);
 });
-console.log("Connected DB:", mongoose.connection.name);
 
 app.set('trust proxy', 1);
 
 //cors 
+const allowedOrigin = [
+    "http://localhost:8000",
+    "https://punarbazaar-production.up.railway.app"
+];
+
 app.use(cors({
-    origin: true,
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigin.includes(origin)) {
+            callback(null, true);  
+        } else {
+            callback(new Error("CORS Blocked"));
+        }
+    },
     credentials: true
 }));
+app.options('*', cors());
 
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
@@ -44,6 +54,7 @@ app.use((req, res, next) => {
         }
     next();
 });
+
 
 //static
 app.use(express.static('public'));

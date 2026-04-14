@@ -32,10 +32,10 @@ exports.login = async (req, res) => {
         res.cookie("token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000 //7 days
         });
-
+        console.log("Login Sucessfull");
         res.redirect('/');
     } catch (err){
         res.status(400).json({ message: err.message });
