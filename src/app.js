@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-require('dotenv').config();
+require('dotenv').config({ path: '../.env' });
 const cors = require('cors');
 
 //view engine
