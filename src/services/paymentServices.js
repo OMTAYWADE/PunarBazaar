@@ -15,7 +15,13 @@ exports.createOrder = async (itemId, userId) => {
     //check payment is already done or not
     console.log("🚀 CREATE ORDER START");
 console.log("ITEM ID:", itemId);
-console.log("USER ID:", userId);
+    console.log("USER ID:", userId);
+    
+    if (!item.price || item.price <= 0) throw new Error("Invalid price");
+
+    if ((item.price < 200000 && item.category === 'set') || (item.price < 100000 && item.category != 'set')) {
+        throw new Error("Price is too high");
+    }
 
     const existing = await Unlock.findOne({
         user: userId,
@@ -29,7 +35,7 @@ console.log("USER ID:", userId);
     let order;
 
     try {
-        const amount = 500;
+        const amount = item.price;
         order = await razorpay.orders.create({
             amount: amount,
             currency: "INR",

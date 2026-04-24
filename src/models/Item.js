@@ -4,7 +4,8 @@ const itemSchema = new mongoose.Schema({
     name: String,
     price: {
         type: Number,
-        required: true
+        required: true,
+        max: 200000
     },
     desc: String,
     image: String,

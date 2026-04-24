@@ -23,6 +23,10 @@ exports.getAllItems = async (userId) => {
 exports.createItem = async (data, userId, file) => {
     const { name, price, desc, category } = data;
     if (!name || !price) throw new Error("Missing fields");
+
+    if (data.price <= 0 || data.price > 200000) {
+        throw new Error("Invalid item price");
+    }
     
     if (category === "Notes" && price > 10) {
         throw new Error("Notes price must be 10 rupees or below");
