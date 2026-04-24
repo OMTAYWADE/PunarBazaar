@@ -99,7 +99,7 @@ class="w-full py-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition 
 
                 try {
                     // CREATE ORDER
-                    const res = await fetch("https://punarbazaar-production.up.railway.app/createOrder/<%= item._id %>", {
+                    const res = await fetch("https://punarbazaar.onrender.com/createOrder/<%= item._id %>", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
@@ -129,7 +129,7 @@ class="w-full py-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition 
                             
 
                             // VERIFY PAYMENT
-                            const verify = await fetch("https://punarbazaar-production.up.railway.app/verifyPayment", {
+                            const verify = await fetch("https://punarbazaar.onrender.com/verifyPayment", {
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/json",
@@ -182,7 +182,7 @@ if (deleteBtn) {
         if (!confirmDelete) return;
 
         try {
-            const res = await fetch(`https://punarbazaar-production.up.railway.app/item/<%= item._id %>`, {
+            const res = await fetch(`https://punarbazaar.onrender.com/item/<%= item._id %>`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": "Bearer " + localStorage.getItem("token")
