@@ -15,21 +15,24 @@ connectDB().catch(err => {
 app.set('trust proxy', 1);
 
 //cors 
-const allowedOrigin = [
-    "http://localhost:8000",
-    "https://punarbazaar-production.up.railway.app"
-];
-
 app.use(cors({
-    origin: (origin, callback) => {
-        if (!origin || allowedOrigin.includes(origin)) {
-            callback(null, true);  
+    origin: function (origin, callback) {
+        if (!origin) return callback(null, true);
+
+        const allowed = [
+            "http://localhost:8000/",
+            "https://punarbazaar.onrender.com/",
+        ];
+
+        if (allowed.includes(origin)) {
+            callback(null, true);
         } else {
-            callback(new Error("CORS Blocked"));
+            console.log('Blocked origin: ', origin);
+            callback(null, false);
         }
     },
     credentials: true
-}));
+}));    
 
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
