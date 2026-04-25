@@ -2,87 +2,79 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%= item.name %>
-    </title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= item.name %></title>
 
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
 <body class="bg-gradient-to-br from-slate-100 via-indigo-50 to-slate-200 min-h-screen">
 
-    <div class="max-w-6xl mx-auto px-4 py-8">
+<div class="max-w-6xl mx-auto px-4 py-8">
 
-        <!-- NAV -->
-        <div class="flex justify-between items-center mb-8">
-            <h1 class="text-xl font-bold text-indigo-600">PunarBazaar</h1>
-            <a href="/" class="text-sm text-gray-600 hover:text-indigo-600">← Back</a>
+<!-- NAV -->
+<div class="flex justify-between items-center mb-8">
+    <h1 class="text-xl font-bold text-indigo-600">PunarBazaar</h1>
+    <a href="/" class="text-sm text-gray-600 hover:text-indigo-600">← Back</a>
+</div>
+
+<!-- GRID -->
+<div class="grid md:grid-cols-2 gap-10">
+
+<!-- IMAGE -->
+<div class="bg-white rounded-2xl shadow p-4">
+    <% if(item.image){ %>
+        <img src="<%= item.image %>" class="w-full h-[320px] object-cover rounded-xl">
+    <% } else { %>
+        <div class="h-80 flex items-center justify-center text-gray-400">
+            No Image
+        </div>
+    <% } %>
+</div>
+
+<!-- DETAILS -->
+<div class="bg-white/80 backdrop-blur-xl p-6 rounded-2xl shadow space-y-5">
+
+<!-- TITLE -->
+<div>
+    <h1 class="text-2xl font-semibold text-gray-800"><%= item.name %></h1>
+    <p class="text-green-600 text-xl font-bold mt-1">₹ <%= item.price %></p>
+</div>
+
+<!-- DESC -->
+<p class="text-gray-500 text-sm"><%= item.desc %></p>
+
+<hr>
+
+<!-- SELLER BOX -->
+<div class="bg-green-50 border border-green-200 rounded-xl p-4 space-y-3">
+
+    <div class="flex justify-between">
+        <div>
+            <p class="text-xs text-gray-500">Seller</p>
+            <p class="font-semibold text-gray-800">Verified Student</p>
+            <p class="text-xs text-gray-500">College Verified ✔</p>
         </div>
 
-        <!-- GRID -->
-        <div class="grid md:grid-cols-2 gap-10">
+        <span class="text-green-600 text-xs font-medium">Trusted</span>
+    </div>
 
-            <!-- IMAGE -->
-            <div class="bg-white rounded-2xl shadow p-4">
-                <% if(item.image){ %>
-                    <img src="<%= item.image %>" class="w-full h-[320px] object-cover">
-                    <% } else { %>
-                        <div class="h-96 flex items-center justify-center text-gray-400">
-                            No Image
-                        </div>
-                        <% } %>
-            </div>
+    <div class="bg-white border rounded-lg p-3">
+        <p class="text-xs text-gray-500">Contact</p>
+        <p class="font-semibold text-gray-800">
+            📞 <%= item.user.phone %>
+        </p>
+    </div>
 
-            <!-- DETAILS -->
-            <div class="bg-white/80 backdrop-blur-xl p-5 rounded-2xl shadow-sm space-y-4">
+</div>
 
-                <div>
-                    <h1 class="text-2xl font-semibold text-gray-800">
-                        <%= item.name %>
-                    </h1>
-                    <p class="text-green-600 text-xl font-bold">₹ <%= item.price %>
-                    </p>
-                </div>
-
-                <p class="text-gray-500 text-sm">
-                    <%= item.desc %>
-                </p>
-                <hr class="border-gray-200">
-
-                <!-- CONTACT (FREE) -->
-                <div class="bg-green-50 border border-green-200 rounded-xl p-4 space-y-3">
-
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <p class="text-xs text-gray-500">Seller</p>
-                            <p class="font-semibold text-gray-800">Verified Student</p>
-                            <p class="text-xs text-gray-500">College Verified ✔</p>
-                        </div>
-
-                        <span class="text-green-600 text-xs font-medium">
-                            Trusted
-                        </span>
-                    </div>
-
-                    <!-- CONTACT -->
-                    <div class="bg-white rounded-lg border p-3">
-                        <p class="text-xs text-gray-500">Contact</p>
-                        <p class="text-base font-semibold text-gray-800">
-                            📞 <%= item.user.phone %>
-                        </p>
-                    </div>
-
-                </div>
-
-
-                <!-- BUY BUTTON -->
-               <div class="space-y-3">
+<!-- ACTION SECTION -->
+<div class="space-y-3">
 
 <% if(isUnlocked){ %>
 
+<!-- PURCHASED -->
 <button class="w-full py-3 bg-green-600 text-white rounded-xl font-semibold cursor-not-allowed">
     ✅ Purchased
 </button>
@@ -95,19 +87,19 @@
 
 <!-- SELLER VIEW -->
 <button onclick="confirmPayment()" id="confirmBtn"
-class="w-full py-3 rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 transition">
+class="w-full py-3 rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 transition shadow">
     ✅ Confirm Payment
 </button>
 
 <p class="text-xs text-gray-400 text-center">
-    Confirm after receiving payment
+    Confirm after receiving payment from buyer
 </p>
 
 <% } else { %>
 
 <!-- BUYER VIEW -->
 <button onclick="payUPI()" id="upiBtn"
-class="w-full py-3 rounded-xl text-white bg-green-600 hover:bg-green-700 transition">
+class="w-full py-3 rounded-xl text-white bg-green-600 hover:bg-green-700 transition shadow">
     💸 Pay via UPI
 </button>
 
@@ -116,7 +108,7 @@ class="w-full py-2 rounded-xl border border-indigo-500 text-indigo-600 hover:bg-
     ✅ I Have Paid
 </button>
 
-<% if(isPending){ %>
+<% if(typeof isPending !== "undefined" && isPending){ %>
 <p class="text-yellow-500 text-sm text-center">
     ⏳ Waiting for seller confirmation
 </p>
@@ -129,134 +121,109 @@ class="w-full py-2 rounded-xl border border-indigo-500 text-indigo-600 hover:bg-
 <% } %>
 
 </div>
-                        <p class="text-xs text-gray-400 mt-2 text-center">
-                            After payment, contact seller on WhatsApp
-                        </p>
-                        <p class="text-xs text-gray-400 text-center">
-                            🔒 Safe deal • Meet in campus • Verify before paying
-                        </p>
 
-                        <% } %>
+<!-- SAFETY TEXT -->
+<div class="text-center space-y-1 text-xs text-gray-400">
+    <p>📱 Contact seller after payment</p>
+    <p>🔒 Meet in campus • Verify before paying</p>
+</div>
 
-                            <% if(isOwner){ %>
-                                <button id="deleteBtn" class="w-full py-2 rounded-xl text-red-500 font-medium
-bg-red-50 hover:bg-red-100 transition">
-                                    🗑 Delete Item
-                                </button>
+<!-- ACTIONS -->
+<div class="flex gap-2">
 
-                                <button onclick="confirmPayment()">
-Confirm Payment ✅
+<a href="https://wa.me/<%= item.user.phone %>?text=Hi, I am interested in your item"
+target="_blank"
+class="flex-1 text-center py-2.5 rounded-xl bg-green-500 text-white hover:bg-green-600 transition">
+    💬 WhatsApp
+</a>
+
+<button onclick="copyNumber('<%= item.user.phone %>')"
+class="flex-1 py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200">
+    📋 Copy
 </button>
-                                <% } %>
 
-                                    <!-- WHATSAPP -->
-                                    <div class="flex gap-2">
+</div>
 
-                                        <!-- WhatsApp -->
-                                        <a href="https://wa.me/<%= item.user.phone %>?text=Hi, I am interested in your item"
-                                            target="_blank"
-                                            class="flex-1 text-center py-2.5 rounded-xl bg-green-500 text-white font-medium hover:bg-green-600 transition">
-                                            💬 WhatsApp
-                                        </a>
+<!-- DELETE (ONLY OWNER) -->
+<% if(isOwner){ %>
+<button id="deleteBtn"
+class="w-full py-2 rounded-xl text-red-500 bg-red-50 hover:bg-red-100 transition">
+    🗑 Delete Item
+</button>
+<% } %>
 
-                                        <!-- Copy -->
-                                        <button onclick="copyNumber('<%= item.user.phone %>')"
-                                            class="flex-1 py-2.5 rounded-xl bg-gray-100 text-gray-700 hover:bg-gray-200 transition">
-                                            📋 Copy
-                                        </button>
+</div>
+</div>
+</div>
 
-                                    </div>
+<!-- SCRIPT -->
+<script>
 
-            </div>
-        </div>
-
-    </div>
-
-    <!-- SCRIPT -->
-    <script>
-
-// 🔥 PAY UPI
+// UPI
 function payUPI() {
-    const upiId = "<%= item.upiId %>";
-    const amount = "<%= item.price %>";
-    const name = "PunarBazaar";
-
-    const url = `upi://pay?pa=${upiId}&pn=${name}&am=${amount}&cu=INR`;
-
+    const url = `upi://pay?pa=<%= item.upiId %>&pn=PunarBazaar&am=<%= item.price %>&cu=INR`;
     alert("Complete payment and then click 'I Have Paid'");
     window.location.href = url;
 }
 
-
-// 🔥 BUYER MARK PAID
+// MARK PAID
 async function markPaid() {
-
     const btn = document.getElementById("markBtn");
-
     btn.innerText = "Processing...";
     btn.disabled = true;
 
-    try {
-        const res = await fetch(`/markPaid/<%= item._id %>`, {
-            method: "POST"
-        });
+    const res = await fetch(`/markPaid/<%= item._id %>`, { method: "POST" });
+    const data = await res.json();
 
-        const data = await res.json();
-
-        if (data.success) {
-            btn.innerText = "⏳ Waiting for Seller";
-            btn.classList.add("bg-yellow-100");
-        } else {
-            alert("Failed ❌");
-            btn.disabled = false;
-        }
-
-    } catch {
-        alert("Error ❌");
+    if(data.success){
+        btn.innerText = "⏳ Waiting for Seller";
+        btn.classList.add("bg-yellow-100");
+    } else {
+        alert("Failed ❌");
         btn.disabled = false;
     }
 }
 
-
-// 🔥 SELLER CONFIRM
+// CONFIRM PAYMENT
 async function confirmPayment(){
-
     const btn = document.getElementById("confirmBtn");
-
     btn.innerText = "Confirming...";
     btn.disabled = true;
 
-    try {
-        const res = await fetch(`/confirmPayment/<%= item._id %>`, {
-            method: "POST"
-        });
+    const res = await fetch(`/confirmPayment/<%= item._id %>`, { method: "POST" });
+    const data = await res.json();
 
-        const data = await res.json();
-
-        if(data.success){
-            alert("Payment confirmed ✅");
-            location.reload();
-        } else {
-            alert("No pending payments");
-            btn.disabled = false;
-        }
-
-    } catch {
-        alert("Error ❌");
+    if(data.success){
+        alert("Payment confirmed ✅");
+        location.reload();
+    } else {
+        alert("No pending payments");
         btn.disabled = false;
     }
 }
 
-
 // COPY
-function copyNumber(phone) {
+function copyNumber(phone){
     navigator.clipboard.writeText(phone);
     alert("Number copied!");
 }
 
+// DELETE
+const deleteBtn = document.getElementById("deleteBtn");
+if(deleteBtn){
+    deleteBtn.onclick = async () => {
+        if(!confirm("Delete item?")) return;
+
+        const res = await fetch(`/item/<%= item._id %>`, { method:"DELETE" });
+
+        if(res.ok){
+            alert("Deleted ✅");
+            location.href = "/";
+        }
+    };
+}
+
 </script>
 
-
 </body>
-
 </html>
