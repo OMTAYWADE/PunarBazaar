@@ -124,8 +124,10 @@ class="flex-1 py-2 bg-gray-200 rounded-xl hover:bg-gray-300 transition">
                         }
                     });
 
-                    const order = await res.json();
-                    console.log("ORDER:", order);
+                    const data = await res.json();
+                    console.log("ORDER:", data);
+
+                    const order = data.order;
 
                     // RAZORPAY OPTIONS
                     const options = {
@@ -150,7 +152,6 @@ class="flex-1 py-2 bg-gray-200 rounded-xl hover:bg-gray-300 transition">
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/json",
-                                    "Authorization": "Bearer " + localStorage.getItem("token")
                                 },
 
                                 body: JSON.stringify({
@@ -161,10 +162,10 @@ class="flex-1 py-2 bg-gray-200 rounded-xl hover:bg-gray-300 transition">
                                 })
                             });
 
-                            const data = await verify.json();
-                           console.log("VERIFY BODY:", data);
+                            const data2 = await verify.json();
+                           console.log("VERIFY BODY:", data2);
 
-                            if (data.success) {
+                            if (data2.success) {
                                 alert("✅ Purchase Successful!");
 
                                 btn.innerText = "Purchased ✅";
