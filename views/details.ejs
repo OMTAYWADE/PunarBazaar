@@ -61,10 +61,28 @@
                 </div>
 
                 <!-- BUY BUTTON -->
-                <button id="buyBtn"
-                    class="w-full py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition text-lg font-semibold">
-                    🛒 Buy Item
-                </button>
+                <% if(isUnlocked){ %>
+
+<button
+class="w-full py-3 bg-green-600 text-white rounded-xl text-lg font-semibold cursor-not-allowed opacity-90">
+    ✅ Purchased
+</button>
+
+<p class="text-green-600 text-sm text-center mt-2">
+    You already own this item
+</p>
+
+<% } else { %>
+
+<button id="buyBtn"
+class="w-full py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition text-lg font-semibold active:scale-95">
+    🛒 Buy Item
+</button>
+<p class="text-xs text-gray-500 text-center mt-2">
+    Secure purchase • Instant contact access
+</p>
+
+<% } %>
 
                 <% if(isOwner){ %>
 <button id="deleteBtn"
@@ -115,6 +133,9 @@ class="flex-1 py-2 bg-gray-200 rounded-xl hover:bg-gray-300 transition">
                 console.log("BUY CLICKED 🛒");
 
                 try {
+        btn.innerHTML = "⏳ Processing...";
+        btn.disabled = true;
+        btn.classList.add("opacity-70");
                     // CREATE ORDER
                     const res = await fetch("https://punarbazaar.onrender.com/createOrder/<%= item._id %>", {
                         method: "POST",
@@ -170,8 +191,9 @@ class="flex-1 py-2 bg-gray-200 rounded-xl hover:bg-gray-300 transition">
 
                                 btn.innerText = "Purchased ✅";
                                 btn.disabled = true;
-                                btn.classList.remove("bg-indigo-600");
-                                btn.classList.add("bg-green-600");
+                                
+btn.classList.remove("bg-indigo-600", "hover:bg-indigo-700");
+btn.classList.add("bg-green-600", "cursor-not-allowed");
 
                             } else {
                                 alert("❌ Payment verification failed");

@@ -3,6 +3,7 @@ const User = require('../models/User.js');
 const mongoose = require('mongoose');
 
 const redisClient = require('../config/redis.js');
+const Unlock = require('../models/Unlock.js');
 
 exports.getAllItems = async (userId) => {
     await Item.updateMany(
@@ -10,7 +11,23 @@ exports.getAllItems = async (userId) => {
         { isFeatured: false }
     );
     let items = await Item.find().limit(20).sort({ isFeatured: -1, createdAt: -1 }).populate("user", "name college");
-    if (!userId) return items;
+    if (!userId) {
+        return items.map(item => ({
+        ...item.toObject(),
+        isPurchased: false
+        }));
+    }
+
+    const unlocks = await Unlock.find({
+        user: userId,
+        status: "paid"
+    });
+
+    const purchasedIds = unlocks.map(u => u.item.toString());
+    items = items.map(item => ({
+        ...item.toObject(),
+        isPurchased: purchasedIds.includes(item._id.toString())
+    }));
 
     const user = await User.findById(userId);
 

@@ -121,6 +121,11 @@ style="animation-delay:<%= i * 0.05 %>s">
 
 <!-- IMAGE -->
 <div class="h-40 bg-gray-200 relative overflow-hidden">
+    <% if(item.isPurchased){ %>
+        <div class="absolute top-2 left-2 bg-green-600 text-white text-xs px-2 py-1 rounded-full shadow">
+    ✓ Purchased
+</div>
+<% } %>
 
 <% if(item.image){ %>
 <img src="<%= item.image %>"
@@ -154,10 +159,20 @@ class="absolute top-2 right-2 bg-white/90 backdrop-blur p-2 rounded-full shadow 
 <%= item.user?.college || "Unknown College" %>
 </p>
 
+<% if(item.isPurchased){ %>
+
+<div class="block mt-3 text-center bg-green-600 text-white py-1.5 rounded-lg text-sm cursor-not-allowed">
+    Purchased
+</div>
+
+<% } else { %>
+
 <a href="/item/<%= item._id %>"
 class="block mt-3 text-center bg-indigo-600 text-white py-1.5 rounded-lg text-sm hover:bg-indigo-700 transition">
 View Details
 </a>
+
+<% } %>
 
 </div>
 
