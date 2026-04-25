@@ -18,6 +18,14 @@ html { scroll-behavior: smooth; }
 .animate-fadeUp {
   animation: fadeUp 0.6s ease forwards;
 }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 </style>
 
 </head>
@@ -68,15 +76,48 @@ class="w-full px-3 py-2 border rounded-l-lg">
 </div>
 
 <!-- CATEGORY -->
-<div class="flex justify-center flex-wrap gap-4 text-sm py-3 bg-white/80 backdrop-blur shadow-sm">
+<div class="bg-white/80 backdrop-blur shadow-sm py-2">
 
-<a href="/category/Books" class="hover:text-indigo-600">Books</a>
-<a href="/category/Electronics" class="hover:text-indigo-600">Electronics</a>
-<a href="/category/Notes" class="hover:text-indigo-600">Notes</a>
-<a href="/category/Instruments" class="hover:text-indigo-600">Instruments</a>
-<a href="/category/Item-Set" class="hover:text-indigo-600">Item-Set</a>
-<a href="/category/Others" class="hover:text-indigo-600">Others</a>
+<div class="flex items-center gap-3 px-3 overflow-x-auto no-scrollbar text-sm">
 
+<a href="/category/Books" class="whitespace-nowrap px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100">
+📚 Books
+</a>
+
+<a href="/category/Electronics" class="whitespace-nowrap px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100">
+💻 Electronics
+</a>
+
+<a href="/category/Notes" class="whitespace-nowrap px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100">
+📝 Notes
+</a>
+
+<a href="/category/Instruments" class="whitespace-nowrap px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100">
+🎸 Instruments
+</a>
+
+<!-- MORE DROPDOWN -->
+<div class="relative">
+<button onclick="toggleMenu()" 
+class="whitespace-nowrap px-3 py-1 rounded-full bg-indigo-600 text-white">
+More ▾
+</button>
+
+<div id="moreMenu"
+class="hidden absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border z-50">
+
+<a href="/category/Item-Set" class="block px-4 py-2 hover:bg-gray-100">
+Item Set
+</a>
+
+<a href="/category/Others" class="block px-4 py-2 hover:bg-gray-100">
+Others
+</a>
+
+</div>
+</div>
+
+</div>
 </div>
 
 <!-- HERO -->
@@ -186,6 +227,12 @@ View Details
 <footer class="mt-12 bg-white/80 backdrop-blur border-t py-6 text-center text-sm text-gray-500">
 © 2026 PunarBazaar — Built for Students ❤️
 </footer>
+
+<script>
+function toggleMenu(){
+    document.getElementById("moreMenu").classList.toggle("hidden");
+}
+</script>
 
 </body>
 </html>

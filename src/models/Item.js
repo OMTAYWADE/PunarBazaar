@@ -40,7 +40,7 @@ const itemSchema = new mongoose.Schema({
         enum: ["note", "book", "product"],
         default: "product"
     },
-    upi: {
+    upiId: {
         type: String,
         required: true
     },
