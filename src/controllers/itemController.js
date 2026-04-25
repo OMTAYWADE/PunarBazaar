@@ -188,3 +188,60 @@ exports.verifyPayment = async (req, res) => {
         res.json({ success: false });
     }
 };
+
+exports.markAsPaid = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const item = req.params.id;
+
+        const existing = await Unlock.findOne({
+            user: userId,
+            item: itemId,
+            status: "paid",
+        });
+
+        if (existing) {
+            return res.json({ success: true });
+        }
+
+        await Unlock.create({
+            user: userId,
+            item: itemId,
+            status: "pending",
+        });
+
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false });
+    }
+};
+
+exports.confirmPayment = async (req, res) => {
+    try {
+        const itemId = req.params.id;
+        const sellerId = req.user.userId;
+
+        const item = await Item.findById(itemId);
+
+        if (!item.user.equals(sellerId)) {
+            return res.status(403).json({ success: false });
+        }
+
+        const unlock = await Unlock.findOne({
+            item: itemId,
+            status: "pending"
+        });
+
+        if (!unlock) {
+            return res.json({ success: false, message: "No pending payments" });
+        }
+
+        unlock.status = "paid";
+        await unlock.save();
+
+        res.json({ success: true });
+
+    } catch (err) {
+        res.status(500).json({ success: false });
+    }
+};

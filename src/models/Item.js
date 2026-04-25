@@ -39,6 +39,15 @@ const itemSchema = new mongoose.Schema({
         type: String,
         enum: ["note", "book", "product"],
         default: "product"
+    },
+    upi: {
+        type: String,
+        required: true
+    },
+    status: {
+        type: String,
+        enum: ["pending", "paid"],
+        default: "pending"
     }
 });
 

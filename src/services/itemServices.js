@@ -38,8 +38,8 @@ exports.getAllItems = async (userId) => {
 };
 
 exports.createItem = async (data, userId, file) => {
-    const { name, price, desc, category } = data;
-    if (!name || !price) {
+    const { name, price, desc, category, upiId } = data;
+    if (!name || !price || !upiId) {
         return {success: false, message: "Please fill all required fields"};
     }
   const numericPrice = Number(price);
@@ -69,7 +69,7 @@ exports.createItem = async (data, userId, file) => {
         await redisClient.del(keys);
     }
     const item = await Item.create({
-        name, price: numericPrice, category:finalCategory, customCategory: category, desc, image, user: userId,
+        name, price: numericPrice, category:finalCategory, customCategory: category, desc, image, user: userId, upiId
     });
     return { success: true, item };
 };

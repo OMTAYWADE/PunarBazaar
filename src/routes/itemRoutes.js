@@ -28,4 +28,7 @@ router.post('/createOrder/:id',verifyToken, isLoggedIn,validateObjectId, itemCon
 
 router.post('/verifyPayment',verifyToken, isLoggedIn, itemControllers.verifyPayment);
 
+router.post('/markPaid/:id', verifyToken, isLoggedIn, itemControllers.markAsPaid);
+router.post('/confirmPayment/:id', verifyToken, isLoggedIn, itemControllers.confirmPayment);
+
 module.exports = router;

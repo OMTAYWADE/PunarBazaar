@@ -12,63 +12,83 @@
 .animate-fadeUp {
   animation: fadeUp 0.5s ease;
 }
+
+/* FIX MOBILE SCROLL */
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+/* Prevent zoom on mobile */
+input, textarea, select {
+  font-size: 16px;
+}
 </style>
 </head>
-<body class="min-h-screen overflow-y-auto bg-gradient-to-br from-indigo-100 via-purple-100 to-blue-100">
-<!-- 🌈 BACKGROUND GLOW -->
+
+<body class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+
+<!-- BACKGROUND LIGHT EFFECT -->
 <div class="absolute inset-0 -z-10">
-  <div class="absolute w-72 h-72 bg-indigo-400 opacity-30 blur-3xl top-10 left-10 rounded-full"></div>
-  <div class="absolute w-72 h-72 bg-purple-400 opacity-30 blur-3xl bottom-10 right-10 rounded-full"></div>
+  <div class="absolute w-60 h-60 bg-indigo-300 opacity-20 blur-3xl top-10 left-10 rounded-full"></div>
+  <div class="absolute w-60 h-60 bg-purple-300 opacity-20 blur-3xl bottom-10 right-10 rounded-full"></div>
 </div>
 
-<div class="max-w-3xl mx-auto px-4 py-10">
+<div class="max-w-2xl mx-auto px-4 py-8 sm:py-10">
 
 <!-- HEADER -->
 <div class="flex justify-between items-center mb-6">
   <div>
-    <h2 class="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+    <h2 class="text-2xl sm:text-3xl font-bold text-indigo-600">
       Add New Item
     </h2>
     <p class="text-sm text-gray-500 mt-1">
-      Create a listing students will trust and buy
+      Create a listing students will trust
     </p>
   </div>
-  <a href="/" class="text-indigo-600 hover:underline">Back</a>
+  <a href="/" class="text-indigo-600 hover:underline text-sm">Back</a>
 </div>
 
-<!-- MESSAGE BOX -->
+<!-- MESSAGE -->
 <div id="msgBox" class="hidden mb-4 p-3 rounded-xl text-sm"></div>
 
 <!-- CARD -->
-<div class="bg-white/70 backdrop-blur-xl border border-white/30 
-rounded-2xl shadow-lg p-5 animate-fadeUp transition hover:shadow-indigo-100">
+<div class="bg-white border border-gray-200 rounded-xl shadow-sm p-5 sm:p-6 animate-fadeUp">
 
 <form id="form" action="/addItems" method="POST" enctype="multipart/form-data" class="space-y-5">
 
 <!-- NAME -->
 <div>
-<label class="text-xs font-medium text-gray-500">Item Name</label>
+<label class="text-xs text-gray-500">Item Name</label>
 <input name="name" required
-class="w-full mt-1 p-2.5 text-sm rounded-lg border border-gray-200 bg-white/80 
-focus:ring-2 focus:ring-indigo-500 focus:border-indigo-400 
-transition">
+class="w-full mt-1 p-3 rounded-lg border border-gray-300 bg-white
+focus:ring-2 focus:ring-indigo-500 outline-none transition">
 </div>
+
+<hr class="border-gray-200">
 
 <!-- PRICE -->
 <div>
-<label class="text-xs font-medium text-gray-500">Price</label>
+<label class="text-xs text-gray-500">Price</label>
 <input type="number" name="price" required
-class="w-full mt-1 p-2.5 text-sm rounded-lg border border-gray-200 bg-white/80 
-focus:ring-2 focus:ring-indigo-500 transition">
+class="w-full mt-1 p-3 rounded-lg border border-gray-300 bg-white
+focus:ring-2 focus:ring-indigo-500 outline-none">
 
-<p id="priceHint" class="text-[11px] text-gray-400 mt-1"></p>
+<p id="priceHint" class="text-xs text-gray-400 mt-1"></p>
 </div>
+
+<hr class="border-gray-200">
+
+<!-- UPI Id -->
+<label class="text-xs text-gray-500">UPI ID</label>
+<input name="upiId" required placeholder="example@upi"
+class="w-full mt-1 p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500">
 
 <!-- CATEGORY -->
 <div>
-<label class="text-xs font-medium text-gray-500">Category</label>
+<label class="text-xs text-gray-500">Category</label>
 <select id="category" name="category"
-class="w-full mt-1 p-2.5 text-sm rounded-lg border border-gray-200 bg-white/80 focus:ring-2 focus:ring-indigo-500">
+class="w-full mt-1 p-3 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-indigo-500">
 <option>Notes</option>
 <option>Books</option>
 <option>Electronics</option>
@@ -77,31 +97,35 @@ class="w-full mt-1 p-2.5 text-sm rounded-lg border border-gray-200 bg-white/80 f
 </select>
 </div>
 
-<!-- CUSTOM CATEGORY -->
+<!-- CUSTOM -->
 <div id="customBox" class="hidden">
 <input id="customCategory" placeholder="Enter custom category"
-class="w-full p-2.5 text-sm rounded-lg border border-gray-200 bg-white/80">
+class="w-full p-3 rounded-lg border border-gray-300">
 </div>
 
-<!-- DESCRIPTION -->
+<hr class="border-gray-200">
+
+<!-- DESC -->
 <div>
-<label class="text-xs font-medium text-gray-500">Description</label>
+<label class="text-xs text-gray-500">Description</label>
 <textarea name="desc"
-class="w-full mt-1 p-2.5 text-sm rounded-lg border border-gray-200 bg-white/80 focus:ring-2 focus:ring-indigo-500"></textarea>
+class="w-full mt-1 p-3 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-indigo-500"></textarea>
 </div>
+
+<hr class="border-gray-200">
 
 <!-- IMAGE -->
 <div>
-<label class="text-xs font-medium text-gray-500">Upload Image</label>
+<label class="text-xs text-gray-500">Upload Image</label>
 
 <div class="flex gap-2 mt-2">
 <button type="button" onclick="imgInput.click()"
-class="flex-1 py-2 text-sm bg-white border rounded-lg hover:bg-indigo-50 transition">
+class="flex-1 py-2 text-sm border rounded-lg hover:bg-indigo-50 transition">
 📁 Gallery
 </button>
 
 <button type="button" onclick="cameraInput.click()"
-class="flex-1 py-2 text-sm bg-white border rounded-lg hover:bg-green-50 transition">
+class="flex-1 py-2 text-sm border rounded-lg hover:bg-green-50 transition">
 📸 Camera
 </button>
 </div>
@@ -113,20 +137,21 @@ class="flex-1 py-2 text-sm bg-white border rounded-lg hover:bg-green-50 transiti
 <!-- PREVIEW -->
 <div id="previewBox" class="hidden">
 <img id="preview"
-class="w-full h-36 object-cover rounded-lg shadow-sm transition">
+class="w-full h-40 object-cover rounded-lg border shadow-sm">
 </div>
 
-<!-- BUTTON -->
+<hr class="border-gray-200">
+
+<!-- SUBMIT -->
 <button id="btn"
-class="w-full py-2.5 text-sm rounded-lg text-white font-medium
-bg-gradient-to-r from-indigo-600 to-purple-600
-hover:scale-[1.02] active:scale-[0.97]
-transition shadow-md">
+class="w-full py-3 rounded-lg text-white font-medium
+bg-indigo-600 hover:bg-indigo-700
+transition shadow-sm">
 Add Item
 </button>
 
-<p class="text-[11px] text-gray-400 text-center">
-💡 Fair pricing = faster sales
+<p class="text-xs text-gray-400 text-center">
+💡 Fair pricing = faster sales • 🔒 Meet safely in campus
 </p>
 
 </form>
@@ -147,14 +172,14 @@ const form = document.getElementById("form");
 const btn = document.getElementById("btn");
 const priceHint = document.getElementById("priceHint");
 
-// CATEGORY + PRICE HINT
+// PRICE HINT
 function updatePriceHint() {
     const val = category.value;
 
-    if (val === "Notes") priceHint.innerText = "💡 Recommended: ₹5 – ₹50";
+    if (val === "Notes") priceHint.innerText = "💡 ₹5 – ₹50 recommended";
     else if (val === "Books") priceHint.innerText = "💡 ₹50 – ₹300";
-    else if (val === "Electronics") priceHint.innerText = "💡 Price based on condition";
-    else if (val === "Item-Set") priceHint.innerText = "💡 Bundle items for better value";
+    else if (val === "Electronics") priceHint.innerText = "💡 Based on condition";
+    else if (val === "Item-Set") priceHint.innerText = "💡 Bundle for better value";
     else priceHint.innerText = "💡 Keep price reasonable";
 }
 
@@ -189,7 +214,7 @@ function showMsg(message, success = true) {
     setTimeout(() => box.classList.add("hidden"), 3000);
 }
 
-// SUBMIT
+// SUBMIT VALIDATION
 form.onsubmit = (e) => {
 
     const name = form.name.value.trim();
@@ -202,7 +227,7 @@ form.onsubmit = (e) => {
     }
 
     if (price <= 0 || price > 2000) {
-        showMsg("Price must be between ₹1–₹2000", false);
+        showMsg("Price must be ₹1–₹2000", false);
         e.preventDefault();
         return;
     }
@@ -224,11 +249,16 @@ form.onsubmit = (e) => {
     </span>`;
     btn.disabled = true;
 };
+
+// SMOOTH SCROLL FIX
 document.querySelectorAll("input, textarea, select").forEach(el => {
     el.addEventListener("focus", () => {
         setTimeout(() => {
-            el.scrollIntoView({ behavior: "smooth", block: "center" });
-        }, 300);
+            window.scrollTo({
+                top: el.getBoundingClientRect().top + window.scrollY - 120,
+                behavior: "smooth"
+            });
+        }, 200);
     });
 });
 </script>

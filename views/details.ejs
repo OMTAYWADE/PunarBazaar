@@ -9,7 +9,6 @@
     </title>
 
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 </head>
 
@@ -80,24 +79,59 @@
 
 
                 <!-- BUY BUTTON -->
-                <% if(isUnlocked){ %>
+               <div class="space-y-3">
 
-                    <button
-                        class="w-full py-3 bg-green-600 text-white rounded-xl text-lg font-semibold cursor-not-allowed opacity-90">
-                        ✅ Purchased
-                    </button>
+<% if(isUnlocked){ %>
 
-                    <p class="text-green-600 text-sm text-center mt-2">
-                        You already own this item
-                    </p>
+<button class="w-full py-3 bg-green-600 text-white rounded-xl font-semibold cursor-not-allowed">
+    ✅ Purchased
+</button>
 
-                    <% } else { %>
+<p class="text-green-600 text-sm text-center">
+    You already own this item
+</p>
 
-                        <button id="buyBtn" class="w-full py-3 rounded-xl text-white font-medium
-bg-gradient-to-r from-indigo-600 to-indigo-500
-hover:scale-[1.02] transition shadow-md">
-                            🛒 Buy Item
-                        </button>
+<% } else if(isOwner){ %>
+
+<!-- SELLER VIEW -->
+<button onclick="confirmPayment()" id="confirmBtn"
+class="w-full py-3 rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 transition">
+    ✅ Confirm Payment
+</button>
+
+<p class="text-xs text-gray-400 text-center">
+    Confirm after receiving payment
+</p>
+
+<% } else { %>
+
+<!-- BUYER VIEW -->
+<button onclick="payUPI()" id="upiBtn"
+class="w-full py-3 rounded-xl text-white bg-green-600 hover:bg-green-700 transition">
+    💸 Pay via UPI
+</button>
+
+<button onclick="markPaid()" id="markBtn"
+class="w-full py-2 rounded-xl border border-indigo-500 text-indigo-600 hover:bg-indigo-50 transition">
+    ✅ I Have Paid
+</button>
+
+<% if(isPending){ %>
+<p class="text-yellow-500 text-sm text-center">
+    ⏳ Waiting for seller confirmation
+</p>
+<% } %>
+
+<p class="text-xs text-gray-400 text-center">
+    After payment, click "I Have Paid"
+</p>
+
+<% } %>
+
+</div>
+                        <p class="text-xs text-gray-400 mt-2 text-center">
+                            After payment, contact seller on WhatsApp
+                        </p>
                         <p class="text-xs text-gray-400 text-center">
                             🔒 Safe deal • Meet in campus • Verify before paying
                         </p>
@@ -105,10 +139,13 @@ hover:scale-[1.02] transition shadow-md">
                         <% } %>
 
                             <% if(isOwner){ %>
-                                <button id="deleteBtn"
-class="w-full py-2 rounded-xl text-red-500 font-medium
+                                <button id="deleteBtn" class="w-full py-2 rounded-xl text-red-500 font-medium
 bg-red-50 hover:bg-red-100 transition">
-🗑 Delete Item
+                                    🗑 Delete Item
+                                </button>
+
+                                <button onclick="confirmPayment()">
+Confirm Payment ✅
 </button>
                                 <% } %>
 
@@ -136,134 +173,88 @@ bg-red-50 hover:bg-red-100 transition">
     </div>
 
     <!-- SCRIPT -->
-
     <script>
-        function copyNumber(phone) {
-            navigator.clipboard.writeText(phone);
-            showToast("Number copied!");
-        }
 
-        document.addEventListener("DOMContentLoaded", () => {
+// 🔥 PAY UPI
+function payUPI() {
+    const upiId = "<%= item.upiId %>";
+    const amount = "<%= item.price %>";
+    const name = "PunarBazaar";
 
-            const btn = document.getElementById("buyBtn");
+    const url = `upi://pay?pa=${upiId}&pn=${name}&am=${amount}&cu=INR`;
 
-            if (!btn) return;
-
-            btn.addEventListener("click", async () => {
-
-                console.log("BUY CLICKED 🛒");
-
-                try {
-                    btn.innerHTML = "⏳ Processing...";
-                    btn.disabled = true;
-                    btn.classList.add("opacity-70");
-                    // CREATE ORDER
-                    const res = await fetch("https://punarbazaar.onrender.com/createOrder/<%= item._id %>", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": "Bearer " + localStorage.getItem("token")
-                        }
-                    });
-
-                    const data = await res.json();
-                    console.log("ORDER:", data);
-
-                    const order = data.order;
-
-                    // RAZORPAY OPTIONS
-                    const options = {
-                        key: "rzp_test_SVtLWAFVv9iBtk",
-                        amount: order.amount,
-                        currency: "INR",
-                        order_id: order.id,
-                        name: "PunarBazaar",
-                        description: "Purchase Item",
-                        theme: { color: "#4f46e5" },
-
-                        handler: async function (response) {
-
-                            console.log("PAYMENT SUCCESS:", response);
-                            console.log('payment id: ', response.razorpay_payment_id);
-                            console.log('order id: ', response.razorpay_order_id);
-                            console.log('signature: ', response.razorpay_signature);
+    alert("Complete payment and then click 'I Have Paid'");
+    window.location.href = url;
+}
 
 
-                            // VERIFY PAYMENT
-                            const verify = await fetch("https://punarbazaar.onrender.com/verifyPayment", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                },
+// 🔥 BUYER MARK PAID
+async function markPaid() {
 
-                                body: JSON.stringify({
-                                    razorpay_order_id: response.razorpay_order_id,
-                                    razorpay_payment_id: response.razorpay_payment_id,
-                                    razorpay_signature: response.razorpay_signature,
-                                    itemId: "<%= item._id %>"
-                                })
-                            });
+    const btn = document.getElementById("markBtn");
 
-                            const data2 = await verify.json();
-                            console.log("VERIFY BODY:", data2);
+    btn.innerText = "Processing...";
+    btn.disabled = true;
 
-                            if (data2.success) {
-                                alert("✅ Purchase Successful!");
-
-                                btn.innerText = "Purchased ✅";
-                                btn.disabled = true;
-
-                                btn.classList.remove("bg-indigo-600", "hover:bg-indigo-700");
-                                btn.classList.add("bg-green-600", "cursor-not-allowed");
-
-                            } else {
-                                alert("❌ Payment verification failed");
-                            }
-                        }
-                    };
-
-                    const rzp = new Razorpay(options);
-                    rzp.open();
-
-                } catch (err) {
-                    console.error("ERROR:", err);
-                    alert("Something went wrong ❌");
-                }
-            });
-
+    try {
+        const res = await fetch(`/markPaid/<%= item._id %>`, {
+            method: "POST"
         });
 
-        const deleteBtn = document.getElementById("deleteBtn");
+        const data = await res.json();
 
-        if (deleteBtn) {
-            deleteBtn.addEventListener("click", async () => {
-
-                const confirmDelete = confirm("Are you sure you want to delete this item?");
-
-                if (!confirmDelete) return;
-
-                try {
-                    const res = await fetch(`https://punarbazaar.onrender.com/item/<%= item._id %>`, {
-                        method: "DELETE",
-                        headers: {
-                            "Authorization": "Bearer " + localStorage.getItem("token")
-                        }
-                    });
-
-                    if (res.ok) {
-                        alert("Item deleted successfully ✅");
-                        window.location.href = "/";
-                    } else {
-                        alert("Failed to delete ❌");
-                    }
-
-                } catch (err) {
-                    console.error(err);
-                    alert("Error deleting item ❌");
-                }
-            });
+        if (data.success) {
+            btn.innerText = "⏳ Waiting for Seller";
+            btn.classList.add("bg-yellow-100");
+        } else {
+            alert("Failed ❌");
+            btn.disabled = false;
         }
-    </script>
+
+    } catch {
+        alert("Error ❌");
+        btn.disabled = false;
+    }
+}
+
+
+// 🔥 SELLER CONFIRM
+async function confirmPayment(){
+
+    const btn = document.getElementById("confirmBtn");
+
+    btn.innerText = "Confirming...";
+    btn.disabled = true;
+
+    try {
+        const res = await fetch(`/confirmPayment/<%= item._id %>`, {
+            method: "POST"
+        });
+
+        const data = await res.json();
+
+        if(data.success){
+            alert("Payment confirmed ✅");
+            location.reload();
+        } else {
+            alert("No pending payments");
+            btn.disabled = false;
+        }
+
+    } catch {
+        alert("Error ❌");
+        btn.disabled = false;
+    }
+}
+
+
+// COPY
+function copyNumber(phone) {
+    navigator.clipboard.writeText(phone);
+    alert("Number copied!");
+}
+
+</script>
 
 
 </body>
