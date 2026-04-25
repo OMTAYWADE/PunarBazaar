@@ -42,10 +42,11 @@ exports.createItem = async (req, res) => {
         if (!result.success) {
             return res.status(400).json(result);
         }
+
         res.redirect("/");
     } catch (err) {
+        res.status(500).send(err.message);
     }
-    res.send(err.message);
 };
 
 // delete items by his id
@@ -80,7 +81,11 @@ exports.getItemDetails = async (req, res) => {
     try {
         const result = await itemServices.getItemDetails(req.params.id);
 
-        if(!result.success)
+        if (!result.success) {
+            return res.status(404).json({success: false, message: result.message});
+        }
+        const item =result.item;
+        const recommended =result.recommended;
         let isUnlocked = false;
         let isOwner = false;
 
@@ -103,7 +108,7 @@ exports.getItemDetails = async (req, res) => {
 
         res.render('details', { item, recommended, isUnlocked,isOwner,  razorpayKey: process.env.RAZORPAY_KEY });
     } catch (err) {
-        res.send(err.message);
+        res.status(500).send("Something went wrong");
     } 
 };
 
@@ -117,67 +122,28 @@ exports.getSearchItems = async (req, res, next) => {
     }
 }
 
-//wishList
-exports.addToWishList = async (req, res) => {
-    try {
-        if (!req.user) {
-    return res.redirect('/login');
-}
-        await itemServices.addToWishList(req.user?.userId, req.params.id);
-
-        res.redirect("back");
-    } catch (err) {
-        res.send("Error adding to wishList");
-    }
-}
-
-//get wishList
-exports.getWishList = async (req, res) => {
-    const user = await User.findById(req.user?.userId).populate({
-        path: "wishList",
-        populate: { path: "user" }
-
-    });
-    res.render('wishList', { items: user.wishList });
-};
-
-exports.featureItem = async (req, res) => {
-    if (!req.user) return res.redirect('/login');
-
-    const item = await Item.findById(req.params.id);
-
-    if (item.user.toString() !== req.user?.userId) {
-        res.send("Not Authorized");
-    }
-    const expiry = new Date();
-    expiry.setDate(expiry.getDate() + 2);
-
-    await Item.findByIdAndUpdate(req.params.id, {
-        isFeatured: true,
-        featuredUntil: expiry,
-    });
-
-    res.redirect("/");
-}   
 // create razor pay order
 exports.createOrder = async (req, res) => {
       try {
-          console.log("Create Order req.body: ", req.body);
+        console.log("Create Order req.body: ", req.body);
         console.log("TOKEN USER:", req.user);
         console.log("ITEM ID:", req.params.id);
         
-       if (!req.user) return res.status(401).json({ error: "Login required" });
+          if (!req.user) {
+              return res.status(401).json({success: false, message: "Login required" });
+          }
 
           const order = await paymentServices.createOrder(req.params.id, req.user.userId);
-                if (!order || !order.id) {
+
+          if (!order || !order.id) {
             return res.status(500).json({ error: "Order not created" }); // ✅ STOP HERE
         }
         console.log('Order checking: ', order);
 
-        res.json(order);
+        res.json({success: true, order});
       } catch (err) {
            console.log("🔥 FULL ERROR:", err); 
-        res.status(500).json({error: err.message});
+        res.status(500).json({success: false, message: err.message});
     }
 };
 
@@ -187,8 +153,10 @@ exports.verifyPayment = async (req, res) => {
 
         console.log("VERIFY BODY:", req.body);
         
-        let success = await paymentServices.verifyPayment(req.body, req.user?.userId, req.body.itemId);
-        res.json({ success });
+        const result = await paymentServices.verifyPayment(req.body, req.user?.userId, req.body.itemId);
+
+        if (!result.success) { return res.status(400).json(result); }
+        res.json({ success:true });
     } catch (err) {
         console.log('"Verify Error: ', err);
         res.json({ success: false });
