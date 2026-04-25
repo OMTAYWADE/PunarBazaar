@@ -14,13 +14,15 @@ exports.createOrder = async (itemId, userId) => {
     
     //check payment is already done or not
     console.log("🚀 CREATE ORDER START");
-console.log("ITEM ID:", itemId);
+    console.log("ITEM ID:", itemId);
     console.log("USER ID:", userId);
     
-    if (!item.price || item.price <= 0) throw new Error("Invalid price");
+    if (!item.price || item.price <= 0) {
+        return { success: false, message: "Invalid choice" };
+    }
 
     if ((item.price < 200000 && item.category === 'set') || (item.price < 100000 && item.category != 'set')) {
-        throw new Error("Price is too high");
+        return { success: false, message: "Price is too High" };
     }
 
     const existing = await Unlock.findOne({

@@ -9,8 +9,11 @@ exports.loginPage = (req, res) => res.render('login');
 exports.signUp = async (req, res) => {
     try {
 
-        const newUser = await authServices.createUser(req.body);
-        const token = authServices.generateToken(newUser);
+        const result = await authServices.createUser(req.body);
+        if (!result.success) {
+            return res.status(400).json(result);
+        }
+        const token = authServices.generateToken(result.user);
 
         res.cookie("token", token, {
             httpOnly: true,
@@ -18,7 +21,7 @@ exports.signUp = async (req, res) => {
             sameSite: "lax",
             maxAge: 7 * 24 * 60 * 60 * 1000 //7 days
         });
-        res.redirect('/profile');
+        return res.json({ success: true, message: "Account is created "});
     } catch (err) {
         res.status(400).json({message: err.message});
     }
@@ -27,18 +30,22 @@ exports.signUp = async (req, res) => {
 //Login post
 exports.login = async (req, res) => {
     try {
-        const{ user, token} = await authServices.loginUser(req.body, req.ip);
+        const result = await authServices.loginUser(req.body, req.ip);
+        if (!result.success) {
+            return res.status(400).json(result);
+        }
+        const { user, token } = result;
         
         res.cookie("token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: processs.env.NODE_ENV === "production" ? "none" : "lax",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             maxAge: 7 * 24 * 60 * 60 * 1000 //7 days
         });
         console.log("Login Sucessfull");
-        res.redirect('/');
+        return res.json({success: true, message: "Login SuccessFull"});
     } catch (err){
-        res.status(400).json({ message: err.message });
+        res.status(500).json({ message: "Something went wrong" });
     }
 };
 
@@ -52,7 +59,7 @@ exports.logout = async (req, res) => {
 exports.profilePage = async (req, res) => {
     try {
         if (!req.user) {
-            return res.redirect('/login');
+            return res.redirect('/login')
         }
         const user = await User.findById(req.user.userId);
         if (!user) return res.redirect('/login');
@@ -68,13 +75,13 @@ exports.profilePage = async (req, res) => {
 //update profile 
 exports.profile = async (req, res) => {
     try {
-        if (!req.user) return res.redirect('/login');
+        if (!req.user) return res.json({ success: false, message: "Login required" });
         await authServices.updateProfile(
             req.user.userId,
             req.body,
             req.file
         );
-        res.redirect('/');
+        res.json({ success: true, message: "Profile updated" });
     } catch (err) {
         res.status(500).json({message: err.message});
     }

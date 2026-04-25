@@ -74,10 +74,22 @@ class="w-full py-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition 
 <% } %>
 
                 <!-- WHATSAPP -->
-                <a href="https://wa.me/<%= item.user.phone %>"
-                    class="block text-center bg-green-600 text-white py-3 rounded-xl hover:bg-green-700">
-                    💬 Chat on WhatsApp
-                </a>
+              <div class="mt-4 flex gap-3">
+
+<!-- WhatsApp -->
+<a href="https://wa.me/<%= item.user.phone %>?text=Hi, I am interested in your item"
+target="_blank"
+class="flex-1 text-center py-2 bg-green-500 text-white rounded-xl hover:scale-105 transition">
+💬 WhatsApp
+</a>
+
+<!-- Copy -->
+<button onclick="copyNumber('<%= item.user.phone %>')"
+class="flex-1 py-2 bg-gray-200 rounded-xl hover:bg-gray-300 transition">
+📋 Copy
+</button>
+
+</div>
 
             </div>
         </div>
@@ -87,6 +99,11 @@ class="w-full py-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition 
     <!-- SCRIPT -->
 
     <script>
+        function copyNumber(phone) {
+    navigator.clipboard.writeText(phone);
+    showToast("Number copied!");
+}
+
         document.addEventListener("DOMContentLoaded", () => {
 
             const btn = document.getElementById("buyBtn");

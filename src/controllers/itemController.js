@@ -37,12 +37,15 @@ exports.createItem = async (req, res) => {
     try {
     if (!req.user) {
     return res.redirect('/login');
-}
-        await itemServices.createItem(req.body, req.user?.userId, req.file);
+    }
+        const result = await itemServices.createItem(req.body, req.user?.userId, req.file);
+        if (!result.success) {
+            return res.status(400).json(result);
+        }
         res.redirect("/");
     } catch (err) {
-        res.send(err.message);
     }
+    res.send(err.message);
 };
 
 // delete items by his id
@@ -51,7 +54,10 @@ exports.deleteItems = async (req, res) => {
         if (!req.user) {
     return res.redirect('/login');
 }
-        await itemServices.deleteItems(req.user?.userId, req.params.id);   
+        const result = await itemServices.deleteItems(req.user?.userId, req.params.id);   
+        if (!result.success) {
+            return res.status(400).json(result);    
+        }
         res.redirect('/'); 
     } catch (err) {
         res.send(err.message);
@@ -72,7 +78,9 @@ exports.searchItems = async (req, res) => {
 //details
 exports.getItemDetails = async (req, res) => {
     try {
-        const { item, recommended } = await itemServices.getItemDetails(req.params.id);
+        const result = await itemServices.getItemDetails(req.params.id);
+
+        if(!result.success)
         let isUnlocked = false;
         let isOwner = false;
 

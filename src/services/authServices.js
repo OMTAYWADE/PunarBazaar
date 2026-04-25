@@ -15,37 +15,40 @@ exports.createUser = async (data) => {
     const { email, password, phone, name } = data;
 
     if (!email || !password || !name) {
-    throw new Error("Required fields missing");
+        return { success: false, message: "Please fill all the required fields" };
 }
     
     const normalizedEmail = email.toLowerCase();
     const existingUser = await User.findOne({ email: normalizedEmail });
-    if (existingUser) throw new Error("Email Already Exsit");
+    if (existingUser) {
+        return { success: false, message: "Email already registered" };
+    }
 
     if (password.length < 6) {
-        throw new Error('Password must be at least 6 characters');
+        return { success: false, message: "Password must be at least 6 characters" };
     }
 
     const hashed = await bcrypt.hash(password, 12);
     
-    return await User.create({
+    const user = await User.create({
         name,
         password: hashed,
         email: normalizedEmail, phone, role: "user"
     });
+    return { success: true, user };
 };
 
 exports.loginUser = async ({ email, password }, ip) => {
     const normalizedEmail = email.toLowerCase();
     let user = await User.findOne({ email: normalizedEmail });
-    if (!user) throw new Error("User Not Found");
+    if (!user) return { success: false, message: "User not Found"}
 
     const attemptKey = `login:attempts:${email}`;
     const blockKey = `login:block:${email}`;
     const ipKey = `login:ip:${ip}`;
 
     const isBlocked = await redisClient.get(blockKey);
-    if (isBlocked) throw new Error("Account blocked. Try tomorrow or contact admin");
+    if (isBlocked) return { success: false, message: "Account blocked. Try again tomorrow" };
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
@@ -57,9 +60,9 @@ exports.loginUser = async ({ email, password }, ip) => {
 
         if (attempts >= 5) {
             await redisClient.setEx(blockKey, 60 * 60 * 24, "blocked");
-            throw new Error("Account Blocked dut to multiple failed attempts. Try tomorrow.");
+            return { success: false, message: `Invalid credentials. Attempts left: ${5 - attempts}` };
         }
-        throw new Error(`Invalid credentials. Attempts left: ${5 - attempts}`);
+        return { success: false, message: "Account blocked due to multiple failed attempts. Try tomorrow." };
     }
     await redisClient.del(attemptKey);
 
@@ -68,7 +71,7 @@ exports.loginUser = async ({ email, password }, ip) => {
 
     const token = this.generateToken(user);
 
-    return {user: {id: user._id, email: user.email}, token};
+    return {success: true, user: {id: user._id, email: user.email}, token};
 };
 
 exports.updateProfile = async (userId,data, file) => {

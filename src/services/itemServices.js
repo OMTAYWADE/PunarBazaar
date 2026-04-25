@@ -22,44 +22,53 @@ exports.getAllItems = async (userId) => {
 
 exports.createItem = async (data, userId, file) => {
     const { name, price, desc, category } = data;
-    if (!name || !price) throw new Error("Missing fields");
+    if (!name || !price) {
+        return {success: false, message: "Please fill all required fields"};
+    }
 
-    if (data.price <= 0 || data.price > 200000) {
-        throw new Error("Invalid item price");
+    if (price <= 0 || price > 200000) {
+        return {success: false, message: "Price must be between ₹1 and ₹2000"};
     }
     
-    if (category === "Notes" && price > 10) {
-        throw new Error("Notes price must be 10 rupees or below");
+    if (category === "Notes" && price > 1000) {
+        return {success: false, message: "Notes should be priced fairly (below ₹10 recommended)"};
     }
     
     const image = file?.path || "";
     await redisClient.del(`search:*`);
-    return await Item.create({
+    const item = await Item.create({
         name, price, category, desc, image, user: userId,
     });
+    return { success: true, item };
 };
 
 exports.deleteItems = async (userId, itemId) => {
     const item = await Item.findById(itemId);
-    if (!item) throw new Error("Item not found");
+    if (!item) {
+        return { success: false, message: "Item not found" };
+    }
     
-    if (!item.user.equals(userId)) throw new Error("Not Authorized");
-    
+    if (!item.user.equals(userId)) {
+        return { success: true, message: "You are not allowed to delete this item" };
+    }
     await redisClient.del(`search:*`);
-    return await Item.findByIdAndDelete(itemId);
-};
+    await Item.findByIdAndDelete(itemId);
+    return { success: true };
+}
 
 exports.getItemDetails = async (itemId) => {
     const item = await Item.findById(itemId).populate("user");
     
-    if (!item) throw new Error("Item Not found");
+    if (!item) {
+        return { success: false, message: "Item not found" };
+    }
     
     const recommended = await Item.find({
         category: item.category,
         _id: { $ne: itemId },
     }).limit(4);
     
-    return { item, recommended };
+    return {success: true, item, recommended };
 };
 
 exports.getItemsBySearch = async (query) => {

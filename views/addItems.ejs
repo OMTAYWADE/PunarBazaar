@@ -3,106 +3,118 @@
 <head>
 <title>Add Item</title>
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+<style>
+@keyframes fadeUp {
+  from {opacity:0; transform:translateY(20px);}
+  to {opacity:1; transform:translateY(0);}
+}
+.animate-fadeUp {
+  animation: fadeUp 0.5s ease;
+}
+</style>
 </head>
 
-<body class="bg-gradient-to-br from-slate-100 via-indigo-50 to-slate-200 min-h-screen">
+<body class="bg-gradient-to-br from-indigo-50 via-white to-purple-50 min-h-screen">
 
-<div class="max-w-4xl mx-auto px-4 py-6 sm:py-10">
+<div class="max-w-3xl mx-auto px-4 py-10">
 
-    <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-6">
-        <h2 class="text-xl sm:text-2xl font-semibold text-gray-800">Add New Item</h2>
-        <a href="/" class="text-indigo-600 text-sm hover:underline">Back</a>
-    </div>
+<!-- HEADER -->
+<div class="flex justify-between items-center mb-8">
+<h2 class="text-2xl font-semibold text-gray-800">Add New Item</h2>
+<a href="/" class="text-indigo-600 hover:underline">Back</a>
+</div>
 
-    <!-- Card -->
-    <div class="bg-white/90 backdrop-blur border rounded-2xl shadow-md p-4 sm:p-6">
+<!-- CARD -->
+<div class="bg-white/70 backdrop-blur-xl rounded-3xl shadow-xl p-6 animate-fadeUp">
 
-        <form action="/addItems" method="POST" enctype="multipart/form-data" id="form">
+<form id="form" action="/addItems" method="POST" enctype="multipart/form-data" class="space-y-6">
 
-            <!-- GRID -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<!-- NAME -->
+<div>
+<label class="text-sm text-gray-500">Item Name</label>
+<input name="name" required
+class="w-full mt-1 p-3 rounded-xl border focus:ring-2 focus:ring-indigo-500 transition">
+</div>
 
-                <!-- Name -->
-                <div>
-                    <label class="text-xs text-gray-500">Item Name</label>
-                    <input name="name" required
-                    class="w-full mt-1 p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm">
-                </div>
+<!-- PRICE -->
+<div>
+<label class="text-sm text-gray-500">Price</label>
+<input type="number" name="price" required
+class="w-full mt-1 p-3 rounded-xl border focus:ring-2 focus:ring-indigo-500 transition">
 
-                <!-- Price -->
-                <p class="text-sm text-gray-500">
-  💡 Tip: Keep price fair so buyers trust you. Recommended price < 500.
+<p class="text-xs text-gray-400 mt-1">
+💡 Fair pricing builds trust (₹5–₹200 recommended)
 </p>
-                <div>
-                    <label class="text-xs text-gray-500">Price</label>
-                    <input type="number" name="price" required
-                    class="w-full mt-1 p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm">
-                </div>
+</div>
 
-                <!-- Category -->
-                <div>
-                    <label class="text-xs text-gray-500">Category</label>
-                    <select name="category" id="category"
-                    class="w-full mt-1 p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm">
-                        <option value="Notes">Notes</option>
-                        <option value="Books">Books</option>
-                        <option value="Electronics">Electronics</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
+<!-- CATEGORY -->
+<div>
+<label class="text-sm text-gray-500">Category</label>
+<select id="category" name="category"
+class="w-full mt-1 p-3 rounded-xl border focus:ring-2 focus:ring-indigo-500">
+<option>Notes</option>
+<option>Books</option>
+<option>Electronics</option>
+<option>Other</option>
+</select>
+</div>
 
-                <!-- Custom Category -->
-                <div id="customBox" class="hidden">
-                    <label class="text-xs text-gray-500">Custom Category</label>
-                    <input type="text" id="customCategory"
-                    class="w-full mt-1 p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm">
-                </div>
+<!-- CUSTOM CATEGORY -->
+<div id="customBox" class="hidden">
+<input id="customCategory" placeholder="Enter custom category"
+class="w-full p-3 rounded-xl border">
+</div>
 
-            </div>
+<!-- DESCRIPTION -->
+<div>
+<label class="text-sm text-gray-500">Description</label>
+<textarea name="desc"
+class="w-full mt-1 p-3 rounded-xl border focus:ring-2 focus:ring-indigo-500"></textarea>
+</div>
 
-            <!-- Description -->
-            <div class="mt-4">
-                <label class="text-xs text-gray-500">Description</label>
-                <textarea name="desc"
-                class="w-full mt-1 p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm"></textarea>
-            </div>
+<!-- IMAGE SECTION -->
+<div>
 
-            <!-- Upload Buttons -->
-            <div class="mt-4">
-                <label class="text-xs text-gray-500">Upload Image</label>
+<label class="text-sm text-gray-500">Upload Image</label>
 
-                <div class="flex flex-col sm:flex-row gap-2 mt-2">
+<div class="flex gap-3 mt-3">
 
-                    <input type="file" id="imgInput" name="image" accept="image/*" class="hidden">
-                    <button type="button" onclick="imgInput.click()"
-                    class="w-full sm:w-auto px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg text-sm">
-                        Choose Image
-                    </button>
+<button type="button" onclick="imgInput.click()"
+class="flex-1 py-2 bg-indigo-100 text-indigo-700 rounded-xl hover:scale-105 transition">
+📁 Gallery
+</button>
 
-                    <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden">
-                    <button type="button" onclick="cameraInput.click()"
-                    class="w-full sm:w-auto px-4 py-2 bg-green-100 text-green-700 rounded-lg text-sm">
-                        Use Camera
-                    </button>
+<button type="button" onclick="cameraInput.click()"
+class="flex-1 py-2 bg-green-100 text-green-700 rounded-xl hover:scale-105 transition">
+📸 Camera
+</button>
 
-                </div>
-            </div>
+</div>
 
-            <!-- Preview -->
-            <img id="preview" class="mt-4 hidden max-h-40 rounded-lg border shadow-sm w-full object-cover">
+<input type="file" id="imgInput" name="image" class="hidden" accept="image/*">
+<input type="file" id="cameraInput" class="hidden" accept="image/*" capture>
 
-            <!-- Submit -->
-            <button id="btn"
-            class="mt-6 w-full py-3 rounded-xl text-white font-medium text-sm
-            bg-gradient-to-r from-indigo-600 to-indigo-500
-            active:scale-[0.98] transition shadow">
-                Add Item
-            </button>
+</div>
 
-        </form>
+<!-- PREVIEW -->
+<div id="previewBox" class="hidden">
+<img id="preview"
+class="w-full h-40 object-cover rounded-xl shadow transition">
+</div>
 
-    </div>
+<!-- SUBMIT -->
+<button id="btn"
+class="w-full py-3 rounded-xl text-white font-medium
+bg-gradient-to-r from-indigo-600 to-purple-600
+hover:scale-[1.02] active:scale-[0.97]
+transition shadow-lg">
+🚀 Add Item
+</button>
+
+</form>
+
+</div>
 
 </div>
 
@@ -114,6 +126,7 @@ const customInput = document.getElementById("customCategory");
 const imgInput = document.getElementById("imgInput");
 const cameraInput = document.getElementById("cameraInput");
 const preview = document.getElementById("preview");
+const previewBox = document.getElementById("previewBox");
 
 const form = document.getElementById("form");
 const btn = document.getElementById("btn");
@@ -126,8 +139,11 @@ category.onchange = () => {
 // Preview
 function showPreview(file){
     if (!file) return;
+
     preview.src = URL.createObjectURL(file);
-    preview.classList.remove("hidden");
+    previewBox.classList.remove("hidden");
+
+    preview.classList.add("animate-fadeUp");
 }
 
 imgInput.onchange = e => showPreview(e.target.files[0]);
@@ -138,7 +154,9 @@ form.onsubmit = () => {
     if (category.value === "Other" && customInput.value.trim()) {
         category.value = customInput.value;
     }
+
     btn.innerText = "Uploading...";
+    btn.classList.add("opacity-70");
     btn.disabled = true;
 };
 </script>
