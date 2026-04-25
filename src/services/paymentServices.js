@@ -21,7 +21,7 @@ exports.createOrder = async (itemId, userId) => {
         return { success: false, message: "Invalid choice" };
     }
 
-    if ((item.price < 200000 && item.category === 'set') || (item.price < 100000 && item.category != 'set')) {
+    if ((item.price > 2000 && item.category === 'Item-Set') || (item.price > 1000 && item.category != 'Item-Set')) {
         return { success: false, message: "Price is too High" };
     }
 
@@ -37,7 +37,7 @@ exports.createOrder = async (itemId, userId) => {
     let order;
 
     try {
-        const amount = item.price;
+        const amount = item.price * 100;
         order = await razorpay.orders.create({
             amount: amount,
             currency: "INR",

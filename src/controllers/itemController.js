@@ -181,7 +181,7 @@ exports.verifyPayment = async (req, res) => {
         
         const result = await paymentServices.verifyPayment(req.body, req.user?.userId, req.body.itemId);
 
-        if (!result.success) { return res.status(400).json(result); }
+        if (!result) { return res.status(400).json({success: false, message: "Payment verification failed"}); }
         res.json({ success:true });
     } catch (err) {
         console.log('"Verify Error: ', err);
