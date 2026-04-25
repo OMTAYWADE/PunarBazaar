@@ -40,35 +40,35 @@
 <div id="msgBox" class="hidden mb-4 p-3 rounded-xl text-sm"></div>
 
 <!-- CARD -->
-<div class="bg-white/60 backdrop-blur-2xl border border-white/40 
-rounded-3xl shadow-2xl p-8 animate-fadeUp transition hover:shadow-indigo-200">
+<div class="bg-white/70 backdrop-blur-xl border border-white/30 
+rounded-2xl shadow-lg p-5 animate-fadeUp transition hover:shadow-indigo-100">
 
-<form id="form" action="/addItems" method="POST" enctype="multipart/form-data" class="space-y-6">
+<form id="form" action="/addItems" method="POST" enctype="multipart/form-data" class="space-y-5">
 
 <!-- NAME -->
 <div>
-<label class="text-sm font-medium text-gray-600">Item Name</label>
+<label class="text-xs font-medium text-gray-500">Item Name</label>
 <input name="name" required
-class="w-full mt-1 p-3 rounded-xl border border-gray-200 bg-white/80 
+class="w-full mt-1 p-2.5 text-sm rounded-lg border border-gray-200 bg-white/80 
 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-400 
-transition shadow-sm hover:shadow-md">
+transition">
 </div>
 
 <!-- PRICE -->
 <div>
-<label class="text-sm font-medium text-gray-600">Price</label>
+<label class="text-xs font-medium text-gray-500">Price</label>
 <input type="number" name="price" required
-class="w-full mt-1 p-3 rounded-xl border border-gray-200 bg-white/80 
-focus:ring-2 focus:ring-indigo-500 transition shadow-sm hover:shadow-md">
+class="w-full mt-1 p-2.5 text-sm rounded-lg border border-gray-200 bg-white/80 
+focus:ring-2 focus:ring-indigo-500 transition">
 
-<p id="priceHint" class="text-xs text-gray-400 mt-1"></p>
+<p id="priceHint" class="text-[11px] text-gray-400 mt-1"></p>
 </div>
 
 <!-- CATEGORY -->
 <div>
-<label class="text-sm font-medium text-gray-600">Category</label>
+<label class="text-xs font-medium text-gray-500">Category</label>
 <select id="category" name="category"
-class="w-full mt-1 p-3 rounded-xl border border-gray-200 bg-white/80 focus:ring-2 focus:ring-indigo-500">
+class="w-full mt-1 p-2.5 text-sm rounded-lg border border-gray-200 bg-white/80 focus:ring-2 focus:ring-indigo-500">
 <option>Notes</option>
 <option>Books</option>
 <option>Electronics</option>
@@ -80,28 +80,28 @@ class="w-full mt-1 p-3 rounded-xl border border-gray-200 bg-white/80 focus:ring-
 <!-- CUSTOM CATEGORY -->
 <div id="customBox" class="hidden">
 <input id="customCategory" placeholder="Enter custom category"
-class="w-full p-3 rounded-xl border border-gray-200 bg-white/80">
+class="w-full p-2.5 text-sm rounded-lg border border-gray-200 bg-white/80">
 </div>
 
 <!-- DESCRIPTION -->
 <div>
-<label class="text-sm font-medium text-gray-600">Description</label>
+<label class="text-xs font-medium text-gray-500">Description</label>
 <textarea name="desc"
-class="w-full mt-1 p-3 rounded-xl border border-gray-200 bg-white/80 focus:ring-2 focus:ring-indigo-500"></textarea>
+class="w-full mt-1 p-2.5 text-sm rounded-lg border border-gray-200 bg-white/80 focus:ring-2 focus:ring-indigo-500"></textarea>
 </div>
 
 <!-- IMAGE -->
 <div>
-<label class="text-sm font-medium text-gray-600">Upload Image</label>
+<label class="text-xs font-medium text-gray-500">Upload Image</label>
 
-<div class="flex gap-3 mt-3">
+<div class="flex gap-2 mt-2">
 <button type="button" onclick="imgInput.click()"
-class="flex-1 py-2 bg-white/80 border text-gray-700 rounded-xl hover:bg-indigo-50 hover:scale-105 transition shadow-sm">
+class="flex-1 py-2 text-sm bg-white border rounded-lg hover:bg-indigo-50 transition">
 📁 Gallery
 </button>
 
 <button type="button" onclick="cameraInput.click()"
-class="flex-1 py-2 bg-white/80 border text-gray-700 rounded-xl hover:bg-green-50 hover:scale-105 transition shadow-sm">
+class="flex-1 py-2 text-sm bg-white border rounded-lg hover:bg-green-50 transition">
 📸 Camera
 </button>
 </div>
@@ -113,20 +113,20 @@ class="flex-1 py-2 bg-white/80 border text-gray-700 rounded-xl hover:bg-green-50
 <!-- PREVIEW -->
 <div id="previewBox" class="hidden">
 <img id="preview"
-class="w-full h-44 object-cover rounded-xl shadow-md hover:scale-[1.02] transition">
+class="w-full h-36 object-cover rounded-lg shadow-sm transition">
 </div>
 
 <!-- BUTTON -->
 <button id="btn"
-class="w-full py-3 rounded-xl text-white font-semibold
-bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500
-hover:scale-[1.03] active:scale-[0.97]
-transition-all duration-300 shadow-lg hover:shadow-xl">
-🚀 Add Item
+class="w-full py-2.5 text-sm rounded-lg text-white font-medium
+bg-gradient-to-r from-indigo-600 to-purple-600
+hover:scale-[1.02] active:scale-[0.97]
+transition shadow-md">
+Add Item
 </button>
 
-<p class="text-xs text-gray-400 text-center mt-2">
-🔒 Fair pricing increases trust and chances of sale
+<p class="text-[11px] text-gray-400 text-center">
+💡 Fair pricing = faster sales
 </p>
 
 </form>
