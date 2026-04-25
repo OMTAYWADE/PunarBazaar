@@ -52,9 +52,11 @@ exports.createItem = async (data, userId, file) => {
         return { success: false, message: "Price must be between ₹1 and ₹2000" };
     }
 
-    const allowedCategory = ["Notes", "Books", "Electronics","Item Set", "Other"];
+    const allowedCategory = ["Notes", "Books", "Electronics", "Item-Set", "Other"];
+    
+    let finalCategory = category;
     if (!allowedCategory.includes(category)) {
-        return {success: false, message: "Invalid Category"}
+        finalCategory = "Other";
     }
     
     if (category === "Notes" && numericPrice > 50) {
@@ -67,7 +69,7 @@ exports.createItem = async (data, userId, file) => {
         await redisClient.del(keys);
     }
     const item = await Item.create({
-        name, price: numericPrice, category, desc, image, user: userId,
+        name, price: numericPrice, category:finalCategory, customCategory: category, desc, image, user: userId,
     });
     return { success: true, item };
 };
