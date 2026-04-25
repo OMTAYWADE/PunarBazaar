@@ -25,19 +25,32 @@ exports.createItem = async (data, userId, file) => {
     if (!name || !price) {
         return {success: false, message: "Please fill all required fields"};
     }
+  const numericPrice = Number(price);
 
-    if (price <= 0 || price > 200000) {
-        return {success: false, message: "Price must be between ₹1 and ₹2000"};
+    if (isNaN(numericPrice)) {
+        return { success: false, message: "Invalid price format" };
+    }
+
+    if (numericPrice <= 0 || numericPrice > 2000) {
+        return { success: false, message: "Price must be between ₹1 and ₹2000" };
+    }
+
+    const allowedCategory = ["Notes", "Books", "Electronics","Item Set", "Other"];
+    if (!allowedCategory.includes(category)) {
+        return {success: false, message: "Invalid Category"}
     }
     
-    if (category === "Notes" && price > 1000) {
-        return {success: false, message: "Notes should be priced fairly (below ₹10 recommended)"};
+    if (category === "Notes" && numericPrice > 50) {
+        return {success: false, message: "Notes should be priced fairly (below ₹50 recommended)"};
     }
     
     const image = file?.path || "";
-    await redisClient.del(`search:*`);
+    const keys = await redisClient.keys("search:*");
+    if (keys.length) {
+        await redisClient.del(keys);
+    }
     const item = await Item.create({
-        name, price, category, desc, image, user: userId,
+        name, price: numericPrice, category, desc, image, user: userId,
     });
     return { success: true, item };
 };
@@ -49,9 +62,9 @@ exports.deleteItems = async (userId, itemId) => {
     }
     
     if (!item.user.equals(userId)) {
-        return { success: true, message: "You are not allowed to delete this item" };
+        return { success: false, message: "You are not allowed to delete this item" };
     }
-    await redisClient.del(`search:*`);
+    await redisClient.del("search:*");
     await Item.findByIdAndDelete(itemId);
     return { success: true };
 }
