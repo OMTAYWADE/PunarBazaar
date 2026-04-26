@@ -251,12 +251,16 @@ if(deleteBtn){
     deleteBtn.onclick = async () => {
         if(!confirm("Delete item?")) return;
 
-        const res = await fetch(`/item/<%= item._id %>`, { method:"DELETE" });
+        const res = await fetch(`/item/<%= item._id %>`, { method:"DELETE", credentials: "include"});
 
-        if(res.ok){
-            alert("Deleted ✅");
+        const data = await res.json();
+        if(data.success){
+             alert("Deleted ✅");
             location.href = "/";
+        }else{
+            alert(data.message || "Failed ❌)
         }
+
     };
 }
 

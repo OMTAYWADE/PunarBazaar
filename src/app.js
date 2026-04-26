@@ -78,6 +78,9 @@ app.use(async (req, res, next) => {
     }
 });
 
+//method-override
+const methodOverride = require
+
 //routes
 const itemRoutes = require('./routes/itemRoutes');
 const authRoutes = require('./routes/authRoutes');

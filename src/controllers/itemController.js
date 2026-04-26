@@ -59,7 +59,7 @@ exports.deleteItems = async (req, res) => {
         if (!result.success) {
             return res.status(400).json(result);    
         }
-        res.redirect('/'); 
+        return res.json({ success: true });
     } catch (err) {
         res.send(err.message);
     }
