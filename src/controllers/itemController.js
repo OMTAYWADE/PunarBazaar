@@ -73,7 +73,7 @@ exports.searchItems = async (req, res) => {
         $text:{$search: q}
     }).populate("user")
 
-    res.render('home', { items });
+    res.render('home', { items, success: req.query.signup === "success"});
 };
 
 //details
@@ -251,7 +251,7 @@ exports.getItemsByCategory = async (req, res) => {
         const category = req.params.category;
 
         const items = await itemServices.getItemsByCategory(category, req.user?.userId);
-        res.render('home', { items });
+        res.render('home', { items, success: req.query.signup === "success"});
     } catch (err) {
         res.status(500).json(err.message);
     }
