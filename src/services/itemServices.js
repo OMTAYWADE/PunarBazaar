@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 
 const redisClient = require('../config/redis.js');
 const Unlock = require('../models/Unlock.js');
+const { unlock } = require('../routes/itemRoutes.js');
 
 exports.getAllItems = async (userId) => {
     await Item.updateMany(
@@ -139,4 +140,46 @@ exports.getItemsBySearch = async (query) => {
     const totalPages = Math.ceil(total / limit);
     await redisClient.setEx(key, 60, JSON.stringify(ans));
     return { ans, page, totalPages, hasPrevPage: page > 1, hasNextPage: page < totalPages };
+};
+
+exports.getItemsByCategory = async (req, res) => {
+    try {
+        const category = req.params.category;
+        const items = await itemServices.getItemsByCategory(category, req.user?.userId);
+        res.render('home', { items });
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+};
+
+exports.getItemsByCategory = async (category, userId) => {
+    const normalized = category.toLowercase();
+
+    const categoryMap = {
+        books: "Books",
+        electronics: "Electronic",
+        notes: "Notes",
+        instruments: "Instruments",
+        "item-set": "Item-set",
+        others: "Other"
+    };
+    const dbCategory = categoryMap[normalized];
+
+    if (!dbCategory) {
+        return [];
+    }
+
+    let items = await Item.find({ category: dbCategory }).sort({ createdAt: -1 }).populate("user", "name college");
+
+    if (userId) {
+        const unlocks = await Unlock.find({ user: userId, status: "paid" });
+        
+        const purchasedIds = unlocks.map(u => u.item.toString());
+        
+        items = items.map(item => ({
+            ...item.toObject(),
+            isPurchased: purchasedIds.includes(item._id.toString())
+        }));
+    }
+    return items;
 };

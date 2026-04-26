@@ -31,4 +31,6 @@ router.post('/verifyPayment',verifyToken, isLoggedIn, itemControllers.verifyPaym
 router.post('/markPaid/:id', verifyToken, isLoggedIn, itemControllers.markAsPaid);
 router.post('/confirmPayment/:id', verifyToken, isLoggedIn, itemControllers.confirmPayment);
 
+router.get('/category/:category', itemControllers.getItemsByCategory);
+
 module.exports = router;

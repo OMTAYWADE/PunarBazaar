@@ -206,11 +206,11 @@ exports.markAsPaid = async (req, res) => {
 
         await Unlock.create({
             user: userId,
-            item: itemId,
+            item: req.params.id,
             status: "pending",
         });
 
-        res.json({ success: true });
+        res.json({ success: true, message: "Payment marked as pending. Waiting for seller confirmation"});
     } catch (err) {
         res.status(500).json({ success: false });
     }
