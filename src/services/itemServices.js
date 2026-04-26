@@ -142,16 +142,6 @@ exports.getItemsBySearch = async (query) => {
     return { ans, page, totalPages, hasPrevPage: page > 1, hasNextPage: page < totalPages };
 };
 
-exports.getItemsByCategory = async (req, res) => {
-    try {
-        const category = req.params.category;
-        const items = await itemServices.getItemsByCategory(category, req.user?.userId);
-        res.render('home', { items });
-    } catch (err) {
-        res.status(500).send(err.message);
-    }
-};
-
 exports.getItemsByCategory = async (category, userId) => {
     const normalized = category.toLowercase();
 

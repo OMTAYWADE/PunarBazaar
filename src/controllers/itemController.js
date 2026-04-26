@@ -245,3 +245,14 @@ exports.confirmPayment = async (req, res) => {
         res.status(500).json({ success: false });
     }
 };
+
+exports.getItemsByCategory = async (req, res) => {
+    try {
+        const category = req.params.category;
+
+        const items = await itemServices.getItemsByCategory(category, req.user?.userId);
+        res.render('home', { items });
+    } catch (err) {
+        res.status(500).json(err.message);
+    }
+};
