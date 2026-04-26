@@ -199,12 +199,17 @@ function showSuccess(msg){
 
 // UPI
 function payUPI() {
-        const upi = "<%= item.upiId || '' %>";
-    const amount = "<%= item.price || 0 %>";
+       const upi = "<%= item.upiId || '' %>";
+const amount = Number("<%= item.price || 0 %>");
 
-    const url = `upi://pay?pa=${encodeURIComponent(upi)}&pn=PunarBazaar&am=${amount}&cu=INR`;
-    alert("Complete payment and then click 'I Have Paid'");
-    window.location.href = url;
+if (!upi || !amount) {
+    alert("Invalid payment details");
+    return;
+}
+
+const url = `upi://pay?pa=${encodeURIComponent(upi)}&pn=PunarBazaar&am=${amount}&cu=INR`;
+
+window.location.href = url;
 }
 
 // MARK PAID
