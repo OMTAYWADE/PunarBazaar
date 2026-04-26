@@ -63,8 +63,9 @@
     <div class="bg-white border rounded-lg p-3">
         <p class="text-xs text-gray-500">Contact</p>
         <p class="font-semibold text-gray-800">
-            📞 <%= item.user.phone %>
+            📞 <%= item.user?.phone || "not available" %>
         </p>
+        
     </div>
 
 </div>
@@ -198,7 +199,10 @@ function showSuccess(msg){
 
 // UPI
 function payUPI() {
-    const url = `upi://pay?pa=<%= item.upiId %>&pn=PunarBazaar&am=<%= item.price %>&cu=INR`;
+        const upi = "<%= item.upiId || '' %>";
+    const amount = "<%= item.price || 0 %>";
+
+    const url = `upi://pay?pa=${encodeURIComponent(upi)}&pn=PunarBazaar&am=${amount}&cu=INR`;
     alert("Complete payment and then click 'I Have Paid'");
     window.location.href = url;
 }
@@ -209,7 +213,7 @@ async function markPaid() {
     btn.innerText = "Processing...";
     btn.disabled = true;
 
-    const res = await fetch(`/markPaid/<%= item._id %>`, { method: "POST" });
+    const res = await fetch(`/markPaid/<%= item._id %>`, { method: "POST", credentials: "includes"});
     const data = await res.json();
 
     if(data.success){
@@ -227,7 +231,7 @@ async function confirmPayment(){
     btn.innerText = "Confirming...";
     btn.disabled = true;
 
-    const res = await fetch(`/confirmPayment/<%= item._id %>`, { method: "POST" });
+    const res = await fetch(`/confirmPayment/<%= item._id %>`, { method: "POST", credentials: "include" });
     const data = await res.json();
 
     if(data.success){
@@ -246,23 +250,26 @@ function copyNumber(phone){
 }
 
 // DELETE
-const deleteBtn = document.getElementById("deleteBtn");
-if(deleteBtn){
-    deleteBtn.onclick = async () => {
-        if(!confirm("Delete item?")) return;
+document.addEventListener("DOMContentLoaded", ()=>{
 
-        const res = await fetch(`/item/<%= item._id %>`, { method:"DELETE", credentials: "include"});
-
-        const data = await res.json();
-        if(data.success){
-             alert("Deleted ✅");
-            location.href = "/";
-        }else{
-            alert(data.message || "Failed ❌)
-        }
-
-    };
-}
+    const deleteBtn = document.getElementById("deleteBtn");
+    if(deleteBtn){
+        deleteBtn.onclick = async () => {
+            if(!confirm("Delete item?")) return;
+    
+            const res = await fetch(`/item/<%= item._id %>`, { method:"DELETE", credentials: "include"});
+    
+            const data = await res.json();
+            if(data.success){
+                 alert("Deleted ✅");
+                location.href = "/";
+            }else{
+                alert(data.message || "Failed ❌");
+            }
+    
+        };
+    }
+})
 
 
 </script>
