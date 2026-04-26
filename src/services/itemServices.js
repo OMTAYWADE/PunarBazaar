@@ -83,7 +83,7 @@ exports.deleteItems = async (userId, itemId) => {
     }
 
     const keys = await redisClient.keys("search:*");
-    if(key.length) await redisClient.del(keys)
+    if (keys.length > 0) await redisClient.del(keys);
     await Item.findByIdAndDelete(itemId);
     return { success: true };
 }
