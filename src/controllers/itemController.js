@@ -14,7 +14,7 @@ exports.getAllItems = async (req, res) => {
 }
     // remove expiry items
     const items = await itemServices.getAllItems(req.user?.userId);
-    res.render('home', { items });
+    res.render('home', { items, success: req.query.signup === "success" });
 } catch (err) {
     res.send(err.message);
 }

@@ -31,6 +31,11 @@ html { scroll-behavior: smooth; }
 </head>
 
 <body class="bg-gradient-to-br from-slate-100 via-indigo-50 to-slate-200 text-gray-800">
+  <% if(success){ %>
+<div class="fixed top-5 left-1/2 -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-xl shadow">
+    ✅ Account created successfully!
+</div>
+<% } %>
 
 <!-- NAVBAR -->
 <header class="bg-white/80 backdrop-blur-md shadow sticky top-0 z-50">

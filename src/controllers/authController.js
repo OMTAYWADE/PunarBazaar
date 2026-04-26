@@ -21,7 +21,7 @@ exports.signUp = async (req, res) => {
             sameSite: "lax",
             maxAge: 7 * 24 * 60 * 60 * 1000 //7 days
         });
-        return res.json({ success: true, message: "Account is created "});
+        return res.redirect('/?signup=success');
     } catch (err) {
         res.status(400).json({message: err.message});
     }

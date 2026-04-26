@@ -143,7 +143,7 @@ exports.getItemsBySearch = async (query) => {
 };
 
 exports.getItemsByCategory = async (category, userId) => {
-    const normalized = category.toLowercase();
+    const normalized = category.toLowerCase();
 
     const categoryMap = {
         books: "Books",
