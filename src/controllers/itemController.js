@@ -53,15 +53,15 @@ exports.createItem = async (req, res) => {
 exports.deleteItems = async (req, res) => {
     try {
         if (!req.user) {
-    return res.redirect('/login');
+            return res.status(401).json({ success: false, message: "Login Required" });
 }
-        const result = await itemServices.deleteItems(req.user?.userId, req.params.id);   
+        const result = await itemServices.deleteItems(req.user.userId, req.params.id);   
         if (!result.success) {
             return res.status(400).json(result);    
         }
-        return res.json({ success: true });
+        return res.json({ success: true, message: "Item deleted" });
     } catch (err) {
-        res.send(err.message);
+        res.status(500).json({ success: false, message: err.message });
     }
 };
 
