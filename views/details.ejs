@@ -72,7 +72,7 @@
 <!-- ACTION SECTION -->
 <div class="space-y-3">
 
-<% if(isUnlocked){ %>
+<% if(isPurchased){ %>
 
 <!-- PURCHASED -->
 <button class="w-full py-3 bg-green-600 text-white rounded-xl font-semibold cursor-not-allowed">
@@ -123,6 +123,11 @@ class="w-full py-3 rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 trans
 <div id="successBox" 
 class="hidden fixed top-5 left-1/2 -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-xl shadow-lg z-50">
 </div>
+
+<button onclick="payUPI()" 
+class="w-full py-3 rounded-xl text-white bg-green-600 hover:bg-green-700 transition shadow">
+    🚀 Open UPI App
+</button>
 
 <button onclick="markPaid()" id="markBtn"
 class="w-full py-2 rounded-xl border border-indigo-500 text-indigo-600 hover:bg-indigo-50 transition">

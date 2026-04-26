@@ -3,6 +3,7 @@ const router = express.Router();
 
 //controllers
 const itemControllers = require('../controllers/itemController');
+const userController = require('../controllers/userController');
 const upload = require('../utils/upload');
 
 //middleware
@@ -32,5 +33,7 @@ router.post('/markPaid/:id', verifyToken, isLoggedIn, itemControllers.markAsPaid
 router.post('/confirmPayment/:id', verifyToken, isLoggedIn, itemControllers.confirmPayment);
 
 router.get('/category/:category', itemControllers.getItemsByCategory);
+
+router.get('/dashboard', verifyToken, isLoggedIn, userController.dashboard);
 
 module.exports = router;

@@ -4,31 +4,28 @@ const mongoose = require('mongoose');
 
 const redisClient = require('../config/redis.js');
 const Unlock = require('../models/Unlock.js');
-const { unlock } = require('../routes/itemRoutes.js');
 
 exports.getAllItems = async (userId) => {
     await Item.updateMany(
         { featuredUntil: { $lt: new Date() } },
         { isFeatured: false }
     );
-    let items = await Item.find().limit(20).sort({ isFeatured: -1, createdAt: -1 }).populate("user", "name college");
-    if (!userId) {
-        return items.map(item => ({
-        ...item.toObject(),
-        isPurchased: false
-        }));
+
+    let purchasedIds = [];
+
+    
+    if (userId) {
+        const unlocks = await Unlock.find({
+            user: userId,
+            status: "paid"
+        });
+        
+        purchasedIds = unlocks.map(u => u.item.toString());
     }
 
-    const unlocks = await Unlock.find({
-        user: userId,
-        status: "paid"
-    });
+    let items = await Item.find({_id: { $nin: purchasedIds}}).limit(20).sort({ isFeatured: -1, createdAt: -1 }).populate("user", "name college");
 
-    const purchasedIds = unlocks.map(u => u.item.toString());
-    items = items.map(item => ({
-        ...item.toObject(),
-        isPurchased: purchasedIds.includes(item._id.toString())
-    }));
+    if (!userId) return items;
 
     const user = await User.findById(userId);
 
@@ -121,6 +118,20 @@ exports.getItemsBySearch = async (query) => {
         return JSON.parse(cachedData);
     }
     const filter = {};
+
+    let purchasedIds = [];
+
+if (query.userId) {
+    const unlocks = await Unlock.find({
+        user: query.userId,
+        status: "paid"
+    });
+
+    purchasedIds = unlocks.map(u => u.item.toString());
+}
+
+filter._id = { $nin: purchasedIds };
+
     if (search) {
         filter.$text = { $search: search };
     }
@@ -143,33 +154,38 @@ exports.getItemsBySearch = async (query) => {
 };
 
 exports.getItemsByCategory = async (category, userId) => {
-    const normalized = category.toLowerCase();
+    const normalized = (category || "").toLowerCase();
 
     const categoryMap = {
         books: "Books",
-        electronics: "Electronic",
+        electronics: "Electronics",
         notes: "Notes",
         instruments: "Instruments",
-        "item-set": "Item-set",
+        "item-set": "Item-Set",
         others: "Other"
     };
-    const dbCategory = categoryMap[normalized];
 
-    if (!dbCategory) {
-        return [];
-    }
-
-    let items = await Item.find({ category: dbCategory }).sort({ createdAt: -1 }).populate("user", "name college");
+    let purchasedIds = [];
 
     if (userId) {
         const unlocks = await Unlock.find({ user: userId, status: "paid" });
-        
-        const purchasedIds = unlocks.map(u => u.item.toString());
-        
-        items = items.map(item => ({
-            ...item.toObject(),
-            isPurchased: purchasedIds.includes(item._id.toString())
-        }));
+        purchasedIds = unlocks.map(u => u.item.toString());
     }
+
+    let query = {
+        _id: { $nin: purchasedIds }
+    };
+
+    if (normalized !== "all") {
+        
+        const dbCategory = categoryMap[normalized];
+        
+        if (!dbCategory) {
+            return [];
+        }
+        query.category = dbCategory;
+    }
+    const items = await Item.find(query).sort({ createdAt: -1 }).populate("user", "name college");
+
     return items;
 };

@@ -85,9 +85,11 @@ exports.getItemDetails = async (req, res) => {
             return res.status(404).json({success: false, message: result.message});
         }
         const item =result.item;
-        const recommended =result.recommended;
+        const recommended = result.recommended;
+        let isPurchased = false;
         let isUnlocked = false;
         let isOwner = false;
+        let isPending = false;
 
         if (req.user?.userId) {
             const unlock = await Unlock.findOne({
@@ -98,15 +100,21 @@ exports.getItemDetails = async (req, res) => {
 
             if(unlock){
                 isUnlocked = true;
+                isPurchased = true;
 
             }
 
             if (item.user._id.toString() === req.user.userId.toString()) {
                 isOwner = true;
             }
+
+            const pending = await Unlock.findOne({ user: req.user?.userId, item: item._id, status: "pending" });
+            if (pending) {
+                isPending = true;
+            }
         }
 
-        res.render('details', { item, recommended, isUnlocked,isOwner,  razorpayKey: process.env.RAZORPAY_KEY });
+        res.render('details', { item, recommended, isUnlocked,isOwner,isPurchased, isPending, razorpayKey: process.env.RAZORPAY_KEY });
     } catch (err) {
         res.status(500).send("Something went wrong");
     } 
@@ -196,7 +204,7 @@ exports.markAsPaid = async (req, res) => {
 
         const existing = await Unlock.findOne({
             user: userId,
-            item: itemId,
+            item: req.params.id,
             status: "paid",
         });
 
