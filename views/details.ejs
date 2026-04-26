@@ -256,13 +256,20 @@ document.addEventListener("DOMContentLoaded", ()=>{
     if(deleteBtn){
         deleteBtn.onclick = async () => {
             if(!confirm("Delete item?")) return;
+
+            const itemId = "<%= item._id %>";
     
-            const res = await fetch(`/item/<%= item._id %>`, { method:"DELETE", credentials: "include"});
+            const res = await fetch(`/item/${itemId}`, { method:"DELETE", credentials: "include"});
     
             const data = await res.json();
             if(data.success){
-                 alert("Deleted ✅");
-                location.href = "/";
+                const card = document.getElementById(`item-${itemId}`);
+                if(card){
+                    card.style.transition = "0.3s";
+                    card.style.opacity = "0";
+                    card.style.transform = "scale(0.9)";
+                    setTimeout(()=> card.remove(), 300);
+                }
             }else{
                 alert(data.message || "Failed ❌");
             }
