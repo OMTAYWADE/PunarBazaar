@@ -98,10 +98,27 @@ class="w-full py-3 rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 trans
 <% } else { %>
 
 <!-- BUYER VIEW -->
-<button onclick="payUPI()" id="upiBtn"
-class="w-full py-3 rounded-xl text-white bg-green-600 hover:bg-green-700 transition shadow">
-    💸 Pay via UPI
-</button>
+<!-- PAYMENT INFO BOX -->
+<div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 space-y-2">
+
+    <p class="text-sm text-gray-600 font-medium">💳 Pay using UPI</p>
+
+    <div class="flex items-center justify-between bg-white p-3 rounded-lg border">
+        <span class="font-semibold text-gray-800 text-sm">
+            <%= item.upiId %>
+        </span>
+
+        <button onclick="copyUPI('<%= item.upiId %>')" 
+        class="text-xs px-2 py-1 bg-gray-100 rounded hover:bg-gray-200">
+            Copy
+        </button>
+    </div>
+
+    <p class="text-xs text-gray-500">
+        Send ₹<%= item.price %> to this UPI ID
+    </p>
+
+</div>
 
 <button onclick="markPaid()" id="markBtn"
 class="w-full py-2 rounded-xl border border-indigo-500 text-indigo-600 hover:bg-indigo-50 transition">
