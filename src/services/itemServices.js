@@ -81,7 +81,8 @@ exports.deleteItems = async (userId, itemId) => {
     if (!item.user.equals(userId)) {
         return { success: false, message: "You are not allowed to delete this item" };
     }
-    const keys = await redisClient.del("search:*");
+
+    const keys = await redisClient.keys("search:*");
     if(key.length) await redisClient.del(keys)
     await Item.findByIdAndDelete(itemId);
     return { success: true };
