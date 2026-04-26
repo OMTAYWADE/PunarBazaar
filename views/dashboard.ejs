@@ -3,10 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <title>Dashboard</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
 <style>
-/* Smooth animations */
+html { scroll-behavior: smooth; }
+
+/* smooth entry */
 @keyframes fadeUp {
   from { opacity:0; transform: translateY(20px); }
   to { opacity:1; transform: translateY(0); }
@@ -15,43 +18,36 @@
   animation: fadeUp 0.5s ease forwards;
 }
 
-/* soft glass */
-.glass {
-  background: rgba(255,255,255,0.6);
-  backdrop-filter: blur(12px);
-}
-
-/* hover glow */
-.card-hover:hover {
-  transform: translateY(-5px) scale(1.02);
-  box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+/* hide scrollbar */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 </style>
+
 </head>
 
 <body class="bg-gradient-to-br from-slate-100 via-indigo-50 to-slate-200 min-h-screen">
 
-<div class="max-w-6xl mx-auto px-4 py-8">
+<div class="max-w-7xl mx-auto px-4 py-8">
 
 <!-- HEADER -->
-<div class="flex justify-between items-center mb-10 animate-fadeUp">
+<div class="flex justify-between items-center mb-8 animate-fadeUp">
     <div>
-        <h1 class="text-2xl font-bold text-indigo-600">Dashboard</h1>
-        <p class="text-sm text-gray-500">Track your activity</p>
+        <h1 class="text-2xl font-bold text-indigo-600">My Dashboard</h1>
+        <p class="text-sm text-gray-500">Manage your activity</p>
     </div>
+
     <a href="/" class="text-sm text-gray-600 hover:text-indigo-600 transition">
         ← Home
     </a>
 </div>
 
 <!-- ================= PURCHASES ================= -->
-<div class="mb-12">
+<div class="mb-10">
 
-<div class="flex items-center justify-between mb-4">
-    <h2 class="text-lg font-semibold flex items-center gap-2">
-        🛒 My Purchases
-    </h2>
-</div>
+<h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
+🛒 My Purchases
+</h2>
 
 <% if(purchases.length === 0){ %>
 <div class="text-center py-10 text-gray-500">
@@ -59,38 +55,56 @@
 </div>
 <% } %>
 
-<div class="grid grid-cols-2 md:grid-cols-4 gap-5">
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
 
 <% purchases.forEach((p,i) => { %>
-<div class="glass rounded-2xl p-4 transition card-hover animate-fadeUp"
+
+<div class="bg-white rounded-2xl shadow-sm hover:shadow-xl transition overflow-hidden group animate-fadeUp"
 style="animation-delay:<%= i * 0.05 %>s">
 
-    <h3 class="font-semibold text-sm truncate">
-        <%= p.item?.name %>
-    </h3>
+<!-- IMAGE -->
+<div class="h-36 bg-gray-200 relative overflow-hidden">
 
-    <p class="text-green-600 font-bold mt-1">
-        ₹ <%= p.item?.price %>
-    </p>
+<% if(p.item?.image){ %>
+<img src="<%= p.item.image %>"
+class="w-full h-full object-cover group-hover:scale-105 transition">
+<% } else { %>
+<div class="flex items-center justify-center h-full text-gray-400 text-xs">
+No Image
+</div>
+<% } %>
 
-    <p class="text-xs text-gray-500 mt-1">
-        Seller: <%= p.item?.user?.name %>
-    </p>
-
-    <div class="flex gap-2 mt-3">
-
-        <a href="/item/<%= p.item?._id %>"
-        class="flex-1 text-center bg-indigo-600 text-white py-1.5 rounded-lg text-xs hover:bg-indigo-700 transition">
-            View
-        </a>
-
-        <span class="px-2 py-1 text-[10px] bg-green-100 text-green-700 rounded-lg">
-            Purchased
-        </span>
-
-    </div>
+<!-- STATUS -->
+<span class="absolute top-2 left-2 bg-green-500 text-white text-[10px] px-2 py-1 rounded-full">
+Purchased
+</span>
 
 </div>
+
+<!-- CONTENT -->
+<div class="p-3">
+
+<h3 class="text-sm font-semibold truncate">
+<%= p.item?.name %>
+</h3>
+
+<p class="text-green-600 font-bold text-sm">
+₹ <%= p.item?.price %>
+</p>
+
+<p class="text-xs text-gray-500 truncate">
+<%= p.item?.user?.college || "Unknown College" %>
+</p>
+
+<a href="/item/<%= p.item?._id %>"
+class="block mt-2 text-center bg-indigo-600 text-white py-1.5 rounded-lg text-xs hover:bg-indigo-700 transition">
+View Details
+</a>
+
+</div>
+
+</div>
+
 <% }) %>
 
 </div>
@@ -99,57 +113,72 @@ style="animation-delay:<%= i * 0.05 %>s">
 <!-- ================= SALES ================= -->
 <div>
 
-<div class="flex items-center justify-between mb-4">
-    <h2 class="text-lg font-semibold flex items-center gap-2">
-        📦 My Listings
-    </h2>
-</div>
+<h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
+📦 My Listings
+</h2>
 
 <% if(sales.length === 0){ %>
 <div class="text-center py-10 text-gray-500">
-    No items listed yet 🧑‍💻
+    No items listed yet 📦
 </div>
 <% } %>
 
-<div class="grid grid-cols-2 md:grid-cols-4 gap-5">
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
 
 <% sales.forEach((item,i) => { %>
-<div class="glass rounded-2xl p-4 transition card-hover animate-fadeUp"
+
+<div class="bg-white rounded-2xl shadow-sm hover:shadow-xl transition overflow-hidden group animate-fadeUp"
 style="animation-delay:<%= i * 0.05 %>s">
 
-    <h3 class="font-semibold text-sm truncate">
-        <%= item.name %>
-    </h3>
+<!-- IMAGE -->
+<div class="h-36 bg-gray-200 relative overflow-hidden">
 
-    <p class="text-green-600 font-bold mt-1">
-        ₹ <%= item.price %>
-    </p>
+<% if(item.image){ %>
+<img src="<%= item.image %>"
+class="w-full h-full object-cover group-hover:scale-105 transition">
+<% } else { %>
+<div class="flex items-center justify-center h-full text-gray-400 text-xs">
+No Image
+</div>
+<% } %>
 
-    <!-- status -->
-    <div class="mt-2 text-xs">
-        <% if(item.status === "sold"){ %>
-            <span class="bg-red-100 text-red-600 px-2 py-1 rounded-lg">Sold</span>
-        <% } else { %>
-            <span class="bg-green-100 text-green-600 px-2 py-1 rounded-lg">Active</span>
-        <% } %>
-    </div>
-
-    <div class="flex gap-2 mt-3">
-
-        <a href="/item/<%= item._id %>"
-        class="flex-1 text-center bg-indigo-600 text-white py-1.5 rounded-lg text-xs hover:bg-indigo-700 transition">
-            View
-        </a>
-
-        <form action="/item/<%= item._id %>?_method=DELETE" method="POST" class="flex-1">
-            <button class="w-full text-xs bg-red-500 text-white py-1.5 rounded-lg hover:bg-red-600 transition">
-                Delete
-            </button>
-        </form>
-
-    </div>
+<!-- STATUS -->
+<% if(item.status === "sold"){ %>
+<span class="absolute top-2 left-2 bg-red-500 text-white text-[10px] px-2 py-1 rounded-full">
+Sold
+</span>
+<% } else { %>
+<span class="absolute top-2 left-2 bg-green-500 text-white text-[10px] px-2 py-1 rounded-full">
+Active
+</span>
+<% } %>
 
 </div>
+
+<!-- CONTENT -->
+<div class="p-3">
+
+<h3 class="text-sm font-semibold truncate">
+<%= item.name %>
+</h3>
+
+<p class="text-green-600 font-bold text-sm">
+₹ <%= item.price %>
+</p>
+
+<p class="text-xs text-gray-500 truncate">
+<%= item.category %>
+</p>
+
+<a href="/item/<%= item._id %>"
+class="block mt-2 text-center bg-indigo-600 text-white py-1.5 rounded-lg text-xs hover:bg-indigo-700 transition">
+Manage Item
+</a>
+
+</div>
+
+</div>
+
 <% }) %>
 
 </div>
