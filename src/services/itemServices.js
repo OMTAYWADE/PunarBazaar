@@ -90,8 +90,7 @@ exports.deleteItems = async (userId, itemId) => {
 
 exports.getItemDetails = async (itemId) => {
     const item = await Item.findById(itemId).populate("user");
-    const unlock = await Unlock.findById({ item: itemId, user: item.user._id });
-    
+
     if (!item) {
         return { success: false, message: "Item not found" };
     }
@@ -101,7 +100,7 @@ exports.getItemDetails = async (itemId) => {
         _id: { $ne: itemId },
     }).limit(4);
     
-    return {success: true, item, recommended, unlock };
+    return {success: true, item, recommended};
 };
 
 exports.getItemsBySearch = async (query) => {

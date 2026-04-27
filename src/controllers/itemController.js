@@ -86,36 +86,25 @@ exports.getItemDetails = async (req, res) => {
         }
         const item =result.item;
         const recommended = result.recommended;
-        let isPurchased = false;
-        let isUnlocked = false;
+
+        let unlock = null;
         let isOwner = false;
-        let isPending = false;
 
         if (req.user?.userId) {
             const unlock = await Unlock.findOne({
-                user: req.user?.userId,
+                user: req.user.userId,
                 item: item._id,
-                status:"paid"
             });
-
-            if(unlock){
-                isUnlocked = true;
-                isPurchased = true;
-
-            }
 
             if (item.user._id.toString() === req.user.userId.toString()) {
                 isOwner = true;
             }
 
-            const pending = await Unlock.findOne({ user: req.user?.userId, item: item._id, status: "pending" });
-            if (pending) {
-                isPending = true;
-            }
         }
 
-        res.render('details', { item, recommended, isUnlocked,isOwner,isPurchased, isPending, razorpayKey: process.env.RAZORPAY_KEY });
+        res.render('details', { item, recommended, unlock, isOwner });
     } catch (err) {
+        console.error(err);
         res.status(500).send("Something went wrong");
     } 
 };
