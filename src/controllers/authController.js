@@ -13,7 +13,11 @@ exports.signUp = async (req, res) => {
         if (!result.success) {
             return res.redirect('/login?error='+ encodeURIComponent(result.message));
         }
+                console.log("STEP 1: User created");
+
         const token = authServices.generateToken(result.user);
+
+                console.log("STEP 2: Token generated");
 
         res.cookie("token", token, {
             httpOnly: true,
@@ -21,6 +25,8 @@ exports.signUp = async (req, res) => {
             sameSite: "lax",
             maxAge: 7 * 24 * 60 * 60 * 1000 //7 days
         });
+                console.log("STEP 3: Cookie set");
+
         return res.redirect('/?signup=success');
     } catch (err) {
         console.error(err);
