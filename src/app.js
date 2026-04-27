@@ -20,8 +20,8 @@ app.use(cors({
         if (!origin) return callback(null, true);
 
         const allowed = [
-            "http://localhost:8000/",
-            "https://punarbazaar.onrender.com/",
+            "http://localhost:8000",
+            "https://punarbazaar.onrender.com",
         ];
 
         if (allowed.includes(origin)) {
