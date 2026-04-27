@@ -27,7 +27,7 @@ exports.signUp = async (req, res) => {
         });
                 console.log("STEP 3: Cookie set");
 
-        return res.redirect('/login');
+        return res.json({success: true});
     } catch (err) {
         console.error(err);
         res.redirect('/signup?error=Something went wrong');
