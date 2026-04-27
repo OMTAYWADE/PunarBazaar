@@ -11,7 +11,7 @@ exports.signUp = async (req, res) => {
 
         const result = await authServices.createUser(req.body);
         if (!result.success) {
-            return res.redirect('/login?error=', encodeURIComponent(result.message));
+            return res.redirect('/login?error='+ encodeURIComponent(result.message));
         }
         const token = authServices.generateToken(result.user);
 
@@ -23,6 +23,7 @@ exports.signUp = async (req, res) => {
         });
         return res.redirect('/?signup=success');
     } catch (err) {
+        console.error(err);
         res.redirect('/signup?error=Something went wrong');
     }
 };
