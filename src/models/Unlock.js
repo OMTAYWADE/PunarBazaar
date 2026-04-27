@@ -16,8 +16,10 @@ const unlockSchema = new mongoose.Schema({
     paymentId: String,
     status: {
         type: String,
+        enum: ["pending", "paid", "confirmed"],
         default: "pending",
     },
+    buyerRated: {type: Boolean, default: false}
 }, { timestamps: true });
 
 module.exports = mongoose.model("Unlock", unlockSchema);

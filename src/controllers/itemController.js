@@ -199,35 +199,33 @@ exports.verifyPayment = async (req, res) => {
 
 exports.markAsPaid = async (req, res) => {
     try {
-        const userId = req.user.userId;
-        const item = req.params.id;
+        const {id} = req.params;
 
-        const existing = await Unlock.findOne({
-            user: userId,
-            item: req.params.id,
-            status: "paid",
+        const unlock= await Unlock.findOne({
+            item: id,
+            user: req.user._id,
         });
 
-        if (existing) {
-            return res.json({ success: true });
+         if (!unlock) {
+        return res.json({ success: false, message: "Order not found" });
         }
 
-        await Unlock.create({
-            user: userId,
-            item: req.params.id,
-            status: "pending",
-        });
+        if (unlock.status !== "pending") {
+        return res.json({ success: false, message: "Already updated" });
+        }
 
-        res.json({ success: true, message: "Payment marked as pending. Waiting for seller confirmation"});
+        unlock.status = "paid";
+        await unlock.save();
+
+        res.json({ success: true });
     } catch (err) {
-        res.status(500).json({ success: false });
+        res.status(500).json({ message: err.message });
     }
 };
 
 exports.confirmPayment = async (req, res) => {
     try {
-        const itemId = req.params.id;
-        const sellerId = req.user.userId;
+        const {id} = req.params;
 
         const item = await Item.findById(itemId);
 
@@ -236,15 +234,23 @@ exports.confirmPayment = async (req, res) => {
         }
 
         const unlock = await Unlock.findOne({
-            item: itemId,
+            item: id,
             status: "pending"
-        });
+        }).populate("item");
 
         if (!unlock) {
             return res.json({ success: false, message: "No pending payments" });
         }
 
-        unlock.status = "paid";
+        if (!unlock.item.user.equals(req.user._id)) {
+            return res.json({ success: false, message: "Unauthorized" });
+        }
+
+        if (unlock.status !== paid) {
+            return res.json({ success: false, message: "No payment yet" });
+        }
+
+        unlock.status = "confirmed";
         await unlock.save();
 
         res.json({ success: true });

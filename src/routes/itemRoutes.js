@@ -35,5 +35,6 @@ router.post('/confirmPayment/:id', verifyToken, isLoggedIn, itemControllers.conf
 router.get('/category/:category', itemControllers.getItemsByCategory);
 
 router.get('/dashboard', verifyToken, isLoggedIn, userController.dashboard);
+router.post('/rate/id', verifyToken, isLoggedIn, userController.rateSeller);
 
 module.exports = router;
