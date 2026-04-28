@@ -57,7 +57,7 @@ const itemSchema = new mongoose.Schema({
     }
 });
 
-itemSchema.index=({
+itemSchema.index({
     name: "text",
     desc: "text",
     category: "text",
