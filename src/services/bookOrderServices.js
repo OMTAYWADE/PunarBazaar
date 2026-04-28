@@ -10,14 +10,14 @@ exports.createBookOrder = async (itemId, userId, qty) => {
     const order = await BookOrder.create({
         buyer: userId,
         seller: item.user,
-        bookId: item._id,
+        book: item._id,
         quantity: qty,
     });
     return ({ success: true, order });
 };
 
 exports.markReady = async (orderId) => {
-    const order = await BookOrder.findById(orderId).populate("buyer book");
+    const order = await BookOrder.findById(orderId).populate("buyer").populate("book");
 
     if (!order) {
         return { success: false, message: "order not found" };
