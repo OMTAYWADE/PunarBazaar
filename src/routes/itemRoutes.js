@@ -4,6 +4,7 @@ const router = express.Router();
 //controllers
 const itemControllers = require('../controllers/itemController');
 const userController = require('../controllers/userController');
+const bookOrderController = require('../controllers/bookOrderController');
 const upload = require('../utils/upload');
 
 //middleware
@@ -36,5 +37,8 @@ router.get('/category/:category', itemControllers.getItemsByCategory);
 
 router.get('/dashboard', verifyToken, isLoggedIn, userController.dashboard);
 router.post('/rate/id', verifyToken, isLoggedIn, userController.rateSeller);
+
+router.post('/book/order/:id', verifyToken, bookOrderController.createBookOrder);
+router.post('/book/ready/:id', verifyToken, bookOrderController.markReady);
 
 module.exports = router;

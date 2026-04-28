@@ -92,26 +92,26 @@ class="w-full px-3 py-2 border rounded-l-lg">
 🔥 All
 </a>
 
-<a href="/category/Books" class="whitespace-nowrap px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100">
-📚 Books
-</a>
-
 <a href="/category/Electronics" class="whitespace-nowrap px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100">
-💻 Electronics
+  💻 Electronics
 </a>
 
 <a href="/category/Notes" class="whitespace-nowrap px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100">
-📝 Notes
+  📝 Notes
 </a>
 
 <a href="/category/Instruments" class="whitespace-nowrap px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100">
-🎸 Instruments
+  🎸 Instruments
+</a>
+
+<a href="/category/Books" class="whitespace-nowrap px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100">
+📚 Books
 </a>
 
 <!-- MORE DROPDOWN -->
 <div class="relative">
 <button onclick="toggleMenu()" 
-class="whitespace-nowrap px-3 py-1 rounded-full bg-indigo-600 text-white">
+class="whitespace-nowrap px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 text-gray-700">
 More ▾
 </button>
 
@@ -241,9 +241,12 @@ View Details
 </footer>
 
 <script>
-function toggleMenu(){
-    document.getElementById("moreMenu").classList.toggle("hidden");
-}
+document.addEventListener("click", function(e){
+    const menu = document.getElementById("moreMenu");
+    if(!e.target.closest("#moreMenu") && !e.target.closest("button")){
+        menu.classList.add("hidden");
+    }
+});
 </script>
 
 </body>

@@ -15,8 +15,14 @@ const itemSchema = new mongoose.Schema({
     },
     category: {
         type: String,
-        required: true,
+        enum: ["books", "notes", "electronics", "all", "others"],
         default: "Other",
+    },
+
+    bookDetails: {
+        pages: Number,
+        subject: String,
+        semester: String,
     },
     tags: [String],
     
