@@ -1,253 +1,307 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PunarBazaar</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PunarBazaar</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
-<style>
-html { scroll-behavior: smooth; }
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
 
-/* animations */
-@keyframes fadeUp {
-  from { opacity:0; transform: translateY(20px); }
-  to { opacity:1; transform: translateY(0); }
-}
-.animate-fadeUp {
-  animation: fadeUp 0.6s ease forwards;
-}
+    /* animations */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
 
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-</style>
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fadeUp {
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
 
 </head>
 
 <body class="bg-gradient-to-br from-slate-100 via-indigo-50 to-slate-200 text-gray-800">
   <% if(success){ %>
-<div class="fixed top-5 left-1/2 -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-xl shadow">
-    ✅ Account created successfully!
-</div>
-<% } %>
+    <div class="fixed top-5 left-1/2 -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-xl shadow">
+      ✅ Account created successfully!
+    </div>
+    <% } %>
 
-<!-- NAVBAR -->
-<header class="bg-white/80 backdrop-blur-md shadow sticky top-0 z-50">
-<div class="max-w-7xl mx-auto flex items-center justify-between p-4 gap-4">
+      <!-- NAVBAR -->
+      <header class="bg-white/80 backdrop-blur-md shadow sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex items-center justify-between p-4 gap-4">
 
-<h1 class="text-xl font-bold text-indigo-600">PunarBazaar</h1>
+          <h1 class="text-xl font-bold text-indigo-600">PunarBazaar</h1>
 
-<form action="/search" class="hidden md:flex flex-1 max-w-lg">
-<input name="q" placeholder="Search items..."
-class="w-full px-4 py-2 border rounded-l-lg focus:ring-2 focus:ring-indigo-500">
-<button class="bg-indigo-600 text-white px-4 rounded-r-lg hover:bg-indigo-700 transition">
-Search
-</button>
-</form>
+          <form action="/search" class="hidden md:flex flex-1 max-w-lg">
+            <input name="q" placeholder="Search items..."
+              class="w-full px-4 py-2 border rounded-l-lg focus:ring-2 focus:ring-indigo-500">
+            <button class="bg-indigo-600 text-white px-4 rounded-r-lg hover:bg-indigo-700 transition">
+              Search
+            </button>
+          </form>
 
-<div class="flex items-center gap-4 text-sm">
-<% if(currentUser){ %>
-<span class="hidden sm:block text-gray-600">Hi, <%= currentUser.name %></span>
+          <div class="flex items-center gap-4 text-sm">
+            <% if(currentUser){ %>
+              <span class="hidden sm:block text-gray-600">Hi, <%= currentUser.name %></span>
 
-<a href="/profile" class="hover:text-indigo-600">Profile</a>
-<a href="/logout" class="text-red-500 hover:underline">Logout</a>
+              <a href="/profile" class="hover:text-indigo-600">Profile</a>
+              <a href="/logout" class="text-red-500 hover:underline">Logout</a>
 
-<% } else { %>
+              <% } else { %>
 
-<a href="/login" class="hover:text-indigo-600">Login</a>
-<a href="/signUp" class="bg-indigo-600 text-white px-3 py-1.5 rounded-lg hover:bg-indigo-700">
-Signup
-</a>
+                <a href="/login" class="hover:text-indigo-600">Login</a>
+                <a href="/signUp" class="bg-indigo-600 text-white px-3 py-1.5 rounded-lg hover:bg-indigo-700">
+                  Signup
+                </a>
 
-<% } %>
-<a href="/dashboard" class="text-indigo-600 hover:underline">
-Dashboard
-</a>
-</div>
+                <% } %>
+                  <a href="/dashboard" class="text-indigo-600 hover:underline">
+                    Dashboard
+                  </a>
+          </div>
 
-</div>
-</header>
+        </div>
+      </header>
 
-<!-- MOBILE SEARCH -->
-<div class="md:hidden p-3">
-<form action="/search" class="flex">
-<input name="q" placeholder="Search..."
-class="w-full px-3 py-2 border rounded-l-lg">
-<button class="bg-indigo-600 text-white px-4 rounded-r-lg">Go</button>
-</form>
-</div>
+      <!-- MOBILE SEARCH -->
+      <div class="md:hidden p-3">
+        <form action="/search" class="flex">
+          <input name="q" placeholder="Search..." class="w-full px-3 py-2 border rounded-l-lg">
+          <button class="bg-indigo-600 text-white px-4 rounded-r-lg">Go</button>
+        </form>
+      </div>
 
-<!-- CATEGORY -->
-<div class="bg-white/80 backdrop-blur shadow-sm py-2">
+      <!-- CATEGORY -->
+      <div class="bg-white/80 backdrop-blur shadow-sm py-2">
 
-<div class="flex items-center gap-3 px-3 overflow-x-auto no-scrollbar text-sm">
+<div id="categoryContainer" class="flex items-center gap-3 px-3 overflow-hidden text-sm">
 
-<a href="/category/all" class="whitespace-nowrap px-3 py-1 rounded-full bg-indigo-600 text-white">
+<a href="/category/all" class="category-item px-3 py-1 rounded-full bg-indigo-600 text-white whitespace-nowrap">
 🔥 All
 </a>
 
-<a href="/category/Electronics" class="whitespace-nowrap px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100">
-  💻 Electronics
+<a href="/category/Electronics" class="category-item px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 whitespace-nowrap">
+💻 Electronics
 </a>
 
-<a href="/category/Notes" class="whitespace-nowrap px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100">
-  📝 Notes
+<a href="/category/Notes" class="category-item px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 whitespace-nowrap">
+📝 Notes
 </a>
 
-<a href="/category/Instruments" class="whitespace-nowrap px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100">
-  🎸 Instruments
+<a href="/category/Instruments" class="category-item px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 whitespace-nowrap">
+🎸 Instruments
 </a>
 
-<a href="/category/Books" class="whitespace-nowrap px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100">
+<a href="/category/Books" class="category-item px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 whitespace-nowrap">
 📚 Books
 </a>
 
-<!-- MORE DROPDOWN -->
-<div class="relative">
+<a href="/category/Item-Set" class="category-item px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 whitespace-nowrap">
+📦 Item Set
+</a>
+
+<a href="/category/Others" class="category-item px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 whitespace-nowrap">
+🧩 Others
+</a>
+
+<!-- MORE -->
+<div id="moreWrapper" class="relative hidden">
 <button onclick="toggleMenu()" 
-class="whitespace-nowrap px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 text-gray-700">
+class="px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100">
 More ▾
 </button>
 
 <div id="moreMenu"
-class="hidden absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border z-50">
-
-<a href="/category/Item-Set" class="block px-4 py-2 hover:bg-gray-100">
-Item Set
-</a>
-
-<a href="/category/Others" class="block px-4 py-2 hover:bg-gray-100">
-Others
-</a>
-
+class="hidden absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-lg border z-50">
 </div>
 </div>
 
 </div>
 </div>
 
-<!-- HERO -->
-<section class="max-w-7xl mx-auto mt-6 px-4">
-<div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 text-white rounded-3xl p-10 shadow-xl animate-fadeUp">
+      <!-- HERO -->
+      <section class="max-w-7xl mx-auto mt-6 px-4">
+        <div
+          class="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 text-white rounded-3xl p-10 shadow-xl animate-fadeUp">
 
-<h2 class="text-2xl md:text-3xl font-bold">
-Buy & Sell within your College
-</h2>
+          <h2 class="text-2xl md:text-3xl font-bold">
+            Buy & Sell within your College
+          </h2>
 
-<p class="mt-2 opacity-90 text-sm md:text-base">
-Trusted student marketplace for notes, books & electronics
-</p>
+          <p class="mt-2 opacity-90 text-sm md:text-base">
+            Trusted student marketplace for notes, books & electronics
+          </p>
 
-<a href="/addItems"
-class="inline-block mt-6 bg-white text-indigo-600 px-6 py-2 rounded-lg font-medium hover:scale-105 transition">
-Start Selling 🚀
-</a>
+          <a href="/addItems"
+            class="inline-block mt-6 bg-white text-indigo-600 px-6 py-2 rounded-lg font-medium hover:scale-105 transition">
+            Start Selling 🚀
+          </a>
 
-</div>
-</section>
+        </div>
+      </section>
 
-<!-- HEADER -->
-<div class="max-w-7xl mx-auto mt-10 px-4 flex justify-between items-center">
+      <!-- HEADER -->
+      <div class="max-w-7xl mx-auto mt-10 px-4 flex justify-between items-center">
 
-<h2 class="text-xl font-semibold">Explore Items</h2>
+        <h2 class="text-xl font-semibold">Explore Items</h2>
 
-<a href="/addItems"
-class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
-+ Add Item
-</a>
+        <a href="/addItems" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
+          + Add Item
+        </a>
 
-</div>
+      </div>
 
-<!-- GRID -->
-<section class="max-w-7xl mx-auto mt-6 px-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+      <!-- GRID -->
+      <section class="max-w-7xl mx-auto mt-6 px-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
 
-<% items.forEach((item, i) => { %>
+        <% items.forEach((item, i)=> { %>
 
-<div class="bg-white/90 backdrop-blur rounded-2xl shadow-md hover:shadow-xl transition overflow-hidden group animate-fadeUp"
-style="animation-delay:<%= i * 0.05 %>s">
+          <div
+            class="bg-white/90 backdrop-blur rounded-2xl shadow-md hover:shadow-xl transition overflow-hidden group animate-fadeUp"
+            style="animation-delay:<%= i * 0.05 %>s">
 
-<!-- IMAGE -->
-<div class="h-40 bg-gray-200 relative overflow-hidden">
-    <% if(item.isPurchased){ %>
-        <div class="absolute top-2 left-2 bg-green-600 text-white text-xs px-2 py-1 rounded-full shadow">
-    ✓ Purchased
-</div>
-<% } %>
+            <!-- IMAGE -->
+            <div class="h-28 sm:h-32 bg-gray-200 relative overflow-hidden">
+              <% if(item.isPurchased){ %>
+                <div class="absolute top-2 left-2 bg-green-600 text-white text-xs px-2 py-1 rounded-full shadow">
+                  ✓ Purchased
+                </div>
+                <% } %>
 
-<% if(item.image){ %>
-<img src="<%= item.image %>"
-class="w-full h-full object-cover group-hover:scale-110 transition duration-300">
-<% } else { %>
-<div class="flex items-center justify-center h-full text-gray-400 text-sm">
-No Image
-</div>
-<% } %>
+                  <% if(item.image){ %>
+                    <img src="<%= item.image %>"
+                      class="w-full h-full object-cover group-hover:scale-110 transition duration-300">
+                    <% } else { %>
+                      <div class="flex items-center justify-center h-full text-gray-400 text-sm">
+                        No Image
+                      </div>
+                      <% } %>
 
-<!-- Wishlist -->
-<!-- <a href="/wishlist/add/<%= item._id %>"
+                        <!-- Wishlist -->
+                        <!-- <a href="/wishlist/add/<%= item._id %>"
 class="absolute top-2 right-2 bg-white/90 backdrop-blur p-2 rounded-full shadow hover:scale-110 transition">
 ❤️
 </a> -->
 
-</div>
+            </div>
 
-<!-- CONTENT -->
-<div class="p-4">
+            <!-- CONTENT -->
+            <div class="p-4">
 
-<h2 class="text-sm font-semibold truncate">
-<%= item.name %>
-</h2>
+              <h2 class="text-sm font-semibold truncate">
+                <%= item.name %>
+              </h2>
 
-<p class="text-green-600 font-bold mt-1">
-₹ <%= item.price %>
-</p>
+              <p class="text-green-600 font-bold mt-1">
+                ₹ <%= item.price %>
+              </p>
 
-<p class="text-xs text-gray-500 mt-1 truncate">
-<%= item.user?.college || "Unknown College" %>
-</p>
+              <p class="text-xs text-gray-500 mt-1 truncate">
+                <%= item.user?.college || "Unknown College" %>
+              </p>
 
-<% if(item.isPurchased){ %>
+              <% if(item.isPurchased){ %>
 
-<div class="block mt-3 text-center bg-green-600 text-white py-1.5 rounded-lg text-sm cursor-not-allowed">
-    Purchased
-</div>
+                <div
+                  class="block mt-3 text-center bg-green-600 text-white py-1.5 rounded-lg text-sm cursor-not-allowed">
+                  Purchased
+                </div>
 
-<% } else { %>
+                <% } else { %>
 
-<a href="/item/<%= item._id %>"
-class="block mt-3 text-center bg-indigo-600 text-white py-1.5 rounded-lg text-sm hover:bg-indigo-700 transition">
-View Details
-</a>
+                  <a href="/item/<%= item._id %>"
+                    class="block mt-3 text-center bg-indigo-600 text-white py-1.5 rounded-lg text-sm hover:bg-indigo-700 transition">
+                    View Details
+                  </a>
 
-<% } %>
+                  <% } %>
 
-</div>
+            </div>
 
-</div>
+          </div>
 
-<% }) %>
+          <% }) %>
 
-</section>
+      </section>
 
-<!-- FOOTER -->
-<footer class="mt-12 bg-white/80 backdrop-blur border-t py-6 text-center text-sm text-gray-500">
-© 2026 PunarBazaar — Built for Students ❤️
-</footer>
+      <!-- FOOTER -->
+      <footer class="mt-12 bg-white/80 backdrop-blur border-t py-6 text-center text-sm text-gray-500">
+        © 2026 PunarBazaar — Built for Students ❤️
+      </footer>
 
-<script>
+      <script>
+function toggleMenu(){
+    document.getElementById("moreMenu").classList.toggle("hidden");
+}
+
+function handleOverflow(){
+    const container = document.getElementById("categoryContainer");
+    const items = Array.from(container.querySelectorAll(".category-item"));
+    const moreWrapper = document.getElementById("moreWrapper");
+    const moreMenu = document.getElementById("moreMenu");
+
+    moreMenu.innerHTML = ""; // reset
+    moreWrapper.classList.add("hidden");
+
+    let availableWidth = container.offsetWidth - 80; // reserve for "More"
+    let usedWidth = 0;
+
+    items.forEach(item => {
+        item.style.display = "inline-block";
+    });
+
+    items.forEach(item => {
+        usedWidth += item.offsetWidth + 8;
+
+        if(usedWidth > availableWidth){
+            moreWrapper.classList.remove("hidden");
+
+            const clone = item.cloneNode(true);
+            clone.classList.remove("rounded-full");
+            clone.classList.add("block", "px-4", "py-2");
+
+            moreMenu.appendChild(clone);
+            item.style.display = "none";
+        }
+    });
+}
+
+// run on load + resize
+window.addEventListener("load", handleOverflow);
+window.addEventListener("resize", handleOverflow);
+
+// close dropdown
 document.addEventListener("click", function(e){
     const menu = document.getElementById("moreMenu");
-    if(!e.target.closest("#moreMenu") && !e.target.closest("button")){
+    if(!e.target.closest("#moreWrapper")){
         menu.classList.add("hidden");
     }
 });
-</script>
+      </script>
 
 </body>
+
 </html>
