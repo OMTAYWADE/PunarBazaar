@@ -200,7 +200,9 @@ form.addEventListener("submit", async (e)=>{
 
         showSuccess("Updated successfully");
 
-        setTimeout(()=> location.reload(),1200);
+        setTimeout(() => {
+            window.location.href = "/";
+        }, 1200);
 
     } catch(err){
         loader.classList.add("hidden");
