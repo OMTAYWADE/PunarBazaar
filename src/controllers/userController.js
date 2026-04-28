@@ -1,6 +1,7 @@
 const Unlock = require('../models/Unlock');
 const Item = require('../models/Item');
 const userServices = require('../services/userServices');
+const BookOrder = require('../models/BookOrder');
 
 exports.dashboard = async (req, res) => {
     try {
@@ -9,7 +10,9 @@ exports.dashboard = async (req, res) => {
         const purchases = await Unlock.find({ user: userId, status: "paid" }).populate({ path: "item", populate: { path: "user", select: "name college phone" } });
         const sales = await Item.find({ user: userId }).sort({ createdAt: -1 });
 
-        res.render('dashboard', { purchases, sales });
+        const bookOrders = await BookOrder.find({ seller: userId }).populate("buyer").populate("book");
+
+        res.render('dashboard', { purchases, sales, bookOrders });
     } catch (err) {
         res.status(500).send(err.message);
     }
