@@ -125,7 +125,8 @@ form.addEventListener("submit", async (e) => {
     try {
         const res = await fetch("/signUp", {
             method: "POST",
-            body: new URLSearchParams(formData)
+            body: new URLSearchParams(formData),
+            credentials: "include"
         });
 
         const data = await res.json();
