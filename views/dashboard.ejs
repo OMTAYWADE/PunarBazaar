@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
@@ -9,68 +10,63 @@
 <style>
 html { scroll-behavior: smooth; }
 
-/* fade animation */
+/* animation */
 @keyframes fadeUp {
-  from { opacity:0; transform: translateY(15px); }
+  from { opacity:0; transform: translateY(10px); }
   to { opacity:1; transform: translateY(0); }
 }
+
 .animate-fadeUp {
-  animation: fadeUp 0.5s ease forwards;
+  animation: fadeUp 0.4s ease;
 }
 
-/* smooth tab system */
+/* FIXED TAB SYSTEM */
 .tab-section {
-  opacity: 0;
-  transform: translateY(10px);
-  transition: all 0.35s ease;
-  pointer-events: none;
-  position: absolute;
-  width: 100%;
+  display: none;
 }
 
 .tab-section.active {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-  position: relative;
+  display: block;
+  animation: fadeUp 0.3s ease;
 }
 
-/* scrollbar clean */
+/* scrollbar hide */
 .no-scrollbar::-webkit-scrollbar { display:none; }
+.no-scrollbar { scrollbar-width:none; }
 </style>
 </head>
 
 <body class="bg-gradient-to-br from-slate-100 via-indigo-50 to-slate-200 min-h-screen">
 
-<div class="max-w-7xl mx-auto px-4 py-8">
+<div class="max-w-7xl mx-auto px-3 sm:px-4 py-6 sm:py-8">
 
 <!-- HEADER -->
-<div class="flex justify-between items-center mb-6 animate-fadeUp">
+<div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
     <div>
-        <h1 class="text-2xl font-bold text-indigo-600">Dashboard</h1>
-        <p class="text-sm text-gray-500">Manage everything here</p>
+        <h1 class="text-xl sm:text-2xl font-bold text-indigo-600">Dashboard</h1>
+        <p class="text-xs sm:text-sm text-gray-500">Manage everything here</p>
     </div>
 
-    <a href="/" class="text-sm px-4 py-1.5 rounded-lg bg-white shadow hover:bg-gray-100 transition active:scale-95">
+    <a href="/" class="text-sm px-4 py-1.5 rounded-lg bg-white shadow hover:bg-gray-100 active:scale-95 transition w-fit">
         ← Home
     </a>
 </div>
 
 <!-- TOGGLE -->
-<div class="flex gap-2 mb-6 bg-white/60 backdrop-blur p-2 rounded-xl shadow w-fit animate-fadeUp">
+<div class="flex overflow-x-auto no-scrollbar gap-2 mb-6 bg-white/70 backdrop-blur p-2 rounded-xl shadow">
 
 <button onclick="switchTab(event,'purchases')" 
-class="tab-btn px-4 py-1.5 rounded-lg text-sm bg-indigo-600 text-white active:scale-95">
+class="tab-btn px-4 py-1.5 rounded-lg text-sm whitespace-nowrap bg-indigo-600 text-white active:scale-95">
 Purchases
 </button>
 
 <button onclick="switchTab(event,'sales')" 
-class="tab-btn px-4 py-1.5 rounded-lg text-sm text-gray-600 hover:bg-gray-100 active:scale-95">
+class="tab-btn px-4 py-1.5 rounded-lg text-sm whitespace-nowrap text-gray-600 hover:bg-gray-100 active:scale-95">
 Listings
 </button>
 
 <button onclick="switchTab(event,'orders')" 
-class="tab-btn px-4 py-1.5 rounded-lg text-sm text-gray-600 hover:bg-gray-100 active:scale-95">
+class="tab-btn px-4 py-1.5 rounded-lg text-sm whitespace-nowrap text-gray-600 hover:bg-gray-100 active:scale-95">
 Book Orders
 </button>
 
@@ -83,12 +79,11 @@ Book Orders
 <div class="text-center py-10 text-gray-500">No purchases yet 🚀</div>
 <% } %>
 
-<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5">
 
 <% purchases.forEach((p,i)=>{ %>
 
-<div class="bg-white/80 backdrop-blur rounded-2xl shadow hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden group animate-fadeUp"
-style="animation-delay:<%= i*0.05 %>s">
+<div class="bg-white rounded-2xl shadow hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden group animate-fadeUp">
 
 <div class="h-36 bg-gray-200 overflow-hidden">
 <% if(p.item?.image){ %>
@@ -101,7 +96,7 @@ style="animation-delay:<%= i*0.05 %>s">
 <p class="text-green-600 font-bold text-sm">₹ <%= p.item?.price %></p>
 
 <a href="/item/<%= p.item?._id %>"
-class="block mt-2 text-center bg-indigo-600 text-white py-1.5 rounded-lg text-xs hover:bg-indigo-700 transition active:scale-95">
+class="block mt-2 text-center bg-indigo-600 text-white py-2 rounded-lg text-sm hover:bg-indigo-700 transition active:scale-95">
 View
 </a>
 </div>
@@ -120,12 +115,11 @@ View
 <div class="text-center py-10 text-gray-500">No listings yet 📦</div>
 <% } %>
 
-<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5">
 
 <% sales.forEach((item,i)=>{ %>
 
-<div class="bg-white/80 backdrop-blur rounded-2xl shadow hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden group animate-fadeUp"
-style="animation-delay:<%= i*0.05 %>s">
+<div class="bg-white rounded-2xl shadow hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden group animate-fadeUp">
 
 <div class="h-36 bg-gray-200 overflow-hidden">
 <% if(item.image){ %>
@@ -138,7 +132,7 @@ style="animation-delay:<%= i*0.05 %>s">
 <p class="text-green-600 font-bold text-sm">₹ <%= item.price %></p>
 
 <a href="/item/<%= item._id %>"
-class="block mt-2 text-center bg-indigo-600 text-white py-1.5 rounded-lg text-xs hover:bg-indigo-700 transition active:scale-95">
+class="block mt-2 text-center bg-indigo-600 text-white py-2 rounded-lg text-sm hover:bg-indigo-700 transition active:scale-95">
 Manage
 </a>
 </div>
@@ -157,19 +151,18 @@ Manage
 <div class="text-center py-10 text-gray-500">No book orders yet 📄</div>
 <% } %>
 
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
 
 <% bookOrders.forEach((o,i)=>{ %>
 
-<div class="bg-white/80 backdrop-blur rounded-2xl shadow hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 p-4 animate-fadeUp"
-style="animation-delay:<%= i*0.05 %>s">
+<div class="bg-white rounded-2xl shadow hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 p-4 animate-fadeUp">
 
 <p class="font-semibold text-sm"><%= o.book?.name %></p>
 <p class="text-xs text-gray-500">Buyer: <%= o.buyer?.name %></p>
 <p class="text-xs text-gray-500">Qty: <%= o.quantity %></p>
 
 <div class="mt-2">
-<span class="px-2 py-0.5 rounded-full text-xs font-medium
+<span class="px-2 py-1 rounded-full text-xs font-medium
 <%= o.status==='ready' ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-yellow-600' %>">
 <%= o.status %>
 </span>
@@ -177,7 +170,7 @@ style="animation-delay:<%= i*0.05 %>s">
 
 <% if(o.status !== "ready"){ %>
 <button onclick="notifyBuyer(event,'<%= o._id %>')"
-class="mt-3 w-full py-2 bg-indigo-600 text-white rounded-lg text-xs hover:bg-indigo-700 transition active:scale-95">
+class="mt-3 w-full py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700 transition active:scale-95">
 Mark Ready & Notify
 </button>
 <% } else { %>
@@ -209,7 +202,6 @@ function switchTab(e, tab){
     e.target.classList.add("bg-indigo-600","text-white");
 }
 
-// notify buyer
 async function notifyBuyer(e, id){
     const btn = e.target;
     btn.innerText = "Processing...";
