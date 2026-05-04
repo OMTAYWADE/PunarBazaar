@@ -177,7 +177,7 @@ async function createOrder(){
     btn.innerText = "Processing...";
     btn.disabled = true;
 
-    const res = await fetch(`/createOrder/<%= item._id %>`,{
+    const res = await fetch(`/createDeal/<%= item._id %>`,{
         method:"POST",
         credentials:"include"
     });

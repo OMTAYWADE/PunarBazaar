@@ -26,9 +26,7 @@ router.post('/addItems',apiLimiter,verifyToken, isLoggedIn, isProfileComplete,ch
 router.delete('/item/:id',verifyToken,isLoggedIn, validateObjectId, itemControllers.deleteItems);
 
 router.get('/feature/:id',verifyToken, isLoggedIn,validateObjectId, itemControllers.featureItem);
-router.post('/createOrder/:id',verifyToken, isLoggedIn,validateObjectId, itemControllers.createOrder);
-
-router.post('/verifyPayment',verifyToken, isLoggedIn, itemControllers.verifyPayment);
+router.post('/createDeal/:id', verifyToken, isLoggedIn, validateObjectId, itemControllers.createDeal);
 
 router.post('/markPaid/:id', verifyToken, isLoggedIn, itemControllers.markAsPaid);
 router.post('/confirmPayment/:id', verifyToken, isLoggedIn, itemControllers.confirmPayment);

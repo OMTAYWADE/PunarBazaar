@@ -145,44 +145,27 @@ exports.featureItem = async (req, res) => {
     }
 };
 
-// create razor pay order
-exports.createOrder = async (req, res) => {
-      try {
-        console.log("Create Order req.body: ", req.body);
-        console.log("TOKEN USER:", req.user);
-        console.log("ITEM ID:", req.params.id);
-        
-          if (!req.user) {
-              return res.status(401).json({success: false, message: "Login required" });
-          }
-
-          const order = await paymentServices.createOrder(req.params.id, req.user.userId);
-
-          if (!order || !order.id) {
-            return res.status(500).json({ error: "Order not created" }); // ✅ STOP HERE
-        }
-        console.log('Order checking: ', order);
-
-        res.json({success: true, order});
-      } catch (err) {
-           console.log("🔥 FULL ERROR:", err); 
-        res.status(500).json({success: false, message: err.message});
-    }
-};
-
-//verify payment
-exports.verifyPayment = async (req, res) => {
+exports.createDeal = async (req, res) => {
     try {
+        const { id } = req.params;
+        const existing = await Unlock.findOne({
+            item: id,
+            user: req.user.userId
+        });
 
-        console.log("VERIFY BODY:", req.body);
-        
-        const result = await paymentServices.verifyPayment(req.body, req.user?.userId, req.body.itemId);
+        if (existing) {
+            return res.json({ success: false, message: "Already Started" });
+        }
 
-        if (!result) { return res.status(400).json({success: false, message: "Payment verification failed"}); }
-        res.json({ success:true });
+        await Unlock.create({
+            user: req.user.userId,
+            item: id,
+            status: "pending"
+        });
+
+        res.json({ success: true, message: "Wait For seller's Reply" });
     } catch (err) {
-        console.log('"Verify Error: ', err);
-        res.json({ success: false });
+        res.status(401).json({ success: false, message: "Deal is not able to done" });
     }
 };
 
@@ -192,7 +175,7 @@ exports.markAsPaid = async (req, res) => {
 
         const unlock= await Unlock.findOne({
             item: id,
-            user: req.user._id,
+            user: req.user.userId,
         });
 
          if (!unlock) {
@@ -216,27 +199,17 @@ exports.confirmPayment = async (req, res) => {
     try {
         const {id} = req.params;
 
-        const item = await Item.findById(itemId);
-
-        if (!item.user.equals(sellerId)) {
-            return res.status(403).json({ success: false });
-        }
-
         const unlock = await Unlock.findOne({
             item: id,
-            status: "pending"
+            status: "paid"
         }).populate("item");
 
         if (!unlock) {
-            return res.json({ success: false, message: "No pending payments" });
+            return res.json({ success: false, message: "No paid order found" });
         }
 
         if (!unlock.item.user.equals(req.user._id)) {
-            return res.json({ success: false, message: "Unauthorized" });
-        }
-
-        if (unlock.status !== paid) {
-            return res.json({ success: false, message: "No payment yet" });
+            return res.status(403).json({ success: false, message: "Unauthorized" });
         }
 
         unlock.status = "confirmed";
