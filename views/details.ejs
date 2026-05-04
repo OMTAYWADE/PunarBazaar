@@ -115,7 +115,7 @@ class="w-full py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transit
     Open UPI
     </button>
 
-    <button onclick="markPaid()" class="w-full py-2 border rounded-xl">
+    <button id="markPaidBtn" onclick="markPaid()" class="w-full py-2 border rounded-xl">
     I Paid
     </button>
 
@@ -193,9 +193,16 @@ class="w-full py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transit
     }
 
     async function markPaid(){
+        const btn = document.getElementById("markPainBtn");
+        btn.innerText = "Wait For Response......."
+        btn.disabled = true;
+        
         const res=await fetch(`/markPaid/<%= item._id %>`,{method:"POST",credentials:"include"});
         const data=await res.json();
-        if(data.success) location.reload();
+        if(data.success) {location.reload();}
+        else{btn.innerText = "Try again";
+            btn.disabled = false;
+        }
     }
 
     async function confirmPayment(id){

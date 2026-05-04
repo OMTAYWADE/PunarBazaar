@@ -146,7 +146,7 @@ exports.featureItem = async (req, res) => {
 exports.createDeal = async (req, res) => {
     try {
         const result = await itemServices.createDeal(req.params.id, req.user.userId);
-        return res.json(result);
+        return res.json({success:true, result});
     } catch (err) {
         console.error("CREATE DEAL ERROR:", err);
         return res.status(500).json({
@@ -163,7 +163,7 @@ exports.markAsPaid = async (req, res) => {
             req.user.userId
         );
 
-        return res.json(result);
+        return res.json({success: true, result});
         
     } catch (err) {
         console.error("MARK PAID ERROR:", err);
@@ -178,7 +178,7 @@ exports.confirmPayment = async (req, res) => {
     try {
         const result = await itemServices.confirmPayment(req.params.id, req.user.userId);
 
-        return res.json(result);
+        return res.json({success: true, result});
 
     } catch (err) {
          console.error("CONFIRM ERROR:", err);
