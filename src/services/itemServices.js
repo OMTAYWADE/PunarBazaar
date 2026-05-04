@@ -49,25 +49,28 @@ exports.createItem = async (data, userId, file) => {
     if (numericPrice <= 0 || numericPrice > 2000) {
         return { success: false, message: "Price must be between ₹1 and ₹2000" };
     }
+const categoryMap = {
+    "Notes": "note",
+    "Books": "book",
+    "Electronics": "electronics",
+    "Item-Set": "item-set",
+    "Other": "other"
+};
 
-    const allowedCategory = ["Notes", "Books", "Electronics", "Item-Set", "Other"];
+const finalType = categoryMap[category] || "other";
     
-    let finalCategory = category;
-    if (!allowedCategory.includes(category)) {
-        finalCategory = "Other";
-    }
-    
-    if (category === "Notes" && numericPrice > 50) {
+    if (finalCategory === "note" && numericPrice > 50) {
         return {success: false, message: "Notes should be priced fairly (below ₹50 recommended)"};
     }
     
     const image = file?.path || "";
+
     const keys = await redisClient.keys("search:*");
     if (keys.length) {
         await redisClient.del(keys);
     }
     const item = await Item.create({
-        name, price: numericPrice, category:finalCategory, customCategory: category, desc, image, user: userId, upiId
+        name, price: numericPrice, type:finalCategory, customCategory: category, desc, image, user: userId, upiId
     });
     return { success: true, item };
 };
