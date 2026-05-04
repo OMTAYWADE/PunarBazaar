@@ -73,7 +73,8 @@ class="py-3 text-center rounded-xl bg-green-500 text-white font-medium">
 </a>
 
 <button onclick="copyNumber('<%= item.user.phone %>')"
-class="py-3 rounded-xl bg-white border text-gray-700">
+class="py-3 rounded-xl bg-white border text-gray-700 w-full py-3 bg-indigo-600 text-white rounded-xl 
+hover:bg-indigo-700 active:scale-95 transition duration-150">
 📋 Copy
 </button>
 
@@ -89,9 +90,8 @@ class="py-3 rounded-xl bg-white border text-gray-700">
 </p>
 
 <% if(!unlock){ %>
-
-<button onclick="createOrder()"
-class="w-full py-3 rounded-xl bg-indigo-600 text-white font-medium">
+<button id="dealBtn" onclick="createOrder()"
+class="w-full py-3 rounded-xl bg-indigo-600 text-white font-medium transition active:scale-95">
 Start Deal
 </button>
 
@@ -110,7 +110,8 @@ Start Deal
 
 </div>
 
-<button onclick="payUPI()" class="w-full py-3 bg-green-600 text-white rounded-xl">
+<button onclick="payUPI()" class="w-full py-3 bg-green-600 text-white rounded-xl class="w-full py-3 bg-indigo-600 text-white rounded-xl 
+hover:bg-indigo-700 active:scale-95 transition duration-150"">
 Open UPI
 </button>
 
@@ -142,8 +143,9 @@ Rate Seller
 
 <!-- OWNER -->
 <% if(isOwner){ %>
-<button onclick="confirmPayment()"
-class="w-full py-3 bg-indigo-600 text-white rounded-xl">
+<button id="confirmBtn" onclick="confirmPayment()"
+class="w-full py-3 bg-indigo-600 text-white rounded-xl 
+hover:bg-indigo-700 active:scale-95 transition">
 Confirm Payment
 </button>
 <% } %>
@@ -170,9 +172,24 @@ function copyNumber(num){
 }
 
 async function createOrder(){
-    const res=await fetch(`/createOrder/<%= item._id %>`,{method:"POST",credentials:"include"});
-    const data=await res.json();
-    if(data.success) location.reload();
+    const btn = document.getElementById("dealBtn");
+
+    btn.innerText = "Processing...";
+    btn.disabled = true;
+
+    const res = await fetch(`/createOrder/<%= item._id %>`,{
+        method:"POST",
+        credentials:"include"
+    });
+
+    const data = await res.json();
+
+    if(data.success){
+        location.reload();
+    } else {
+        btn.innerText = "Try Again";
+        btn.disabled = false;
+    }
 }
 
 async function markPaid(){
@@ -182,9 +199,24 @@ async function markPaid(){
 }
 
 async function confirmPayment(){
-    const res=await fetch(`/confirmPayment/<%= item._id %>`,{method:"POST",credentials:"include"});
-    const data=await res.json();
-    if(data.success) location.reload();
+    const btn = document.getElementById("confirmBtn");
+
+    btn.innerText = "Confirming...";
+    btn.disabled = true;
+
+    const res = await fetch(`/confirmPayment/<%= item._id %>`,{
+        method:"POST",
+        credentials:"include"
+    });
+
+    const data = await res.json();
+
+    if(data.success){
+        location.reload();
+    } else {
+        btn.innerText = "Try Again";
+        btn.disabled = false;
+    }
 }
 
 async function rateSeller(){
