@@ -4,7 +4,6 @@ const Unlock = require('../models/Unlock.js');
 const User = require('../models/User.js');
 
 const itemServices = require('../services/itemServices.js');
-const paymentServices = require('../services/paymentServices');
 
 // home page
 exports.getAllItems = async (req, res) => {
