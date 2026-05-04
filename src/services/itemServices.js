@@ -191,3 +191,55 @@ exports.getItemsByCategory = async (category, userId) => {
 
     return items;
 };
+
+exports.createDeal = async (itemId, userId) => {
+    const existing = await Unlock.findOne({
+        user: userId,
+        item: itemId,
+    });
+
+    if (existing) {
+        return { success: false, message: "Already started" };
+    }
+
+    await Unlock.create({
+        user: userId,
+        item: itemId,
+        status: "pending"
+    });
+    return { success: true };
+};
+
+exports.markPaid = async (userId, itemId) => {
+    const unlock = await Unlock.findOne({
+        item: itemId,
+        user: userId,
+    });
+
+    if (!unlock) {
+        return { success: false, message: "No deal Found" };
+    }
+
+    unlock.status = "paid";
+    await unlock.save();
+    return { success: true };
+};
+
+exports.confirmPayment = async ( itemId, sellerId) => {
+    const unlock = await Unlock.findOne({
+        item: itemId,
+        status: "paid"
+    }).populate("item");
+
+    if (!unlock) {
+        return { success: false, message: " No paid deal" };
+    }
+
+    if (!unlock.item.user.equals(sellerId)) {
+        return { success: false, message: "Unauthorized" };
+    }
+
+    unlock.status = "confirmed";
+    await unlock.save();
+    return { success: true, message: "Trade is Done. ThankYou visit Again" };
+};

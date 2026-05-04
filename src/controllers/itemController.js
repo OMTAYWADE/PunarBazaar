@@ -4,6 +4,7 @@ const Unlock = require('../models/Unlock.js');
 const User = require('../models/User.js');
 
 const itemServices = require('../services/itemServices.js');
+const { default: items } = require('razorpay/dist/types/items.js');
 
 // home page
 exports.getAllItems = async (req, res) => {
@@ -90,7 +91,7 @@ exports.getItemDetails = async (req, res) => {
         let isOwner = false;
 
         if (req.user?.userId) {
-            const unlock = await Unlock.findOne({
+            unlock = await Unlock.findOne({
                 user: req.user.userId,
                 item: item._id,
             });
@@ -146,78 +147,47 @@ exports.featureItem = async (req, res) => {
 
 exports.createDeal = async (req, res) => {
     try {
-        const { id } = req.params;
-        const existing = await Unlock.findOne({
-            item: id,
-            user: req.user.userId
-        });
-
-        if (existing) {
-            return res.json({ success: false, message: "Already Started" });
-        }
-
-        await Unlock.create({
-            user: req.user.userId,
-            item: id,
-            status: "pending"
-        });
-
-        res.json({ success: true, message: "Wait For seller's Reply" });
+        const result = await itemServices.createDeal(req.params.id, req.user.userId);
+        return res.json(result);
     } catch (err) {
-        res.status(401).json({ success: false, message: "Deal is not able to done" });
+        console.error("CREATE DEAL ERROR:", err);
+        return res.status(500).json({
+            success: false,
+            message: "Failed to start deal"
+        });
     }
 };
 
 exports.markAsPaid = async (req, res) => {
     try {
-        const {id} = req.params;
+        const result = await itemServices.markPaid(
+            req.params.id,
+            req.user.userId
+        );
 
-        const unlock= await Unlock.findOne({
-            item: id,
-            user: req.user.userId,
-        });
-
-         if (!unlock) {
-        return res.json({ success: false, message: "Order not found" });
-        }
-
-        if (unlock.status !== "pending") {
-        return res.json({ success: false, message: "Already updated" });
-        }
-
-        unlock.status = "paid";
-        await unlock.save();
-
-        res.json({ success: true });
+        return res.json(result);
+        
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        console.error("MARK PAID ERROR:", err);
+        return res.status(500).json({
+            success: false,
+            message: "Failed to update payment"
+        });
     }
 };
 
 exports.confirmPayment = async (req, res) => {
     try {
-        const {id} = req.params;
+        const result = await itemServices.confirmPayment(req.params.id, req.user.userId);
 
-        const unlock = await Unlock.findOne({
-            item: id,
-            status: "paid"
-        }).populate("item");
-
-        if (!unlock) {
-            return res.json({ success: false, message: "No paid order found" });
-        }
-
-        if (!unlock.item.user.equals(req.user._id)) {
-            return res.status(403).json({ success: false, message: "Unauthorized" });
-        }
-
-        unlock.status = "confirmed";
-        await unlock.save();
-
-        res.json({ success: true });
+        return res.json(result);
 
     } catch (err) {
-        res.status(500).json({ success: false });
+         console.error("CONFIRM ERROR:", err);
+        return res.status(500).json({
+            success: false,
+            message: "Failed to confirm deal"
+        });
     }
 };
 
