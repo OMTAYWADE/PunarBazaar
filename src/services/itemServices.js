@@ -17,13 +17,13 @@ exports.getAllItems = async (userId) => {
     if (userId) {
         const unlocks = await Unlock.find({
             user: userId,
-            status: "paid"
+            status: "confirmed"
         });
         
         purchasedIds = unlocks.map(u => u.item.toString());
     }
 
-    let items = await Item.find({_id: { $nin: purchasedIds}}).limit(20).sort({ isFeatured: -1, createdAt: -1 }).populate("user", "name college");
+    let items = await Item.find({_id: { $nin: purchasedIds}, status: "sold"}).limit(20).sort({ isFeatured: -1, createdAt: -1 }).populate("user", "name college");
 
     if (!userId) return items;
 
@@ -202,6 +202,12 @@ exports.createDeal = async (itemId, userId) => {
         return { success: false, message: "Already started" };
     }
 
+    const count = await Unlock.countDocuments({ item: itemId, status: { $in: ["pending", "paid"] } });
+
+    if (count >= 5) {
+        return { success: false, message: "Deal limit reached" };
+    }
+
     await Unlock.create({
         user: userId,
         item: itemId,
@@ -241,5 +247,13 @@ exports.confirmPayment = async ( itemId, sellerId) => {
 
     unlock.status = "confirmed";
     await unlock.save();
+
+    await Unlock.updateMany({
+        item: itemId,
+        id: { $in: unlock.id }
+    }, { status: "rejected" });
+    
+    await Item.findByIdAndUpdate(itemId, { status: "sold" });
+
     return { success: true, message: "Trade is Done. ThankYou visit Again" };
 };

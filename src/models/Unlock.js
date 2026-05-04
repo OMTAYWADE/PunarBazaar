@@ -16,7 +16,7 @@ const unlockSchema = new mongoose.Schema({
     paymentId: String,
     status: {
         type: String,
-        enum: ["pending", "paid", "confirmed"],
+        enum: ["pending", "paid", "confirmed", "rejected"],
         default: "pending",
     },
     buyerRated: {type: Boolean, default: false}
