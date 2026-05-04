@@ -70,7 +70,7 @@ const finalType = categoryMap[category] || "other";
         await redisClient.del(keys);
     }
     const item = await Item.create({
-        name, price: numericPrice, type:finalCategory, customCategory: category, desc, image, user: userId, upiId
+        name, price: numericPrice, type:finalType, desc, image, user: userId, upiId
     });
     return { success: true, item };
 };
