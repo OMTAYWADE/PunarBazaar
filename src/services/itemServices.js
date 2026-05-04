@@ -210,7 +210,7 @@ exports.createDeal = async (itemId, userId) => {
     return { success: true };
 };
 
-exports.markPaid = async (userId, itemId) => {
+exports.markPaid = async (itemId, userId) => {
     const unlock = await Unlock.findOne({
         item: itemId,
         user: userId,

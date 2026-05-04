@@ -89,13 +89,13 @@
     <%= unlock?.status || "not started" %>
     </p>
 
-    <% if(!unlock){ %>
+    <% if(!unlock && !isOwner){ %>
     <button id="dealBtn" onclick="createDeal('<%= item._id %>')"
     class="w-full py-3 rounded-xl bg-indigo-600 text-white font-medium transition active:scale-95">
     Start Deal
     </button>
 
-    <% } else if(unlock.status==="pending"){ %>
+    <% } else if(unlock && unlock.status==="pending" && !isOwner){ %>
 
     <div class="bg-gray-50 p-3 rounded-lg text-sm">
 
@@ -142,7 +142,7 @@ class="w-full py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transit
     </div>
 
     <!-- OWNER -->
-    <% if(isOwner){ %>
+    <% if(isOwne  r){ %>
     <button id="confirmBtn" onclick="confirmPayment('<%= item._id %>')"
     class="w-full py-3 bg-indigo-600 text-white rounded-xl 
     hover:bg-indigo-700 active:scale-95 transition">
