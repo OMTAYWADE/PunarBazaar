@@ -194,13 +194,14 @@ class="w-full py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transit
 
     async function markPaid(){
         const btn = document.getElementById("markPainBtn");
-        btn.innerText = "Wait For Response......."
+        btn.innerText = "Wait For Response.......";
         btn.disabled = true;
         
         const res=await fetch(`/markPaid/<%= item._id %>`,{method:"POST",credentials:"include"});
         const data=await res.json();
         if(data.success) {location.reload();}
-        else{btn.innerText = "Try again";
+        else{
+            btn.innerText = "Try again";
             btn.disabled = false;
         }
     }
