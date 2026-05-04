@@ -37,13 +37,13 @@ exports.createOrder = async (itemId, userId) => {
     let order;
 
     try {
-        const amount = item.price * 100;
+        const amount = item.price;
         order = await razorpay.orders.create({
-            amount: amount,
+            amount: amount*100,
             currency: "INR",
             receipt: `unlock_${Date.now()}`
         });
-        console.log("CREATING ORDER WITH:", amount * 100);
+        console.log("CREATING ORDER WITH:", amount);
         
     } catch (err) {
         console.log("Razorpat order is not created", err);
