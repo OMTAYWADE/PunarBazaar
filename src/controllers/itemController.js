@@ -4,8 +4,6 @@ const Unlock = require('../models/Unlock.js');
 const User = require('../models/User.js');
 
 const itemServices = require('../services/itemServices.js');
-const { default: items } = require('razorpay/dist/types/items.js');
-
 // home page
 exports.getAllItems = async (req, res) => {
     try {
