@@ -56,7 +56,7 @@ exports.createOrder = async (itemId, userId) => {
         orderId: order.id,
         status: "pending"
     });
-    return order;
+    return{success: true, order};
 };
 
 exports.verifyPayment = async (data, userId, itemId) => {
