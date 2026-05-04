@@ -1,239 +1,239 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><%= item.name %></title>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= item.name %></title>
 
-<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-</head>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    </head>
 
-<body class="bg-slate-50 min-h-screen">
+    <body class="bg-slate-50 min-h-screen">
 
-<div class="max-w-5xl mx-auto px-3 py-5">
+    <div class="max-w-5xl mx-auto px-3 py-5">
 
-<!-- NAV -->
-<div class="flex justify-between items-center mb-5">
-    <h1 class="font-semibold text-indigo-600">PunarBazaar</h1>
-    <a href="/" class="text-sm text-gray-500">← Back</a>
-</div>
-
-<!-- IMAGE -->
-<div class="rounded-xl overflow-hidden bg-white">
-    <% if(item.image){ %>
-        <img src="<%= item.image %>" class="w-full h-60 sm:h-80 object-cover">
-    <% } else { %>
-        <div class="h-60 flex items-center justify-center text-gray-400">
-            No Image
-        </div>
-    <% } %>
-</div>
-
-<!-- MAIN -->
-<div class="mt-4 space-y-4">
-
-<!-- TITLE -->
-<div>
-    <h1 class="text-lg sm:text-xl font-semibold text-gray-800">
-        <%= item.name %>
-    </h1>
-
-    <p class="text-indigo-600 text-lg font-bold mt-1">
-        ₹ <%= item.price %>
-    </p>
-
-    <p class="text-gray-500 text-sm mt-2 leading-relaxed">
-        <%= item.desc %>
-    </p>
-</div>
-
-<!-- SELLER -->
-<div class="bg-white rounded-xl p-4 flex justify-between items-center">
-
-    <div>
-        <p class="text-sm font-medium text-gray-800">Verified Seller</p>
-        <p class="text-xs text-gray-500">College Verified ✔</p>
+    <!-- NAV -->
+    <div class="flex justify-between items-center mb-5">
+        <h1 class="font-semibold text-indigo-600">PunarBazaar</h1>
+        <a href="/" class="text-sm text-gray-500">← Back</a>
     </div>
 
-    <div class="text-right">
-        <p class="text-xs text-gray-500">Trust</p>
-        <p class="text-indigo-600 font-semibold">
-            <%= item.user?.trustScore || 0 %>
+    <!-- IMAGE -->
+    <div class="rounded-xl overflow-hidden bg-white">
+        <% if(item.image){ %>
+            <img src="<%= item.image %>" class="w-full h-60 sm:h-80 object-cover">
+        <% } else { %>
+            <div class="h-60 flex items-center justify-center text-gray-400">
+                No Image
+            </div>
+        <% } %>
+    </div>
+
+    <!-- MAIN -->
+    <div class="mt-4 space-y-4">
+
+    <!-- TITLE -->
+    <div>
+        <h1 class="text-lg sm:text-xl font-semibold text-gray-800">
+            <%= item.name %>
+        </h1>
+
+        <p class="text-indigo-600 text-lg font-bold mt-1">
+            ₹ <%= item.price %>
+        </p>
+
+        <p class="text-gray-500 text-sm mt-2 leading-relaxed">
+            <%= item.desc %>
         </p>
     </div>
 
-</div>
+    <!-- SELLER -->
+    <div class="bg-white rounded-xl p-4 flex justify-between items-center">
 
-<!-- ACTIONS -->
-<div class="grid grid-cols-2 gap-3">
+        <div>
+            <p class="text-sm font-medium text-gray-800">Verified Seller</p>
+            <p class="text-xs text-gray-500">College Verified ✔</p>
+        </div>
 
-<a href="https://wa.me/<%= item.user.phone %>?text=<%= encodeURIComponent(`Hi, I saw your ${item.name} on Punar Bazaar and I'm interested.`) %>"
-class="py-3 text-center rounded-xl bg-green-500 text-white font-medium">
-💬 Chat
-</a>
+        <div class="text-right">
+            <p class="text-xs text-gray-500">Trust</p>
+            <p class="text-indigo-600 font-semibold">
+                <%= item.user?.trustScore || 0 %>
+            </p>
+        </div>
 
-<button onclick="copyNumber('<%= item.user.phone %>')"
-class="py-3 rounded-xl bg-white border text-gray-700 w-full py-3 bg-indigo-600 text-white rounded-xl 
-hover:bg-indigo-700 active:scale-95 transition duration-150">
-📋 Copy
-</button>
+    </div>
 
-</div>
+    <!-- ACTIONS -->
+    <div class="grid grid-cols-2 gap-3">
 
-<!-- DEAL -->
-<div class="bg-white rounded-xl p-4 space-y-3">
+    <a href="https://wa.me/<%= item.user.phone %>?text=<%= encodeURIComponent(`Hi, I saw your ${item.name} on Punar Bazaar and I'm interested.`) %>"
+    class="py-3 text-center rounded-xl bg-green-500 text-white font-medium">
+    💬 Chat
+    </a>
 
-<p class="text-sm font-medium">Deal Status</p>
+    <button onclick="copyNumber('<%= item.user.phone %>')"
+    class=" w-full py-3 bg-indigo-600 text-white rounded-xl 
+    hover:bg-indigo-700 active:scale-95 transition duration-150">
+    📋 Copy
+    </button>
 
-<p class="text-xs text-gray-500">
-<%= unlock?.status || "not started" %>
-</p>
+    </div>
 
-<% if(!unlock){ %>
-<button id="dealBtn" onclick="createOrder('<% item._id %>')"
-class="w-full py-3 rounded-xl bg-indigo-600 text-white font-medium transition active:scale-95">
-Start Deal
-</button>
+    <!-- DEAL -->
+    <div class="bg-white rounded-xl p-4 space-y-3">
 
-<% } else if(unlock.status==="pending"){ %>
+    <p class="text-sm font-medium">Deal Status</p>
 
-<div class="bg-gray-50 p-3 rounded-lg text-sm">
+    <p class="text-xs text-gray-500">
+    <%= unlock?.status || "not started" %>
+    </p>
 
-<p>UPI ID:</p>
+    <% if(!unlock){ %>
+    <button id="dealBtn" onclick="createDeal('<%= item._id %>')"
+    class="w-full py-3 rounded-xl bg-indigo-600 text-white font-medium transition active:scale-95">
+    Start Deal
+    </button>
 
-<div class="flex justify-between items-center mt-1">
-<span class="font-medium"><%= item.upiId %></span>
-<button onclick="copyUPI('<%= item.upiId %>')" class="text-xs text-indigo-600">Copy</button>
-</div>
+    <% } else if(unlock.status==="pending"){ %>
 
-<p class="text-xs mt-2">Amount: ₹ <%= item.price %></p>
+    <div class="bg-gray-50 p-3 rounded-lg text-sm">
 
-</div>
+    <p>UPI ID:</p>
 
-<button onclick="payUPI()" class="w-full py-3 bg-green-600 text-white rounded-xl class="w-full py-3 bg-indigo-600 text-white rounded-xl 
-hover:bg-indigo-700 active:scale-95 transition duration-150"">
-Open UPI
-</button>
+    <div class="flex justify-between items-center mt-1">
+    <span class="font-medium"><%= item.upiId %></span>
+    <button onclick="copyUPI('<%= item.upiId %>')" class="text-xs text-indigo-600">Copy</button>
+    </div>
 
-<button onclick="markPaid()" class="w-full py-2 border rounded-xl">
-I Paid
-</button>
+    <p class="text-xs mt-2">Amount: ₹ <%= item.price %></p>
 
-<% } else if(unlock.status==="paid"){ %>
+    </div>
 
-<div class="text-yellow-600 text-sm">
-Waiting for seller confirmation
-</div>
+   <button onclick="payUPI()" 
+class="w-full py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition">
+    Open UPI
+    </button>
 
-<% } else if(unlock.status==="confirmed"){ %>
+    <button onclick="markPaid()" class="w-full py-2 border rounded-xl">
+    I Paid
+    </button>
 
-<div class="text-green-600 text-sm">
-Deal completed
-</div>
+    <% } else if(unlock.status==="paid"){ %>
 
-<% if(!unlock.buyerRated){ %>
-<button onclick="rateSeller()" class="w-full py-3 bg-indigo-600 text-white rounded-xl">
-Rate Seller
-</button>
-<% } %>
+    <div class="text-yellow-600 text-sm">
+    Waiting for seller confirmation
+    </div>
 
-<% } %>
+    <% } else if(unlock.status==="confirmed"){ %>
 
-</div>
+    <div class="text-green-600 text-sm">
+    Deal completed
+    </div>
 
-<!-- OWNER -->
-<% if(isOwner){ %>
-<button id="confirmBtn" onclick="confirmPayment('<% item._id %>')"
-class="w-full py-3 bg-indigo-600 text-white rounded-xl 
-hover:bg-indigo-700 active:scale-95 transition">
-Confirm Payment
-</button>
-<% } %>
+    <% if(!unlock.buyerRated){ %>
+    <button onclick="rateSeller()" class="w-full py-3 bg-indigo-600 text-white rounded-xl">
+    Rate Seller
+    </button>
+    <% } %>
 
-</div>
+    <% } %>
 
-</div>
+    </div>
 
-<script>
-function payUPI(){
-    const upi="<%= item.upiId %>";
-    const amount="<%= item.price %>";
-    window.location.href=`upi://pay?pa=${upi}&pn=PunarBazaar&am=${amount}&cu=INR`;
-}
+    <!-- OWNER -->
+    <% if(isOwner){ %>
+    <button id="confirmBtn" onclick="confirmPayment('<%= item._id %>')"
+    class="w-full py-3 bg-indigo-600 text-white rounded-xl 
+    hover:bg-indigo-700 active:scale-95 transition">
+    Confirm Payment
+    </button>
+    <% } %>
 
-function copyUPI(id){
-    navigator.clipboard.writeText(id);
-    alert("Copied");
-}
+    </div>
 
-function copyNumber(num){
-    navigator.clipboard.writeText(num);
-    alert("Copied");
-}
+    </div>
 
-async function createOrder(id){
-    const btn = document.getElementById("dealBtn");
-
-    btn.innerText = "Processing...";
-    btn.disabled = true;
-
-    const res = await fetch(`/createDeal/${id}`,{
-        method:"POST",
-        credentials:"include"
-    });
-
-    const data = await res.json();
-
-    if(data.success){
-        location.reload();
-    } else {
-        btn.innerText = "Try Again";
-        btn.disabled = false;
+    <script>
+    function payUPI(){
+        const upi="<%= item.upiId %>";
+        const amount="<%= item.price %>";
+        window.location.href=`upi://pay?pa=${upi}&pn=PunarBazaar&am=${amount}&cu=INR`;
     }
-}
 
-async function markPaid(){
-    const res=await fetch(`/markPaid/<%= item._id %>`,{method:"POST",credentials:"include"});
-    const data=await res.json();
-    if(data.success) location.reload();
-}
-
-async function confirmPayment(id){
-    const btn = document.getElementById("confirmBtn");
-
-    btn.innerText = "Confirming...";
-    btn.disabled = true;
-
-    const res = await fetch(`/confirmPayment/${id}`,{
-        method:"POST",
-        credentials:"include"
-    });
-
-    const data = await res.json();
-
-    if(data.success){
-        location.reload();
-    } else {
-        btn.innerText = "Try Again";
-        btn.disabled = false;
+    function copyUPI(id){
+        navigator.clipboard.writeText(id);
+        alert("Copied");
     }
-}
 
-async function rateSeller(){
-    const rating=prompt("Rate 1-5");
-    if(!rating) return;
+    function copyNumber(num){
+        navigator.clipboard.writeText(num);
+        alert("Copied");
+    }
 
-    const res=await fetch(`/rate/<%= item._id %>`,{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({rating}),
-        credentials:"include"
-    });
+    async function createDeal(id){
+        const btn = document.getElementById("dealBtn");
 
-    const data=await res.json();
-    if(data.success) location.reload();
-}
-</script>
+        btn.innerText = "Processing...";
+        btn.disabled = true;
 
-</body>
-</html>
+        const res = await fetch(`/createDeal/${id}`,{
+            method:"POST",
+            credentials:"include"
+        });
+
+        const data = await res.json();
+
+        if(data.success){
+            location.reload();
+        } else {
+            btn.innerText = "Try Again";
+            btn.disabled = false;
+        }
+    }
+
+    async function markPaid(){
+        const res=await fetch(`/markPaid/<%= item._id %>`,{method:"POST",credentials:"include"});
+        const data=await res.json();
+        if(data.success) location.reload();
+    }
+
+    async function confirmPayment(id){
+        const btn = document.getElementById("confirmBtn");
+
+        btn.innerText = "Confirming...";
+        btn.disabled = true;
+
+        const res = await fetch(`/confirmPayment/${id}`,{
+            method:"POST",
+            credentials:"include"
+        });
+
+        const data = await res.json();
+
+        if(data.success){
+            location.reload();
+        } else {
+            btn.innerText = "Try Again";
+            btn.disabled = false;
+        }
+    }
+
+    async function rateSeller(){
+        const rating=prompt("Rate 1-5");
+        if(!rating) return;
+
+        const res=await fetch(`/rate/<%= item._id %>`,{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({rating}),
+            credentials:"include"
+        });
+
+        const data=await res.json();
+        if(data.success) location.reload();
+    }
+    </script>
+
+    </body>
+    </html>
