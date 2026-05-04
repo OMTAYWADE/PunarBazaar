@@ -144,7 +144,7 @@ class="py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700">
 
 <script>
     const state = "<%= unlock?.status || 'not_started' %>";
-    const isOwner = <%= isOwner %>;
+    const isOwner = <%= isOwner ? "true" : "false" %>;
     const itemId = "<%= item._id %>";
 
     const btn = document.getElementById("dealBtn");
