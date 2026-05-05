@@ -60,6 +60,18 @@
   </p>
 </div>
 
+<% if(isOwner){ %>
+<div class="flex gap-2 mt-3">
+
+<button onclick="deleteItem()"
+class="flex-1 py-2 rounded-lg bg-red-500 text-white text-sm
+hover:bg-red-600 active:scale-[0.97] transition">
+🗑 Delete
+</button>
+
+</div>
+<% } %>
+
 <!-- SELLER -->
 <div class="bg-white/90 backdrop-blur rounded-xl p-4 shadow-md hover:shadow-lg transition flex justify-between items-center">
   <div>
@@ -216,6 +228,31 @@ function copyUPI(id){
 function copyNumber(num){
   navigator.clipboard.writeText(num);
   alert("Number Copied");
+}
+
+async function deleteItem(){
+  const confirmDelete = confirm("Delete this item?");
+  if(!confirmDelete) return;
+
+  try{
+    const res = await fetch(`/item/${itemId}`,{
+      method: "DELETE",
+      credentials: "include"
+    });
+
+    const data = await res.json();
+
+    if(data.success){
+      alert("Item deleted");
+      window.location.href = "/";
+    }else{
+      alert(data.message || "Delete failed");
+    }
+
+  }catch(err){
+    console.error(err);
+    alert("Something went wrong");
+  }
 }
 
 btn.onclick = handleAction;
