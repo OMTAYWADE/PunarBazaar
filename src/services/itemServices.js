@@ -23,7 +23,7 @@ exports.getAllItems = async (userId) => {
         purchasedIds = unlocks.map(u => u.item.toString());
     }
 
-    let items = await Item.find({_id: { $nin: purchasedIds}, status: "sold"}).limit(20).sort({ isFeatured: -1, createdAt: -1 }).populate("user", "name college");
+    let items = await Item.find({_id: { $nin: purchasedIds}, status: {$ne: "sold"}}).limit(20).sort({ isFeatured: -1, createdAt: -1 }).populate("user", "name college");
 
     if (!userId) return items;
 
@@ -99,7 +99,7 @@ exports.getItemDetails = async (itemId) => {
     }
     
     const recommended = await Item.find({
-        category: item.category,
+        category: item.type,
         _id: { $ne: itemId },
     }).limit(4);
     
@@ -253,7 +253,7 @@ exports.confirmPayment = async ( itemId, sellerId) => {
 
     await Unlock.updateMany({
         item: itemId,
-        id: { $in: unlock.id }
+        _id: { $in: unlock._id }
     }, { status: "rejected" });
     
     await Item.findByIdAndUpdate(itemId, { status: "sold" });
