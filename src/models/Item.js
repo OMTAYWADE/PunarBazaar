@@ -13,11 +13,6 @@ const itemSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     },
-    category: {
-        type: String,
-        enum: ["books", "notes", "electronics", "all", "others"],
-        default: "Other",
-    },
 
     bookDetails: {
         pages: Number,
