@@ -196,6 +196,10 @@ exports.getItemsByCategory = async (category, userId) => {
 };
 
 exports.createDeal = async (itemId, userId) => {
+
+    const item = await Item.findById(itemId);
+    if (!item) throw new Error("Item not found");
+
     const existing = await Unlock.findOne({
         user: userId,
         item: itemId,
