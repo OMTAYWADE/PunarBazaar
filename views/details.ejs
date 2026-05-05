@@ -106,6 +106,26 @@ hover:bg-indigo-700 hover:scale-[1.02] active:scale-[0.97] transition">
 
 <!-- DEAL BOX -->
 <div class="bg-white/90 backdrop-blur rounded-xl p-4 shadow-md hover:shadow-lg transition space-y-4">
+    <% if(unlock && unlock.status === "confirmed" && !isOwner && !unlock.buyerRated){ %>
+
+<div class="bg-white/90 backdrop-blur rounded-xl p-4 shadow-md mt-4 space-y-3">
+
+  <p class="text-sm font-medium text-gray-700">
+    Rate Seller ⭐
+  </p>
+
+  <div class="flex gap-2">
+    <% for(let i=1;i<=5;i++){ %>
+      <button onclick="rateSeller(<%= i %>)"
+      class="text-xl hover:scale-110 active:scale-95 transition">
+        ⭐
+      </button>
+    <% } %>
+  </div>
+
+</div>
+
+<% } %>
 
 <div>
   <p class="text-sm font-medium text-gray-700">Deal Status</p>
@@ -252,6 +272,31 @@ async function deleteItem(){
   }catch(err){
     console.error(err);
     alert("Something went wrong");
+  }
+}
+
+async function rateSeller(stars){
+  try{
+    const res = await fetch(`/rate/${itemId}`,{
+      method:"POST",
+      headers: {
+        "Content-Type":"application/json"
+      },
+      body: JSON.stringify({ rating: stars }),
+      credentials:"include"
+    });
+
+    const data = await res.json();
+
+    if(data.success){
+      alert("Thanks for rating!");
+      location.reload();
+    }else{
+      alert(data.message || "Failed");
+    }
+
+  }catch(err){
+    console.error(err);
   }
 }
 

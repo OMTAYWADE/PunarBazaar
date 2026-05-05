@@ -20,10 +20,11 @@ exports.dashboard = async (req, res) => {
 
 exports.rateSeller = async (req, res) => {
     try {
-        const result = await userServices.rateSeller(req.user.userId, req.params.id, req.body);
+        const { rating } = req.body;
+        const result = await userServices.rateSeller(req.user.userId, req.params.id, rating);
         res.json(result);
         
     } catch (err) {
-        res.json(err.message);
+        res.status(500).json({ success: false, message: err.message });
     }
 };

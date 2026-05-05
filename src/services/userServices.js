@@ -3,9 +3,9 @@ const Unlock = require('../models/Unlock');
 const User = require('../models/User');
 
 exports.rateSeller = async (userId, itemId, rating) => {
-    const unlocks = Unlock.findOne({ user: userId, item: itemId });
+    const unlocks = await Unlock.findOne({ user: userId, item: itemId });
     
-    if (!unlocks || !unlocks.status !== "confirmed") {
+    if (!unlocks || unlocks.status !== "confirmed") {
         return { success: false, message: "Not allowed" };
     }
 
@@ -14,9 +14,15 @@ exports.rateSeller = async (userId, itemId, rating) => {
     }
 
     const item = await Item.findById(itemId).populate("user");
+
+    if (!item) {
+        return { success: false, message: "Item not found" };
+    }
     const seller = await User.findById(item.user._id);
 
-    seller.trustScore = (seller.trustScore || 0) + rating * 2;
+   seller.totalRating = (seller.totalRating || 0) + rating;
+seller.ratingCount = (seller.ratingCount || 0) + 1;
+seller.trustScore = seller.totalRating / seller.ratingCount;
     await seller.save();
 
     unlocks.buyerRated = true;
