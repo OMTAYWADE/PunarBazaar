@@ -275,7 +275,7 @@ exports.confirmPayment = async ( itemId, sellerId) => {
 
     await Unlock.updateMany({
         item: itemId,
-        _id: { $in: unlock._id }
+        _id: { $ne: unlock._id }
     }, { status: "rejected" });
     
     await Item.findByIdAndUpdate(itemId, { status: "sold" });
