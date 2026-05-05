@@ -97,13 +97,31 @@ exports.getItemDetails = async (itemId) => {
     if (!item) {
         return { success: false, message: "Item not found" };
     }
+
+    const isOwner = item.user._id.toString() === userId;
+
+    let unlock = null;
+
+    if (userId) {
+        if (isOwner) {
+            unlock = await Unlock.findOne({
+                item: itemId,
+                status: "paid"
+            });
+        } else {
+            unlock = await Unlock.findOne({
+                item: itemId,
+                user: userId
+            });
+        }
+    }
     
     const recommended = await Item.find({
         category: item.type,
         _id: { $ne: itemId },
     }).limit(4);
     
-    return {success: true, item, recommended};
+    return {success: true, item, recommended, unlock, isOwner};
 };
 
 exports.getItemsBySearch = async (query) => {
