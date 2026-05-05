@@ -91,7 +91,7 @@ exports.deleteItems = async (userId, itemId) => {
     return { success: true };
 }
 
-exports.getItemDetails = async (itemId) => {
+exports.getItemDetails = async (itemId, userId) => {
     const item = await Item.findById(itemId).populate("user");
 
     if (!item) {
@@ -102,6 +102,7 @@ exports.getItemDetails = async (itemId) => {
 
     let unlock = null;
 
+    
     if (userId) {
         if (isOwner) {
             unlock = await Unlock.findOne({
@@ -115,9 +116,11 @@ exports.getItemDetails = async (itemId) => {
             });
         }
     }
+    console.log("IS OWNER:", isOwner);
+console.log("UNLOCK:", unlock);
     
     const recommended = await Item.find({
-        category: item.type,
+        type: item.type,
         _id: { $ne: itemId },
     }).limit(4);
     

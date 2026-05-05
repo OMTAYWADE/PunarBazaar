@@ -77,7 +77,7 @@ exports.searchItems = async (req, res) => {
 //details
 exports.getItemDetails = async (req, res) => {
     try {
-        const result = await itemServices.getItemDetails(req.params.id);
+        const result = await itemServices.getItemDetails(req.params.id, req.user.userId);
 
         if (!result.success) {
             return res.status(404).json({success: false, message: result.message});
@@ -85,20 +85,8 @@ exports.getItemDetails = async (req, res) => {
         const item =result.item;
         const recommended = result.recommended;
 
-        let unlock = null;
-        let isOwner = false;
-
-        if (req.user?.userId) {
-            unlock = await Unlock.findOne({
-                user: req.user.userId,
-                item: item._id,
-            });
-
-            if (item.user._id.toString() === req.user.userId.toString()) {
-                isOwner = true;
-            }
-
-        }
+        const unlock = result.unlock;
+        const isOwner = result.isOwner;
 
         res.render('details', { item, recommended, unlock, isOwner });
     } catch (err) {
