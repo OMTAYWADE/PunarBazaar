@@ -59,7 +59,7 @@ const categoryMap = {
 
 const finalType = categoryMap[category] || "other";
     
-    if (finalCategory === "note" && numericPrice > 50) {
+    if (finalType === "note" && numericPrice > 50) {
         return {success: false, message: "Notes should be priced fairly (below ₹50 recommended)"};
     }
     
